@@ -1,6 +1,6 @@
 import {ChapterTable} from "db/schema/chapter-table";
 import {eq} from "drizzle-orm";
-import {DbActionBase} from "../db-action";
+import {DbActionBase} from "../../../utilities/db-action";
 
 export class DbManageActionDrop extends DbActionBase<void> {
   public async executeAction(): Promise<void> {

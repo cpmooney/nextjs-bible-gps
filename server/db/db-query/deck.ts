@@ -1,6 +1,6 @@
 import {DeckPayload} from "@/types/zod/card-list";
+import {obtainDatabase} from "@/utilities/obtain-database";
 import {DbActionBase} from "server/db-action";
-import {obtainDatabase} from "server/db/utilities/database";
 
 export class DbQueryDeck extends DbActionBase<DeckPayload> {
   protected get actionName(): string {

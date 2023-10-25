@@ -1,6 +1,6 @@
 import {ChapterListPayload} from "@/types/interfaces/chapter-list";
+import {obtainDatabase} from "@/utilities/obtain-database";
 import {DbActionBase} from "server/db-action";
-import {obtainDatabase} from "server/db/utilities/database";
 
 export class DbQueryActionChapterList extends DbActionBase<ChapterListPayload> {
   public async executeAction() {

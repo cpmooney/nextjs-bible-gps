@@ -1,5 +1,5 @@
-import { DebugMessage, LogLevel } from "@/utilities/db-management";
-import {obtainDatabase} from "server/db/utilities/database";
+import {DebugMessage, LogLevel} from "@/utilities/db-management";
+import {DbSchema, obtainDatabase} from "@/utilities/obtain-database";
 
 interface DbActionResponse<T> {
   payload: T;
@@ -19,7 +19,9 @@ export abstract class DbActionBase<T> {
 
   protected abstract get actionName(): string;
 
-  protected constructor(protected module: string) {}
+  protected abstract get dbSchema(): DbSchema;
+
+  protected constructor() {}
 
   private debugMessages: DebugMessage[] = [];
 
@@ -51,6 +53,6 @@ export abstract class DbActionBase<T> {
   }
 
   protected getDatabase() {
-    return obtainDatabase();
+    return obtainDatabase(this.dbSchema);
   }
 }
