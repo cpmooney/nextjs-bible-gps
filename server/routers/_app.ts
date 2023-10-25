@@ -1,9 +1,14 @@
-import {chapterList} from "server/procedures/chapter-list";
-import {manageDb} from "server/procedures/db-management";
-import {deck} from "server/procedures/deck";
 import {router} from "../trpc";
+import { CitationTable } from "db/schema/citation-table";
+import { usingDbProcedures } from "@/utilities/db-procedures";
+import { ZodCitation } from "@/models/citation";
 
-export const appRouter = router({manageDb, deck, chapterList});
+const dbProcedures = usingDbProcedures({
+    rowType: ZodCitation,
+    schema: { CitationTable }
+});
+
+export const appRouter = router(dbProcedures);
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

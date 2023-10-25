@@ -1,4 +1,4 @@
-import {obtain} from "@/types/container";
+import { obtain } from "../container";
 
 interface Ticket {
   id: number;

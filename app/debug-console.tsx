@@ -1,25 +1,54 @@
-import { DebugMessage, LogLevel } from "@/types/interfaces/db-management";
-import { useState } from "react";
+import {DebugMessage, LogLevel} from "@/utilities/debugger";
+import {useState} from "react";
+
+export const useDebugMessages = () => {
+  const [debugMessages, setDebugMessages] = useState<DebugMessage[]>([]);
+
+  const appendDebugMessage = (debugMessages: DebugMessage[]) => {
+    setDebugMessages([...debugMessages, ...debugMessages]);
+  };
+
+  const resetDebugMessages = () => {
+    setDebugMessages([]);
+  };
+
+  return {
+    debugMessages,
+    appendDebugMessage,
+    resetDebugMessages,
+  };
+};
+
+export const DebugConsole = (props: DebugConsoleProps) => {
+  const {debugMessages} = props;
+  return (
+    <div>
+      {debugMessages.map((debugMessage) => (
+        <DebugMessageBox {...debugMessage} key={debugMessage.timestamp} />
+      ))}
+    </div>
+  );
+};
 
 const messageColor: Record<LogLevel, string> = {
   info: "darkblue",
   warn: "orange",
-  error: "red"
+  error: "red",
 };
 
 const formatTimestamp = (timestamp: number) => {
   return new Date(timestamp).toLocaleString();
-}
+};
 
 const DebugMessageBox = (debugMessage: DebugMessage) => {
   const timestamp = formatTimestamp(debugMessage.timestamp);
-  const { message } = debugMessage;
+  const {message} = debugMessage;
   return (
     <div
       style={{
         border: "1px solid gray",
         padding: "1px",
-        color: messageColor[debugMessage.level]
+        color: messageColor[debugMessage.level],
       }}
     >
       <pre>{timestamp}</pre>
@@ -28,30 +57,6 @@ const DebugMessageBox = (debugMessage: DebugMessage) => {
   );
 };
 
-export const useDebugMessages = () => {
-    const [debugMessages, setDebugMessages] = useState<DebugMessage[]>([]);
-    
-    const appendDebugMessage = (debugMessages: DebugMessage[]) => {
-      setDebugMessages([...debugMessages, ...debugMessages]);
-    };
-    
-    return {
-        debugMessages,
-        appendDebugMessage,
-    };
-}
-
 interface DebugConsoleProps {
   debugMessages: DebugMessage[];
 }
-
-export const DebugConsole = (props: DebugConsoleProps) => {
-  const { debugMessages } = props;
-  return (
-    <div>
-        {debugMessages.map((debugMessage) => (
-            <DebugMessageBox {...debugMessage} key={debugMessage.timestamp} />
-        ))}
-    </div>
-  );
-};
