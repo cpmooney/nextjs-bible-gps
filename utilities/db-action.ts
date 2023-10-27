@@ -1,13 +1,17 @@
 import {DebugMessage, LogLevel} from "@/utilities/db-management";
 import {DbSchema, obtainDatabase} from "@/utilities/obtain-database";
+import { z } from "zod";
 
-interface DbActionResponse<T> {
-  payload: T;
-  debugMessages: DebugMessage[];
-}
+export abstract class DbActionBase {
+  protected abstract get zodPayloadType(): z.ZodAny;
 
-export abstract class DbActionBase<T> {
-  public async execute(): Promise<DbActionResponse<T>> {
+  public abstract executeAction(): Promise<unknown>;
+
+  protected abstract get actionName(): string;
+
+  protected abstract get dbSchema(): DbSchema;
+
+  public async execute(): Promise<unknown> {
     const payload = await this.executeAction();
     return {
       payload,
@@ -15,11 +19,12 @@ export abstract class DbActionBase<T> {
     };
   }
 
-  protected abstract executeAction(): Promise<T>;
-
-  protected abstract get actionName(): string;
-
-  protected abstract get dbSchema(): DbSchema;
+  public get zodDbActionResponse(): z.AnyZodObject {
+    return z.object({
+      debugMessages: z.array(z.string()),
+      payload: this.zodPayloadType,
+    })
+  }
 
   protected constructor() {}
 

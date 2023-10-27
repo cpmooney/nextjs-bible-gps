@@ -4,7 +4,7 @@ import {
 } from "@/types/interfaces/db-management";
 import {DbActionBase} from "server/db-action";
 import {DbManageActionDrop} from "./drop";
-import {DbManageActionSeed} from "./seed";
+import {DbManageActionSeed} from "../../../utilities/seed";
 
 export const executeDbManageAction = async (
   request: DbManagementRequest

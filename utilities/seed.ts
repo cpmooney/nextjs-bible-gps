@@ -1,20 +1,20 @@
 import {PgTable} from "drizzle-orm/pg-core";
 import {readFileSync, readdirSync} from "fs";
 import path from "path";
-import {DbActionBase} from "../../../utilities/db-action";
+import {DbActionBase} from "./db-action";
+import { z } from "zod";
 
-export abstract class DbManageActionSeed extends DbActionBase<void> {
+export abstract class DbManageActionSeed extends DbActionBase {
+  protected abstract parseJsonPayload(body: any): z.infer<typeof this.zodPayloadType>;
+
+  protected abstract sendPayloadToDb(payload: z.infer<typeof this.zodPayloadType>): Promise<void>;
+
   public async executeAction(): Promise<void> {
     this.seedPaths().forEach(async (path) => {
       const filePayload = this.loadPayloadFromFile(path);
       await this.sendPayloadToDb(filePayload);
-      this.info(`Seed complete: ${filePayload.cards.length} cards inserted`);
     });
   }
-
-  protected abstract parseJsonPayload(body: any): any;
-
-  protected abstract sendPayloadToDb(payload: any): Promise<void>;
 
   public constructor() {
     super();
@@ -24,12 +24,9 @@ export abstract class DbManageActionSeed extends DbActionBase<void> {
     this.getDatabase().insert(table).values(rows).execute();
   }
 
-  private loadPayloadFromFile(path: string) {
+  private loadPayloadFromFile(path: string): T {
     const body = readFileSync(path, "utf8");
-    this.info(`Loaded file ${body.slice(0, 100)} ...`);
-    const response = this.tryParseDeckResponse(body);
-    this.info(`Parsed file ${response.module} ${response.chapter.title}`);
-    return response;
+    return this.tryParseDeckResponse(body);
   }
 
   private tryParseDeckResponse(body: string) {

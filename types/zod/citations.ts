@@ -1,6 +1,6 @@
 import {z} from "zod";
 
-export const ZodCard = z.object({
+export const ZodCitation = z.object({
   id: z.string(),
   fragment: z.string(),
   book: z.string(),
@@ -12,13 +12,6 @@ export const ZodCard = z.object({
   active: z.boolean()
 });
 
-export const ZodDeckPayload = z.object({
-  cards: z.array(ZodCard)
+export const ZodCitationListPayload = z.object({
+  citations: z.array(ZodCitation)
 });
-
-export const ZodDeckResponse = z.object({
-  debugMessages: z.array(z.string()),
-  payload: ZodDeckPayload,
-});
-
-export type DeckPayload = z.infer<typeof ZodDeckPayload>;
