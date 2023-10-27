@@ -1,6 +1,5 @@
 import {DebugMessage, LogLevel} from "@/utilities/db-management";
 import {DbSchema, obtainDatabase} from "@/utilities/obtain-database";
-import { z } from "zod";
 
 interface DbActionResponse<ActionResponse> {
   payload: ActionResponse;
@@ -8,11 +7,7 @@ interface DbActionResponse<ActionResponse> {
 }
 
 export abstract class DbActionBase<ActionResponse> {
-  protected abstract get zodPayloadType(): z.AnyZodObject;
-
   protected abstract executeAction(): Promise<ActionResponse>;
-
-  protected abstract get actionName(): string;
 
   protected abstract get dbSchema(): DbSchema;
 
@@ -22,13 +17,6 @@ export abstract class DbActionBase<ActionResponse> {
       payload,
       debugMessages: this.debugMessages,
     };
-  }
-
-  public get zodDbActionResponse(): z.AnyZodObject {
-    return z.object({
-      debugMessages: z.array(z.string()),
-      payload: this.zodPayloadType,
-    })
   }
 
   protected constructor() {}
@@ -64,5 +52,9 @@ export abstract class DbActionBase<ActionResponse> {
 
   protected getDatabase() {
     return obtainDatabase(this.dbSchema);
+  }
+
+  private get actionName(): string {
+    return this.constructor.name;
   }
 }

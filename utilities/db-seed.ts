@@ -1,13 +1,15 @@
 import {PgTable} from "drizzle-orm/pg-core";
 import {readFileSync, readdirSync} from "fs";
 import path from "path";
+import {z} from "zod";
 import {DbActionBase} from "./db-action";
-import { z } from "zod";
 
-export abstract class DbManageActionSeed<PayloadType> extends DbActionBase<void> {
+export abstract class DbManageActionSeed<
+  InputDataType
+> extends DbActionBase<void> {
   protected abstract get zodSeedType(): z.AnyZodObject;
 
-  protected abstract sendPayloadToDb(payload: PayloadType): Promise<void>;
+  protected abstract sendPayloadToDb(payload: InputDataType): Promise<void>;
 
   protected async executeAction(): Promise<void> {
     this.seedPaths().forEach(async (path) => {
@@ -24,15 +26,15 @@ export abstract class DbManageActionSeed<PayloadType> extends DbActionBase<void>
     this.getDatabase().insert(table).values(rows).execute();
   }
 
-  private loadPayloadFromFile(path: string): PayloadType {
+  private loadPayloadFromFile(path: string): InputDataType {
     this.info(`Loading payload from ${path}`);
     const body = readFileSync(path, "utf8");
-    return this.tryParseDeckResponse(body);
+    return this.tryParseBody(body);
   }
 
-  private tryParseDeckResponse(body: string) {
+  private tryParseBody(body: string): InputDataType {
     try {
-      return this.zodSeedType.parse(JSON.parse(body));
+      return this.zodSeedType.parse(JSON.parse(body)) as InputDataType;
     } catch (e) {
       this.error(`Failed to parse: ${e}`);
       throw new Error("Failed to parse deck response");

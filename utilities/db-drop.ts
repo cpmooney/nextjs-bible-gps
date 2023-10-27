@@ -1,8 +1,7 @@
-import {eq} from "drizzle-orm";
-import {DbActionBase} from "../../../utilities/db-action";
+import {DbActionBase} from "./db-action";
 
-export class DbManageActionDrop extends DbActionBase<void> {
-  protected async executeAction(): Promise<void> {
+export abstract class DbManageActionDrop extends DbActionBase<void> {
+  public async executeAction(): Promise<void> {
     const deletedRecords = await this.getDatabase()
       .delete(ChapterTable)
       .where(eq(ChapterTable.module, this.module))

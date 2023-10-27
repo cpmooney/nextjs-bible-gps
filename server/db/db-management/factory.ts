@@ -3,8 +3,8 @@ import {
   DbManagementResponse,
 } from "@/types/interfaces/db-management";
 import {DbActionBase} from "server/db-action";
+import {DbManageActionSeed} from "../../../utilities/db-seed";
 import {DbManageActionDrop} from "./drop";
-import {DbManageActionSeed} from "../../../utilities/seed";
 
 export const executeDbManageAction = async (
   request: DbManagementRequest
