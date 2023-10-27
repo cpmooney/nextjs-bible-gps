@@ -2,16 +2,21 @@ import {DebugMessage, LogLevel} from "@/utilities/db-management";
 import {DbSchema, obtainDatabase} from "@/utilities/obtain-database";
 import { z } from "zod";
 
-export abstract class DbActionBase {
-  protected abstract get zodPayloadType(): z.ZodAny;
+interface DbActionResponse<ActionResponse> {
+  payload: ActionResponse;
+  debugMessages: DebugMessage[];
+}
 
-  public abstract executeAction(): Promise<unknown>;
+export abstract class DbActionBase<ActionResponse> {
+  protected abstract get zodPayloadType(): z.AnyZodObject;
+
+  protected abstract executeAction(): Promise<ActionResponse>;
 
   protected abstract get actionName(): string;
 
   protected abstract get dbSchema(): DbSchema;
 
-  public async execute(): Promise<unknown> {
+  public async execute(): Promise<DbActionResponse<ActionResponse>> {
     const payload = await this.executeAction();
     return {
       payload,
