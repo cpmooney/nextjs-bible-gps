@@ -1,53 +1,61 @@
-import {PgTable} from "drizzle-orm/pg-core";
 import {readFileSync, readdirSync} from "fs";
 import path from "path";
 import {z} from "zod";
-import {DbActionBase} from "./db-action";
+import { obtainDatabase, usingDatabase } from "./database";
+import { ZodDebugMessage, debugLog, obtainDebugMessages, usingDebugger } from "./debugger";
+import { procedure } from "server/trpc";
+import { DbActionConfig } from "./db-procedures";
 
-export abstract class DbManageActionSeed<
-  InputDataType
-> extends DbActionBase<void> {
-  protected abstract get zodSeedType(): z.AnyZodObject;
+let config: DbActionConfig;
 
-  protected abstract sendPayloadToDb(payload: InputDataType): Promise<void>;
+export const usingDbSeedProcedure = (config: DbActionConfig) => procedure
+  .input(z.object({}))
+  .output(z.array(ZodDebugMessage))
+  .query(async () => {
+    return await invokeDbSeedAction(config);
+  });
 
-  protected async executeAction(): Promise<void> {
-    this.seedPaths().forEach(async (path) => {
-      const filePayload = this.loadPayloadFromFile(path);
-      await this.sendPayloadToDb(filePayload);
-    });
+const invokeDbSeedAction = async <RowType>(myConfig: DbActionConfig) => {
+  config = myConfig;
+  usingDatabase(config.schema);
+  usingDebugger("db-seed");
+  
+  await Promise.all(seedPaths().map(async (path) => {
+    const rows = loadPayloadFromFile<RowType[]>(path);
+    // Future: Create ability to transform more complex payloads
+    await insertRows(config.tableName, rows);
+  }));
+  
+  return obtainDebugMessages();
+}
+
+const insertRows = async (tableName: string, rows: any[]) => {
+  const table = config.schema[tableName];
+  obtainDatabase().insert(table).values(rows).execute();
+}
+
+const loadPayloadFromFile = <PayloadType>(path: string): PayloadType => {
+  debugLog('info', `Loading payload from ${path}`);
+  const body = readFileSync(path, "utf8");
+  return tryParseBody<PayloadType>(body);
+}
+
+const tryParseBody = <PayloadType>(body: string): PayloadType => {
+  try {
+    return config.payloadType.parse(JSON.parse(body)) as PayloadType;
+  } catch (e) {
+    debugLog("error", `Failed to parse: ${e}`);
+    throw new Error("Failed to parse deck response");
   }
+}
 
-  public constructor() {
-    super();
+const seedPaths = (): string[] => {
+  const seedPath = ["db", "seeds"];
+  if (config.seedDirectory) {
+    seedPath.push(config.seedDirectory);
   }
-
-  protected async insertRows(table: PgTable, rows: any[]) {
-    this.getDatabase().insert(table).values(rows).execute();
-  }
-
-  private loadPayloadFromFile(path: string): InputDataType {
-    this.info(`Loading payload from ${path}`);
-    const body = readFileSync(path, "utf8");
-    return this.tryParseBody(body);
-  }
-
-  private tryParseBody(body: string): InputDataType {
-    try {
-      return this.zodSeedType.parse(JSON.parse(body)) as InputDataType;
-    } catch (e) {
-      this.error(`Failed to parse: ${e}`);
-      throw new Error("Failed to parse deck response");
-    }
-  }
-
-  private seedPaths(): string[] {
-    return readdirSync(this.seedDir()).map((file) =>
-      path.join(this.seedDir(), file)
-    );
-  }
-
-  private seedDir(): string {
-    return path.join("db", "seeds");
-  }
+  const seedDir = path.join(...seedPath);
+  return readdirSync(seedDir).map((file) =>
+    path.join(seedDir, file)
+  );
 }
