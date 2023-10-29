@@ -10,7 +10,7 @@ export const getServerSideProps = async () => {
 const App = ({
   isDevelopment,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const {debugMessages, appendDebugMessage} = useDebugMessages();
+  const {debugMessages, appendDebugMessage, resetDebugMessages} = useDebugMessages();
 
   const dbDropProcedure = trpc.dbDropProcedure.useMutation();
   const dbSeedProcedure = trpc.dbSeedProcedure.useMutation();
@@ -34,11 +34,24 @@ const App = ({
     }
   };
 
+  const testDebugMessage = () => {
+    appendDebugMessage([
+      {
+        action: "test debug message",
+        level: "info",
+        message: "This is a test debug message.",
+        timestamp: new Date().getTime(),
+      },
+    ]);
+  };
+
   if (isDevelopment) {
     return (
       <div>
         <div>
           <button onClick={reseed}>Reseed</button>
+          <button onClick={resetDebugMessages}>Clear Debug</button>
+          <button onClick={testDebugMessage}>Test Debug</button>
         </div>
         <DebugConsole debugMessages={debugMessages} />
       </div>
