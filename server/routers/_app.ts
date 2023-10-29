@@ -5,8 +5,7 @@ import { ZodCitation } from "server/citations";
 
 const dbProcedures = usingDbProcedures({
     rowType: ZodCitation,
-    schema: { CitationTable },
-    tableName: "citations",
+    schema: { CitationTable }
 });
 
 export const appRouter = router(dbProcedures);

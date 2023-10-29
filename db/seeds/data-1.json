@@ -124,7 +124,7 @@
     "book": "Romans",
     "chapter": 10,
     "firstVerse": 9,
-    "suffix": -10,
+    "suffix": "-10",
     "tags": ["Redemption","Confession"],
     "entire": "If you confess with your mouth that Jesus is Lord and believe in your heart that God raised Him from the dead, you will be saved.  For with the heart one believes and is justified and with the mouth one confesses and is saved.",
     "active": true
@@ -164,7 +164,7 @@
     "book": "Ezekiel",
     "chapter": 36,
     "firstVerse": 26,
-    "suffix": -27,
+    "suffix": "-27",
     "tags": ["Redemption"],
     "entire": "I will give you a new heart and put a new Spirit within you; I will take the heart of stone from your flesh and give you a heart of flesh.  I will put my Spirit within you and cause you to walk in my statues and you will keep my judgements and do them.",
     "active": true
@@ -253,7 +253,7 @@
     "fragment": "brothers dwell together",
     "book": "Psalm",
     "chapter": 133,
-    "firstVerse": "",
+    "firstVerse": 0,
     "suffix": "",
     "tags": ["Brotherhood","Life"],
     "entire": "Behold how good and pleasant it is when brothers dwell in unity",
@@ -444,7 +444,7 @@
     "book": "Ephesians",
     "chapter": 3,
     "firstVerse": 16,
-    "suffix": -19,
+    "suffix": "-19",
     "tags": [""],
     "entire": "That He would grant you, according to the riches of His glory, to be strenghened with might through His Spirit in your inner man, that Christ may dwell in your hearts through faith; that you, being rooted and grounded in love would be able to comprehend with all the saints what is the height and width and length and depth and to know the love of Christ which passes knowledge that you may be filled with all the fullness of God.",
     "active": true
@@ -484,7 +484,7 @@
     "book": "James",
     "chapter": 1,
     "firstVerse": 5,
-    "suffix": -6,
+    "suffix": "-6",
     "tags": ["Wisdom"],
     "entire": "If any of you lacks wisdom, let him ask of God who gives to all liberally and without reproach, and it will be given to him.  But let him ask in faith, with no doubting, for he who doubts is like a wave of the sea driven and tossed by the wind.",
     "active": true
@@ -564,7 +564,7 @@
     "book": "Genesis",
     "chapter": 49,
     "firstVerse": 8,
-    "suffix": -9,
+    "suffix": "-9",
     "tags": ["Brotherhood","Fighting"],
     "entire": "Judah, your bothers shall praise you.  Your hand shall be on the neck of your enemies.  Your father's sons shall bow down before you.  Judah is a lion's cub, with the prey my son you have gone up.  He stooped down, he crouched as a lion, and as a lioness -- who dares rouse him?",
     "active": true
@@ -664,7 +664,7 @@
     "book": "Luke",
     "chapter": 18,
     "firstVerse": 6,
-    "suffix": -8,
+    "suffix": "-8",
     "tags": [""],
     "entire": "Hear what the unjust judge said.  And shall God not avenge His own children who cry out day and night to Him, though He bears long with them?  I tell you that He will avenge them speedily.  Nevertheless, when the Son of Man comes, will He really find faith in the earth?",
     "active": true
@@ -824,7 +824,7 @@
     "book": "Luke",
     "chapter": 5,
     "firstVerse": 31,
-    "suffix": -32,
+    "suffix": "-32",
     "tags": [""],
     "entire": "Those who are well have no need of a physician, but those who are sick.  I have not come to call the righteous, but sinners to repentance.",
     "active": true
@@ -844,7 +844,7 @@
     "book": "Matthew",
     "chapter": 7,
     "firstVerse": 24,
-    "suffix": -25,
+    "suffix": "-25",
     "tags": [""],
     "entire": "Everyone who hears these words of mine and does them will be like a wise man who built his house on the rock.  And the rains fell and the floods came and the winds blew and beat on that house but it did not fall because it had been founded on the rock.",
     "active": true
@@ -904,7 +904,7 @@
     "book": "Hebrews",
     "chapter": 12,
     "firstVerse": 1,
-    "suffix": -2,
+    "suffix": "-2",
     "tags": [""],
     "entire": "Therefore, since we are surrounded by so great a cloud of witnesses, let us also lay aside every weight, and sin which clings so closely, and let us run with endurance the race that is set before us, looking to Jesus, the founder and perfector of our faith, who for the joy that was set before Him endured the cross, despising the shame, and is seated at the right hand of the throne of God.",
     "active": true
@@ -934,7 +934,7 @@
     "book": "2 Timothy",
     "chapter": 3,
     "firstVerse": 16,
-    "suffix": -17,
+    "suffix": "-17",
     "tags": [""],
     "entire": "All scripture is God-breathed and profitable for teaching, for reproof, for correction, and for training in righteousness, that the man of God may be complete, equipped for every good work.",
     "active": true
@@ -974,7 +974,7 @@
     "book": "John",
     "chapter": 14,
     "firstVerse": 16,
-    "suffix": -17,
+    "suffix": "-17",
     "tags": [""],
     "entire": "And I will ask the Father and He will give you another helper that He may abide with you forever -- the Spirit of truth, whom the world cannot receive, because it neither sees Him nor knows Him.  But you know Him, for He dwells with you and will be in you.",
     "active": true
@@ -994,7 +994,7 @@
     "book": "Mark",
     "chapter": 11,
     "firstVerse": 22,
-    "suffix": -24,
+    "suffix": "-24",
     "tags": [""],
     "entire": "Have faith in God!  For assuredly I say to you, whoever says to this mountain, \"Be removed and cast into the sea\" and does not doubt in his heart but believes that those things he says will be done, he will have whatever he says.  Therefore I say to you, whatever things you ask when you pray, believe that you receive them and you will have them.",
     "active": true
@@ -1024,7 +1024,7 @@
     "book": "James",
     "chapter": 2,
     "firstVerse": 15,
-    "suffix": -16,
+    "suffix": "-16",
     "tags": [""],
     "entire": "If a brother is naked and destitute of daily food, and one of you says to him, \"Depart in peace!  Be warmed and filled!\"  But you do not give him the things which are needed for the body, what does it profit him?",
     "active": true
@@ -1164,7 +1164,7 @@
     "book": "James",
     "chapter": 4,
     "firstVerse": 7,
-    "suffix": -8,
+    "suffix": "-8",
     "tags": [""],
     "entire": "Therefore submit to God.  Resist the devil and he will flee from you.  Draw near to God and He will draw near to you.",
     "active": true

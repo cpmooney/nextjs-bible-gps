@@ -44,6 +44,9 @@ const tryInsertRows = async (tableName: string, rows: any[]) => {
 }
 
 const insertRows = async (tableName: string, rows: any[]) => {
+  if (!config.schema.hasOwnProperty(tableName)) {
+    throw new Error(`Table "${tableName}" not found in schema`);
+  }
   const table = config.schema[tableName];
   await obtainDatabase().insert(table).values(rows).execute();
 }

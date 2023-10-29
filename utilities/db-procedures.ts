@@ -5,11 +5,11 @@ import { usingDbLoadAllProcedure } from "./db-load-all-rows"
 import { usingDbSeedProcedure } from "./db-seed"
 
 export interface DbActionConfig {
-  seedDirectory?: string,
-  payloadType?: z.ZodTypeAny
   rowType: z.AnyZodObject,
   schema: DbSchema,
-  tableName: string
+  tableName?: string
+  seedDirectory?: string,
+  payloadType?: z.ZodTypeAny
 }
 
 let config: DbActionConfigWithDefaults;
@@ -36,6 +36,17 @@ const withDefaults = (config: DbActionConfig): DbActionConfigWithDefaults => {
   return {
     ...config,
     payloadType: config.payloadType ?? z.array(config.rowType),
-    seedDirectory: config.seedDirectory ?? "db/seeds"
+    seedDirectory: config.seedDirectory ?? "db/seeds",
+    tableName: defaulTableName(config)
   }
+}
+
+const defaulTableName = (config: DbActionConfig): string => {
+  if (config.tableName) {
+    return config.tableName;
+  }
+  if (Object.keys(config.schema).length === 1) {
+    return Object.keys(config.schema)[0];
+  }
+  throw new Error("Table name must be specified when schema contains more than one table");
 }
