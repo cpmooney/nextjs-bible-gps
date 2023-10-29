@@ -2,12 +2,13 @@ import { z } from "zod";
 import { DbSchema, obtainDatabase, obtainDbSchema, usingDatabase } from "./database";
 import { ZodDebugMessage, debugLog, obtainDebugMessages, usingDebugger } from "./debugger";
 import { procedure } from "server/trpc";
+import { DbActionConfigWithDefaults } from "./db-procedures";
 
-export const usingDbDropProcedure = (schema: DbSchema) => procedure
+export const usingDbDropProcedure = (config: DbActionConfigWithDefaults) => procedure
   .input(z.object({}))
   .output(z.array(ZodDebugMessage))
   .mutation(async () => {
-    return await invokeDbDropAllAction(schema);
+    return await invokeDbDropAllAction(config.schema);
   });
 
 const invokeDbDropAllAction = async (schema: DbSchema) => {

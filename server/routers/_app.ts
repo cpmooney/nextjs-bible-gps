@@ -1,10 +1,9 @@
 import {router} from "../trpc";
 import { CitationTable } from "db/schema/citation-table";
 import { usingDbProcedures } from "@/utilities/db-procedures";
-import { ZodCitation, ZodCitationList } from "server/citations";
+import { ZodCitation } from "server/citations";
 
 const dbProcedures = usingDbProcedures({
-    payloadType: ZodCitationList,
     rowType: ZodCitation,
     schema: { CitationTable },
     tableName: "citations",

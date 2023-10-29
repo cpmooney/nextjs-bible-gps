@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 export const ZodCitation = z.object({
-  id: z.string(),
+  id: z.optional(z.string()),
   fragment: z.string(),
   book: z.string(),
   chapter: z.number(),
@@ -11,9 +11,3 @@ export const ZodCitation = z.object({
   entire: z.string(),
   active: z.boolean(),
 });
-
-export const ZodCitationList = z.object({
-  citations: z.array(ZodCitation),
-});
-
-export type CitationList = z.infer<typeof ZodCitationList>;

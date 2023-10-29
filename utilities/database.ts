@@ -7,7 +7,7 @@ export type DbSchema = Record<string, PgTable>;
 let database: VercelPgDatabase<DbSchema>;
 let schema: DbSchema;
 
-export const usingDatabase = async (mySchema: DbSchema) => {
+export const usingDatabase = (mySchema: DbSchema) => {
   schema = mySchema;
   database = createDatabase(schema);
   return database;

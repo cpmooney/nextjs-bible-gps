@@ -2,15 +2,16 @@ import { z } from "zod";
 import { DbSchema, obtainDatabase, obtainDbSchema, usingDatabase } from "./database";
 import { ZodDebugMessage, debugLog, obtainDebugMessages, usingDebugger } from "./debugger";
 import { procedure } from "server/trpc";
+import { DbActionConfigWithDefaults } from "./db-procedures";
 
-export const usingDbLoadAllProcedure = (schema: DbSchema, rowType: z.AnyZodObject) => procedure
+export const usingDbLoadAllProcedure = (config: DbActionConfigWithDefaults) => procedure
   .input(z.object({}))
   .output(z.object({
-    rows: z.array(rowType),
+    rows: z.array(config.rowType),
     debugMessages: z.array(ZodDebugMessage),
   }))
   .query(async () => {
-    return await invokeDbLoadAllAction(schema);
+    return await invokeDbLoadAllAction(config.schema);
   });
 
 const invokeDbLoadAllAction = async (schema: DbSchema) => {
