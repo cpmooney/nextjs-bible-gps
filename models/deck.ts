@@ -1,8 +1,29 @@
-import {Card, CardJson} from "./card";
 import {provide} from "../utilities/container";
+import { bookNumber } from "./books";
+import { Citation } from "./citation";
 
-export class CardList {
-  private constructor(private Cards: Card[]) {}
+class Card implements Citation {
+  constructor(
+    public id: string,
+    public fragment: string,
+    public book: string,
+    public chapter: number,
+    public firstVerse: number,
+    public suffix: string,
+    public tags: string[],
+    public entire: string,
+    public active: boolean,
+    public score: number
+  ) { }
+
+  public bookNumber: number = bookNumber(this.book);
+}
+
+export class Deck {
+  private constructor(citations: Citation[]) {
+  }
+
+  private 
 
   private totalScore: number = 0;
   private index: number = 0;
@@ -10,15 +31,15 @@ export class CardList {
   public static fromCardListAsJson(
     cardListAsJson: CardJson[],
     chapterDefinitions: ChapterDefinitionJson[]
-  ): CardList {
+  ): Deck {
     const chapterList = chapterArray(chapterDefinitions);
     provide("chapter-titles", chapterList);
-    return new CardList(
+    return new Deck(
       cardListAsJson.map((cardAsJson) => Card.fromJson(cardAsJson))
     );
   }
 
-  public nextCard(): Card {
+  public nextCard(): CardType {
     this.advanceIndex();
     return this.Cards[this.index];
   }

@@ -1,7 +1,7 @@
 import {router} from "../trpc";
 import { CitationTable } from "db/schema/citation-table";
 import { usingDbProcedures } from "@/utilities/db-procedures";
-import { ZodCitation } from "server/citations";
+import { ZodCitation } from "@/models/citation";
 
 const dbProcedures = usingDbProcedures({
     rowType: ZodCitation,

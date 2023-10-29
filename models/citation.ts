@@ -11,3 +11,5 @@ export const ZodCitation = z.object({
   entire: z.string(),
   active: z.boolean(),
 });
+
+export type Citation = z.infer<typeof ZodCitation>;
