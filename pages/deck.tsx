@@ -1,7 +1,7 @@
 "use client";
-import {DeckPayload} from "@/types/zod/card-list";
 import {trpc} from "../utilities/trpc";
 
+/*
 const ShowDeckResponse = (deckResponse: DeckPayload) => {
   return (
     <div>
@@ -25,8 +25,10 @@ const ShowDeckResponse = (deckResponse: DeckPayload) => {
     </div>
   );
 };
+*/
 
 const Home = () => {
+  /*
   const {data} = trpc.deck.useQuery({
     module: "aws-foundations",
     chapter: 1,
@@ -34,9 +36,10 @@ const Home = () => {
   if (!data) {
     return <div>Loading...</div>;
   }
+  */
   return (
     <div>
-      <ShowDeckResponse {...data.payload} />
+    Dude
     </div>
   );
 };

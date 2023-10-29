@@ -1,4 +1,4 @@
-import {Card} from "@/types/card";
+import {Card} from "@/models/card";
 
 export default function CardComponent(card: Card) {
   return (

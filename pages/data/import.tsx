@@ -1,7 +1,3 @@
-import {
-  DbActionChoice,
-  DbActionChoices,
-} from "@/types/interfaces/db-management";
 import {isDevelopment} from "@/utilities/env";
 import {trpc} from "@/utilities/trpc";
 import {DebugConsole, useDebugMessages} from "app/debug-console";
@@ -16,15 +12,16 @@ const App = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const {debugMessages, appendDebugMessage} = useDebugMessages();
 
-  const dbMutation = trpc.manageDb.useMutation();
+  const dbDropProcedure = trpc.dbDropProcedure.useMutation();
+  const dbSeedProcedure = trpc.dbSeedProcedure.useMutation();
 
-  const dispatchDbManagementAction = async (dbAction: DbActionChoice) => {
+  const reseed = async () => {
     if (isDevelopment) {
-      const response = await dbMutation.mutateAsync({
-        module: "aws-foundations",
-        action: dbAction,
-      });
-      appendDebugMessage(response.debugMessages);
+      const dropResponse = await dbDropProcedure.mutateAsync({});
+      appendDebugMessage(dropResponse);
+
+      const seedResponse = await dbSeedProcedure.mutateAsync({});
+      appendDebugMessage(seedResponse);
     } else {
       appendDebugMessage([
         {
@@ -41,14 +38,7 @@ const App = ({
     return (
       <div>
         <div>
-          {DbActionChoices.map((action) => (
-            <button
-              key={action}
-              onClick={() => dispatchDbManagementAction(action)}
-            >
-              {action}
-            </button>
-          ))}
+          <button onClick={reseed}>Reseed</button>
         </div>
         <DebugConsole debugMessages={debugMessages} />
       </div>

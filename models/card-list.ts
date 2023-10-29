@@ -1,5 +1,5 @@
 import {Card, CardJson} from "./card";
-import {provide} from "../../utilities/container";
+import {provide} from "../utilities/container";
 
 export class CardList {
   private constructor(private Cards: Card[]) {}

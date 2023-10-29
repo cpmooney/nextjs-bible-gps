@@ -1,4 +1,4 @@
-import { DebugMessage, LogLevel } from "@/types/interfaces/db-management";
+import { DebugMessage, LogLevel } from "@/utilities/debugger";
 import { useState } from "react";
 
 const messageColor: Record<LogLevel, string> = {

@@ -6,7 +6,7 @@ import { procedure } from "server/trpc";
 export const usingDbDropProcedure = (schema: DbSchema) => procedure
   .input(z.object({}))
   .output(z.array(ZodDebugMessage))
-  .query(async () => {
+  .mutation(async () => {
     return await invokeDbDropAllAction(schema);
   });
 
@@ -14,12 +14,14 @@ const invokeDbDropAllAction = async (schema: DbSchema) => {
   usingDatabase(schema);
   usingDebugger("db-drop-all");
 
-  const tables = Object.values(obtainDbSchema());
-  await Promise.all(tables.map(async (table) =>
+  const tableNames = Object.keys(obtainDbSchema());
+  await Promise.all(tableNames.map(async (tableName) =>
   {
+    debugLog('info', `Dropping ${tableName}`);
+    const table = schema[tableName];
     const deletedRecords = await obtainDatabase()
       .delete(table)
-      .returning({})
+      .returning()
       .execute();
     debugLog('info', `Drop complete: ${deletedRecords.length} records deleted`);
   }));
