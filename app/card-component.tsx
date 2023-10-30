@@ -1,15 +1,9 @@
-import {Card} from "@/models/card";
+import { Card } from '../models/card';
 
 export default function CardComponent(card: Card) {
   return (
     <>
-      <div>Question: {card.question}</div>
-      <div>
-        Answers:
-        {card.answers.map((answer, index) => {
-          return <div key={index}>{answer}</div>;
-        })}
-      </div>
+      <div>{card.fullCitation}</div>
     </>
   );
 }

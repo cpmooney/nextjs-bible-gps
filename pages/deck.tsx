@@ -1,45 +1,26 @@
 "use client";
+import { Card } from "@/models/card";
 import {trpc} from "../utilities/trpc";
+import CardComponent from "app/card-component";
 
-/*
-const ShowDeckResponse = (deckResponse: DeckPayload) => {
+const ShowDeckResponse = (cards: Card[]) => {
   return (
     <div>
-      {deckResponse.cards.map((card) => (
-        <div key={card.id}>
-          <h1 style={{padding: "10px"}}>
-            {" "}
-            {deckResponse.module} / {deckResponse.chapter.number} -{" "}
-            {deckResponse.chapter.title}{" "}
-          </h1>
-          <div>
-            <em>{card.question}</em>
-            <ul>
-              {card.answers.map((answer, index) => (
-                <li key={index}>{answer}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
+      {cards.map((card) => (
+        <CardComponent props={card} />
       ))}
     </div>
   );
 };
-*/
 
 const Home = () => {
-  /*
-  const {data} = trpc.deck.useQuery({
-    module: "aws-foundations",
-    chapter: 1,
-  });
+  const {data} = trpc.dbLoadAllProcedure.useQuery({});
   if (!data) {
     return <div>Loading...</div>;
   }
-  */
   return (
     <div>
-    Dude
+
     </div>
   );
 };

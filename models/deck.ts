@@ -1,68 +1,31 @@
-import {provide} from "../utilities/container";
-import { bookNumber } from "./books";
+import { Card } from "./card";
 import { Citation } from "./citation";
 
-class Card implements Citation {
-  constructor(
-    public id: string,
-    public fragment: string,
-    public book: string,
-    public chapter: number,
-    public firstVerse: number,
-    public suffix: string,
-    public tags: string[],
-    public entire: string,
-    public active: boolean,
-    public score: number
-  ) { }
-
-  public bookNumber: number = bookNumber(this.book);
-}
-
 export class Deck {
-  private constructor(citations: Citation[]) {
+  public static of(citations: Citation[]): Deck {
+    return new Deck(citations);
   }
 
-  private 
+  private constructor(citations: Citation[]) {
+    this.cards = citations.map(Card.of);
+  }
+
+  private readonly cards: Card[];
 
   private totalScore: number = 0;
   private index: number = 0;
 
-  public static fromCardListAsJson(
-    cardListAsJson: CardJson[],
-    chapterDefinitions: ChapterDefinitionJson[]
-  ): Deck {
-    const chapterList = chapterArray(chapterDefinitions);
-    provide("chapter-titles", chapterList);
-    return new Deck(
-      cardListAsJson.map((cardAsJson) => Card.fromJson(cardAsJson))
-    );
-  }
-
-  public nextCard(): CardType {
+  public nextCard(): Card {
     this.advanceIndex();
-    return this.Cards[this.index];
+    return this.cards[this.index];
   }
 
   private advanceIndex(): void {
-    this.index = (this.index + 1) % this.Cards.length;
+    this.index = (this.index + 1) % this.cards.length;
   }
 
   public incrementScore(index: number): void {
-    this.Cards[index].incrementScore();
+    this.cards[index].score++;
     this.totalScore++;
   }
 }
-
-export interface ChapterDefinitionJson {
-  number: number;
-  title: string;
-}
-
-const chapterArray = (chapters: ChapterDefinitionJson[]): string[] => {
-  const result: string[] = [];
-  for (const chapter of chapters) {
-    result[chapter.number] = chapter.title;
-  }
-  return result;
-};
