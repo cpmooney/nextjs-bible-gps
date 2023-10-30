@@ -1,26 +1,19 @@
 "use client";
-import { Card } from "@/models/card";
+import {Citation} from "@/models/citation";
+import {Deck} from "@/models/deck";
+import {DeckComponent} from "app/deck-component";
 import {trpc} from "../utilities/trpc";
-import CardComponent from "app/card-component";
-
-const ShowDeckResponse = (cards: Card[]) => {
-  return (
-    <div>
-      {cards.map((card) => (
-        <CardComponent props={card} />
-      ))}
-    </div>
-  );
-};
 
 const Home = () => {
   const {data} = trpc.dbLoadAllProcedure.useQuery({});
   if (!data) {
     return <div>Loading...</div>;
   }
+  const rows: Citation[] = data.rows as Citation[];
+  const deck: Deck = Deck.of(rows);
   return (
     <div>
-
+      <DeckComponent deck={deck} />
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import { Card } from "./card";
-import { Citation } from "./citation";
+import {Card} from "./card";
+import {Citation} from "./citation";
 
 export class Deck {
   public static of(citations: Citation[]): Deck {
@@ -10,7 +10,7 @@ export class Deck {
     this.cards = citations.map(Card.of);
   }
 
-  private readonly cards: Card[];
+  public readonly cards: Card[];
 
   private totalScore: number = 0;
   private index: number = 0;
