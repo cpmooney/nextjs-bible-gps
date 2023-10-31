@@ -3,7 +3,7 @@ import {Citation} from "./citation";
 
 export class Card implements Citation {
   private constructor(
-    public id: string,
+    public id: number,
     public fragment: string,
     public book: string,
     public chapter: number,
