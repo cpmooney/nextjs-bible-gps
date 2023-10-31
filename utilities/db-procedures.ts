@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { DbSchema } from "./database"
 import { usingDbDropProcedure } from "./db-drop"
-import { usingDbLoadAllProcedure } from "./db-load-all-rows"
+import { usingDbLoadAllProcedure } from "../server/db-load-all-rows"
 import { usingDbSeedProcedure } from "./db-seed"
 
 export interface DbActionConfig {

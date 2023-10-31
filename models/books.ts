@@ -1,7 +1,7 @@
 export const bookNumber = (bookName: string): number => {
     const index = bibleBooks.indexOf(bookName);
     if (index === -1) {
-        throw new Error(`bookNumber: "${bookName}" is not in the bible, bro`);
+        throw new Error(`bookNumber: "${bookName}" is not in the bible, bro: ${JSON.stringify(bibleBooks)}`);
     }
     return index;
 }
@@ -42,7 +42,7 @@ const bibleBooks = [
     "Micah",
     "Nahum",
     "Habakkuk",
-    "Zephania",
+    "Zephaniah",
     "Haggai",
     "Zechariah",
     "Malachi",

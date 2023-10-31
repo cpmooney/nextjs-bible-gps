@@ -13,8 +13,8 @@ export const CitationTable = pgTable("citations", {
   book: text("book").notNull(),
   chapter: integer("chapter").notNull(),
   firstVerse: integer("first_verse").notNull(),
-  suffix: text("suffix"),
+  suffix: text("suffix").notNull(),
   tags: json("tags").notNull(),
-  entire: text("entire"),
+  entire: text("entire").notNull(),
   active: boolean("active").notNull().default(false),
 });
