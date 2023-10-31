@@ -15,17 +15,25 @@ export class Deck {
   private totalScore: number = 0;
   private index: number = 0;
 
+  public get currentCard(): Card {
+    return this.cards[this.index];
+  }
+
   public nextCard(): Card {
     this.advanceIndex();
-    return this.cards[this.index];
+    return this.currentCard;
   }
 
   private advanceIndex(): void {
     this.index = (this.index + 1) % this.cards.length;
   }
 
-  public incrementScore(index: number): void {
-    this.cards[index].score++;
+  public incrementScore(): void {
+    this.currentCard.score++;
     this.totalScore++;
+  }
+
+  public resetScore(): void {
+    this.currentCard.score = 0;
   }
 }
