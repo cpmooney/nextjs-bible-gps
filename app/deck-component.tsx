@@ -12,9 +12,13 @@ interface ButtonBarComponentProps {
 const ButtonBarComponent = (props: ButtonBarComponentProps) => {
   const {toggleShowAnswer, correct, wrong, showAnswer} = props;
 
+  if (!showAnswer) {
+    return (<div>
+      <button onClick={toggleShowAnswer}>Show Answer</button>
+    </div>);
+  }
   return (
     <div>
-      <button onClick={toggleShowAnswer}>Show Answer</button>
       <button onClick={correct}>Correct</button>
       <button onClick={wrong}>Wrong</button>
     </div>
