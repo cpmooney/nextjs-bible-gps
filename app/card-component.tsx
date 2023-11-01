@@ -1,14 +1,17 @@
 import {Card} from "../models/card";
 
 export default function CardComponent(props: CardComponentProps) {
-  const {card} = props;
+  const {showAnswer, card} = props;
+  const answer = showAnswer ? card.fullCitation : "";
   return (
     <>
-      <div>{card.fullCitation}</div>
+      <div>{card.fragment}</div>
+      <div>{answer}</div>
     </>
   );
 }
 
 interface CardComponentProps {
   card: Card;
+  showAnswer: boolean;
 }
