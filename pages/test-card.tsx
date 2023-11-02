@@ -1,5 +1,4 @@
 import { Deck } from "@/models/deck";
-import CardComponent from "app/card-component";
 import { DeckComponent } from "app/deck-component";
 
 const testCard: Deck = Deck.of([

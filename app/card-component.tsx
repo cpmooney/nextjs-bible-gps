@@ -1,5 +1,26 @@
 import {Card} from "../models/card";
 
+interface ButtonBarComponentProps {
+  showAnswer: boolean;
+  cardComponentProps: CardComponentProps;
+}
+
+const ButtonBarComponent = (props: ButtonBarComponentProps) => {
+  const {showAnswer, cardComponentProps} = props;
+
+  if (!showAnswer) {
+    return (<div>
+      <button className="btn btn-btnPrimary" onClick={cardComponentProps.toggleShowAnswer}>Show Answer</button>
+    </div>);
+  }
+  return (
+    <div>
+      <button className="btn btn-btnPrimary" onClick={cardComponentProps.correct}>Correct</button>
+      <button className="btn btn-btnPrimary" onClick={cardComponentProps.wrong}>Wrong</button>
+    </div>
+  );
+};
+
 export default function CardComponent(props: CardComponentProps) {
   const {showAnswer, card} = props;
   const answer = showAnswer ? card.fullCitation : "";
@@ -9,7 +30,10 @@ export default function CardComponent(props: CardComponentProps) {
     <h2 className="card-title">{card.fragment}</h2>
     <p>{card.fullCitation}</p>
     <div className="card-actions">
-      <button className="btn btn-primary">Buy Now</button>
+      <ButtonBarComponent
+        showAnswer={showAnswer}
+        cardComponentProps={props}
+        />
     </div>
   </div>
 </div>
@@ -19,4 +43,7 @@ export default function CardComponent(props: CardComponentProps) {
 interface CardComponentProps {
   card: Card;
   showAnswer: boolean;
+  toggleShowAnswer: () => void;
+  correct: () => void;
+  wrong: () => void;
 }
