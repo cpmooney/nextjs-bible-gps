@@ -1,3 +1,4 @@
+import { CheckCircleIcon, EyeIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
 import {Card} from "../models/card";
 
 interface ButtonBarComponentProps {
@@ -10,13 +11,22 @@ const ButtonBarComponent = (props: ButtonBarComponentProps) => {
 
   if (!showAnswer) {
     return (<div>
-      <button className="btn btn-btnPrimary" onClick={cardComponentProps.toggleShowAnswer}>Show Answer</button>
+      <button className="btn btn-btnPrimary" onClick={cardComponentProps.toggleShowAnswer}>
+        <EyeIcon className="h-5 w-5 mr-2" />
+        Show Answer
+        </button>
     </div>);
   }
   return (
     <div>
-      <button className="btn btn-btnPrimary" onClick={cardComponentProps.correct}>Correct</button>
-      <button className="btn btn-btnPrimary" onClick={cardComponentProps.wrong}>Wrong</button>
+      <button className="btn btn-btnPrimary" onClick={cardComponentProps.correct}>
+        <CheckCircleIcon className="h-5 w-5 mr-2" />
+        Correct
+        </button>
+      <button className="btn btn-btnPrimary" onClick={cardComponentProps.wrong}>
+        <NoSymbolIcon className="h-5 w-5 mr-2" />
+        Wrong
+        </button>
     </div>
   );
 };
