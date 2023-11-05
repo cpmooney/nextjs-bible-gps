@@ -1,29 +1,7 @@
 import {Deck} from "@/models/deck";
 import {useState} from "react";
 import CardComponent from "./card-component";
-
-interface ButtonBarComponentProps {
-  showAnswer: boolean;
-  toggleShowAnswer: () => void;
-  correct: () => void;
-  wrong: () => void;
-}
-
-const ButtonBarComponent = (props: ButtonBarComponentProps) => {
-  const {toggleShowAnswer, correct, wrong, showAnswer} = props;
-
-  if (!showAnswer) {
-    return (<div>
-      <button onClick={toggleShowAnswer}>Show Answer</button>
-    </div>);
-  }
-  return (
-    <div>
-      <button onClick={correct}>Correct</button>
-      <button onClick={wrong}>Wrong</button>
-    </div>
-  );
-};
+import "../app/globals.css";
 
 export const DeckComponent = (props: DeckComponentProps) => {
   const {deck} = props;
@@ -33,19 +11,19 @@ export const DeckComponent = (props: DeckComponentProps) => {
     setCurrentCard(deck.nextCard());
   };
 
-  const [showAnswer, setShowAnswer] = useState(false);
+  const [showingAnswer, setShowingAnswer] = useState(false);
   const toggleShowAnswer = () => {
-    setShowAnswer(!showAnswer);
+    setShowingAnswer(!showingAnswer);
   };
 
   const correct = () => {
-    setShowAnswer(false);
+    setShowingAnswer(false);
     deck.incrementScore();
     advanceToNextCard();
   };
 
   const wrong = () => {
-    setShowAnswer(false);
+    setShowingAnswer(false);
     deck.resetScore();
     advanceToNextCard();
   };
@@ -54,17 +32,14 @@ export const DeckComponent = (props: DeckComponentProps) => {
     <div>
       <div>
         <CardComponent
-          showAnswer={showAnswer}
+          showingAnswer={showingAnswer}
           card={currentCard}
+          correct={correct}
+          wrong={wrong}
+          toggleShowAnswer={toggleShowAnswer}
           key={currentCard.id}
         />
       </div>
-      <ButtonBarComponent
-        showAnswer={showAnswer}
-        correct={correct}
-        wrong={wrong}
-        toggleShowAnswer={toggleShowAnswer}
-      />
     </div>
   );
 };
