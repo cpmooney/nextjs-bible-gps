@@ -11,19 +11,19 @@ export const DeckComponent = (props: DeckComponentProps) => {
     setCurrentCard(deck.nextCard());
   };
 
-  const [showAnswer, setShowAnswer] = useState(false);
+  const [showingAnswer, setShowingAnswer] = useState(false);
   const toggleShowAnswer = () => {
-    setShowAnswer(!showAnswer);
+    setShowingAnswer(!showingAnswer);
   };
 
   const correct = () => {
-    setShowAnswer(false);
+    setShowingAnswer(false);
     deck.incrementScore();
     advanceToNextCard();
   };
 
   const wrong = () => {
-    setShowAnswer(false);
+    setShowingAnswer(false);
     deck.resetScore();
     advanceToNextCard();
   };
@@ -32,7 +32,7 @@ export const DeckComponent = (props: DeckComponentProps) => {
     <div>
       <div>
         <CardComponent
-          showAnswer={showAnswer}
+          showingAnswer={showingAnswer}
           card={currentCard}
           correct={correct}
           wrong={wrong}
