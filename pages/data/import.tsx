@@ -10,7 +10,8 @@ export const getServerSideProps = async () => {
 const App = ({
   isDevelopment,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const {debugMessages, appendDebugMessage, resetDebugMessages} = useDebugMessages();
+  const {debugMessages, appendDebugMessage, resetDebugMessages} =
+    useDebugMessages();
 
   const dbDropProcedure = trpc.dbDropProcedure.useMutation();
   const dbSeedProcedure = trpc.dbSeedProcedure.useMutation();
@@ -57,9 +58,7 @@ const App = ({
       </div>
     );
   } else {
-    return (
-    <div>Import functionality is only available in local</div>
-    );
+    return <div>Import functionality is only available in local</div>;
   }
 };
 

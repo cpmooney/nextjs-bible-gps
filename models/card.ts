@@ -12,7 +12,8 @@ export class Card implements Citation {
     public tags: string[],
     public entire: string,
     public active: boolean,
-    public score: number
+    public score: number,
+    public userId: string,
   ) {
     this.bookNumber = bookNumber(book);
     this.fullCitation = `${book} ${chapter}:${firstVerse}${suffix}`;
@@ -32,7 +33,8 @@ export class Card implements Citation {
       citation.tags,
       citation.entire,
       citation.active,
-      0
+      0,
+      citation.userId,
     );
   }
 }

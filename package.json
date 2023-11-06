@@ -2,18 +2,22 @@
   "name": "nextjs",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "clean": "rm -rf .next && rm -rf node_modules && rm next-env.d.ts && rm -rf yarn.lock && rm -rf test-scripts",
+    "clean": "rm -rf .next && rm -rf node_modules && rm -f next-env.d.ts && rm -rf yarn.lock && rm -rf test-scripts",
     "env-pull": "vercel env pull .env.development.local",
     "generate": "drizzle-kit generate:pg --config=drizzle.config.ts",
     "migrate": "drizzle-kit push:pg --config=drizzle.config.ts",
     "drizzle-studio": "drizzle-kit studio --config=drizzle.config.ts"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.26.2",
     "@heroicons/react": "^2.0.18",
     "@neondatabase/serverless": "^0.6.0",
     "@tanstack/react-query": "^4.18.0",
