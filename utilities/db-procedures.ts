@@ -1,7 +1,6 @@
 import { z } from "zod"
 import { DbSchema } from "./database"
 import { usingDbDropProcedure } from "./db-drop"
-import { usingDbLoadAllProcedure } from "../server/db-load-all-rows"
 import { usingDbSeedProcedure } from "./db-seed"
 
 export interface DbActionConfig {
@@ -18,7 +17,6 @@ export const usingDbProcedures = (myConfig: DbActionConfig) => {
   config = withDefaults(myConfig);
   myConfig;
   return {
-    dbLoadAllProcedure: usingDbLoadAllProcedure(config),
     dbSeedProcedure: usingDbSeedProcedure(config),
     dbDropProcedure: usingDbDropProcedure(config)
   }

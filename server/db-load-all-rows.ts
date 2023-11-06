@@ -1,23 +1,20 @@
 import { z } from "zod";
-import { DbSchema, obtainDatabase, obtainDbSchema, usingDatabase } from "../utilities/database";
-import { ZodDebugMessage, debugLog, obtainDebugMessages, usingDebugger } from "../utilities/debugger";
+import { DbSchema, obtainDatabase, usingDatabase } from "../utilities/database";
+import { debugLog, usingDebugger } from "../utilities/debugger";
 import { procedure } from "server/trpc";
-import { DbActionConfigWithDefaults } from "../utilities/db-procedures";
 import { Citation, ZodCitation } from "@/models/citation";
 import { CitationTable } from "db/schema/citation-table";
 
-export const usingDbLoadAllProcedure = (config: DbActionConfigWithDefaults) => procedure
+import { auth } from '@clerk/nextjs';
+
+export const usingDbLoadAllProcedure = (schema: DbSchema) => procedure
   .input(z.object({}))
-  .output(z.object({
-    // Future: Figure out how to make ZodCitation generic
-    rows: z.array(ZodCitation),
-    debugMessages: z.array(ZodDebugMessage),
-  }))
+  .output(z.array(ZodCitation))
   .query(async () => {
-    return await invokeDbLoadAllAction(config.schema);
+    return await invokeDbLoadAllAction(schema);
   });
 
-const invokeDbLoadAllAction = async (schema: DbSchema)  => {
+const invokeDbLoadAllAction = async (schema: DbSchema) => {
   usingDatabase(schema);
   usingDebugger("db-load-all");
 
@@ -26,7 +23,7 @@ const invokeDbLoadAllAction = async (schema: DbSchema)  => {
     .select()
     .from(CitationTable)
     .execute();
-  debugLog('info', `Loaded ${records.length} records`);
+  debugLog('info', `Loaded ${records.length} records.`);
   const citations: Citation[] = records.map((record) => {
     return {
       ...record,
@@ -34,8 +31,5 @@ const invokeDbLoadAllAction = async (schema: DbSchema)  => {
     }
   });
 
-  return {
-    rows: citations,
-    debugMessages: obtainDebugMessages(),
-  }
+  return citations;
 }

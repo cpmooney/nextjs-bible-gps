@@ -14,6 +14,7 @@
     "drizzle-studio": "drizzle-kit studio --config=drizzle.config.ts"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.26.2",
     "@heroicons/react": "^2.0.18",
     "@neondatabase/serverless": "^0.6.0",
     "@tanstack/react-query": "^4.18.0",
