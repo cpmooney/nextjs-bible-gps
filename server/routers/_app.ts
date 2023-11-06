@@ -1,4 +1,4 @@
-import {router} from "../trpc";
+import {isAuthed, router} from "../trpc";
 import { CitationTable } from "db/schema/citation-table";
 import { usingDbProcedures } from "@/utilities/db-procedures";
 import { ZodCitation } from "@/models/citation";
@@ -11,7 +11,10 @@ const dbProcedures = usingDbProcedures({
 
 const loadAllProcedure = usingDbLoadAllProcedure({ CitationTable });
 
-export const appRouter = router({ ...dbProcedures, loadAllProcedure });
+export const appRouter = router({
+    ...dbProcedures,
+    loadAllProcedure
+});
 
 // export type definition of API
 export type AppRouter = typeof appRouter;
