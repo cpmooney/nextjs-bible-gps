@@ -1,21 +1,21 @@
 import * as trpc from '@trpc/server';
 import * as trpcNext from '@trpc/server/adapters/next';
-import { getAuth } from '@clerk/nextjs/server';
+import { getAuth, SignedInAuthObject, SignedOutAuthObject } from '@clerk/nextjs/server';
  
 interface AuthContext {
-  userId: string | null;
+  auth: SignedInAuthObject | SignedOutAuthObject;
 }
  
-export const createContextInner = async ({ userId }: AuthContext  ) => {
+export const createContextInner = async ({ auth }: AuthContext  ) => {
   return {
-    userId,
+    auth,
   }
 }
  
 export const createContext = async (
   opts: trpcNext.CreateNextContextOptions
 ) => {
-  return await createContextInner({ userId: getAuth(opts.req).userId })
+  return await createContextInner({ auth: getAuth(opts.req) as SignedInAuthObject | SignedOutAuthObject })
 }
  
 export type Context = trpc.inferAsyncReturnType<typeof createContext>;

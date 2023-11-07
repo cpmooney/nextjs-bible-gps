@@ -9,6 +9,7 @@ import {
 
 export const CitationTable = pgTable("citations", {
   id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
   fragment: text("fragment").notNull(),
   book: text("book").notNull(),
   chapter: integer("chapter").notNull(),

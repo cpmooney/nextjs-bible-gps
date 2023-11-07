@@ -10,7 +10,7 @@ export const usingDbLoadAllProcedure = (schema: DbSchema) => procedure
   .input(z.object({}))
   .output(z.array(ZodCitation))
   .query(async ({ ctx }) => {
-    return await invokeDbLoadAllAction(schema, ctx.userId);
+    return await invokeDbLoadAllAction(schema, ctx.auth.userId);
   });
 
 const invokeDbLoadAllAction = async (schema: DbSchema, userId: string) => {

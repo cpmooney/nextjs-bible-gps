@@ -8,7 +8,7 @@ export interface DbActionConfig {
   schema: DbSchema,
   tableName?: string
   seedDirectory?: string,
-  payloadType?: z.ZodTypeAny
+  payloadType?: z.ZodTypeAny,
 }
 
 let config: DbActionConfigWithDefaults;
