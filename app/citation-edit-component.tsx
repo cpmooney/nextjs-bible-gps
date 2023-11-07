@@ -1,4 +1,4 @@
-import { Citation } from "@/models/citation";
+import {Citation} from "@/models/citation";
 
 interface CitationEditComponentProps {
   citation?: Citation;
@@ -12,11 +12,9 @@ export const CitationEditComponent = (props: CitationEditComponentProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log("submitting");
-  }
+  };
 
-return (
-  <form onSubmit={handleSubmit}>
-  </form>
+  return <form onSubmit={handleSubmit}></form>;
 };
 
 const starterCitation = (): Citation => {
