@@ -62,7 +62,9 @@ const tryParseBody = <PayloadType>(body: string): PayloadType => {
   const myUserId = userId();
   try {
     const unownedBody = JSON.parse(body);
-    unownedBody["userId"] = myUserId;
+    unownedBody.forEach((row: any) => {
+      row.userId = myUserId;
+    });
     return config.payloadType.parse(unownedBody) as PayloadType;
   } catch (e) {
     const errorMessage = `Failed to parse seed file: ${e}`;
