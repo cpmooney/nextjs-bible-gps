@@ -11,7 +11,8 @@ const testCard: Deck = Deck.of([
     suffix: "",
     tags: ["Redemption"],
     entire: "Therefore you are no longer a SLAVE but a SON and if a SON than an heir of God through Christ.",
-    active: true
+    active: true,
+    userId: "test-user"
 },
 {
     fragment: "living and active",
@@ -21,7 +22,8 @@ const testCard: Deck = Deck.of([
     suffix: "",
     tags: [""],
     entire: "For the Word of God is living and active, sharper than any 2 edged sword, piercing even to the division of soul and Spirit and of joints and marrow and is a discerner of the thoughts and intentions of the heart",
-    active: true
+    active: true,
+    userId: "test-user"
   },
 ]);
 

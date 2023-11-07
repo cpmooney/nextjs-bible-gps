@@ -59,13 +59,26 @@ const loadPayloadFromFile = <PayloadType>(path: string): PayloadType => {
 }
 
 const tryParseBody = <PayloadType>(body: string): PayloadType => {
+  const myUserId = userId();
   try {
-    return config.payloadType.parse(JSON.parse(body)) as PayloadType;
+    const unownedBody = JSON.parse(body);
+    unownedBody.forEach((row: any) => {
+      row.userId = myUserId;
+    });
+    return config.payloadType.parse(unownedBody) as PayloadType;
   } catch (e) {
     const errorMessage = `Failed to parse seed file: ${e}`;
     debugLog("error", errorMessage);
     throw new Error(errorMessage);
   }
+}
+
+const userId = (): string => {
+  const userId = process.env.USER_ID;
+  if (!userId) {
+    throw new Error("USER_ID environment variable must be set");
+  }
+  return userId;
 }
 
 const seedPaths = (): string[] => {
