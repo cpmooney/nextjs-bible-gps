@@ -1,8 +1,8 @@
 "use client";
 import {Deck} from "@/models/deck";
+import {ClerkProvider, UserButton} from "@clerk/nextjs";
 import {DeckComponent} from "app/deck-component";
 import {trpc} from "../utilities/trpc";
-import {UserButton, ClerkProvider} from "@clerk/nextjs";
 
 const DeckPage = () => {
   const {data} = trpc.loadAllProcedure.useQuery({});
@@ -12,16 +12,16 @@ const DeckPage = () => {
   const deck: Deck = Deck.of(data);
   return (
     <div>
-        <DeckComponent deck={deck} />
+      <DeckComponent deck={deck} />
     </div>
   );
 };
 
-const Home = () => 
-      <ClerkProvider>
-        <UserButton />
-        <DeckPage />
-      </ClerkProvider>;
-
+const Home = () => (
+  <ClerkProvider>
+    <UserButton />
+    <DeckPage />
+  </ClerkProvider>
+);
 
 export default trpc.withTRPC(Home);

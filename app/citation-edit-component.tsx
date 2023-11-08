@@ -1,20 +1,38 @@
 import {Citation} from "@/models/citation";
+import {useState} from "react";
 
-interface CitationEditComponentProps {
-  citation?: Citation;
-}
-
-export const CitationEditComponent = (props: CitationEditComponentProps) => {
-  if (!props.citation) {
-    props.citation = starterCitation();
-  }
+export const CitationEditComponent = (props: {id?: string}) => {
+  const citation = obtainCitation(props.id);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log("submitting");
   };
 
-  return <form onSubmit={handleSubmit}></form>;
+  const [fragment, setFragment] = useState(citation.fragment);
+
+  return (
+    <div className="card w-96 bg-base-100 shadow-xl">
+      <div className="card-body">
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Fragment"
+            className="input w-full max-w-xs"
+            value={fragment}
+            onChange={(event) => setFragment(event.target.value)}
+          />
+        </form>
+      </div>
+    </div>
+  );
+};
+
+const obtainCitation = (id?: string): Citation => {
+  if (!id) {
+    return starterCitation();
+  }
+  throw new Error("Not implemented yet!");
 };
 
 const starterCitation = (): Citation => {

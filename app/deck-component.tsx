@@ -1,7 +1,7 @@
 import {Deck} from "@/models/deck";
 import {useState} from "react";
 import CardComponent from "./card-component";
-import "../app/globals.css";
+import "./globals.css";
 
 export const DeckComponent = (props: DeckComponentProps) => {
   const {deck} = props;
