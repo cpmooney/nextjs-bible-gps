@@ -18,4 +18,5 @@ export const CitationTable = pgTable("citations", {
   tags: json("tags").notNull(),
   entire: text("entire").notNull(),
   active: boolean("active").notNull().default(false),
+  score: integer("score").notNull().default(0),
 });

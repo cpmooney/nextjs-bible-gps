@@ -11,6 +11,7 @@ export const ZodCitation = z.object({
   tags: z.array(z.string()),
   entire: z.string(),
   active: z.boolean(),
+  score: z.number(),
 });
 
 export type Citation = z.infer<typeof ZodCitation>;
