@@ -7,16 +7,17 @@ export class Deck {
   }
 
   private constructor(citations: Citation[]) {
-    this.cards = citations.map(Card.of);
+    this.allCards = citations.map(Card.of);
+    this.activeCards = this.allCards.slice(0, 5);
   }
 
-  public readonly cards: Card[];
+  private readonly allCards: Card[];
+  public readonly activeCards: Card[];
 
-  private totalScore: number = 0;
   private index: number = 0;
 
   public get currentCard(): Card {
-    return this.cards[this.index];
+    return this.activeCards[this.index];
   }
 
   public nextCard(): Card {
@@ -25,15 +26,22 @@ export class Deck {
   }
 
   private advanceIndex(): void {
-    this.index = (this.index + 1) % this.cards.length;
+    this.index = (this.index + 1) % this.activeCards.length;
   }
 
   public incrementScore(): void {
-    this.currentCard.score++;
-    this.totalScore++;
+    this.currentCard.incrementScore();
   }
 
   public resetScore(): void {
     this.currentCard.score = 0;
+  }
+
+  public getChangedCards(): Card[] {
+    return this.activeCards.filter((card) => card.changed);
+  }
+
+  public resetChanged(): void {
+    this.getChangedCards().forEach((card) => card.resetScore());
   }
 }

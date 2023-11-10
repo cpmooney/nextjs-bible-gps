@@ -19,7 +19,6 @@ const invokeDbLoadAllAction = async (userId: string) => {
   usingDatabase({CitationTable});
   usingDebugger("db-load-all");
 
-  // Future: Support multiple tables, conversion
   const records = await obtainDatabase().query.CitationTable.findMany({
     where: (citation, {eq}) => {
       return eq(citation.userId, userId);
