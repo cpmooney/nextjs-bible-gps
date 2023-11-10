@@ -18,8 +18,8 @@ export const usingDbSaveChangedProcedure = () =>
   procedure
     .use(isAuthed)
     .input(ZodSaveChangedRequest)
-    .mutation(async ({ctx}) => {
-      return await invokeDbSaveChangedAction(ctx.auth.userId, opts);
+    .mutation(async ({ctx, input}) => {
+      return await invokeDbSaveChangedAction(ctx.auth.userId, input);
     });
 
 const invokeDbSaveChangedAction = async (
