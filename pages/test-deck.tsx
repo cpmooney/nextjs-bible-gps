@@ -1,7 +1,7 @@
-import {Deck} from "@/models/deck";
-import {DeckComponent} from "app/deck-component";
+import {Citation} from "@/models/citation";
+import {DeckPage} from "./deck";
 
-const testCard: Deck = Deck.of([
+const sampleCitations: Citation[] = [
   {
     fragment: "not a slave but a son",
     book: "Galatians",
@@ -28,12 +28,12 @@ const testCard: Deck = Deck.of([
     userId: "test-user",
     score: 0,
   },
-]);
+];
 
 const TestDeck = () => {
   return (
     <div>
-      <DeckComponent deck={testCard} />
+      <DeckPage sampleCitations={sampleCitations} />
     </div>
   );
 };

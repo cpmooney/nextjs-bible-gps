@@ -35,20 +35,16 @@ export const DeckPage = (props: DeckPageProps) => {
   };
 
   return (
-    <div>
+    <ClerkProvider>
       <UserButton />
       <button className="btn btn-btnPrimary" onClick={sync}>
         <ArrowDownOnSquareStackIcon className="w-8 h-8 mr-2" />
       </button>
       <DeckComponent deck={deck} />
-    </div>
+    </ClerkProvider>
   );
 };
 
-const Home = () => (
-  <ClerkProvider>
-    <DeckPage />
-  </ClerkProvider>
-);
+const Home = () => <DeckPage />;
 
 export default trpc.withTRPC(Home);
