@@ -12,7 +12,7 @@ const ZodSaveChangedRequest = z.array(
   })
 );
 
-type SaveChangedRequest = z.infer<typeof ZodSaveChangedRequest>;
+export type SaveChangedRequest = z.infer<typeof ZodSaveChangedRequest>;
 
 export const usingDbSaveChangedProcedure = () =>
   procedure
@@ -28,6 +28,7 @@ const invokeDbSaveChangedAction = async (
 ) => {
   usingDatabase({CitationTable});
   usingDebugger("db-save-changed");
+  debugLog("info", `Saving changed citations for user ${userId}: ${JSON.stringify(changedRequest)}`);
 
   changedRequest.forEach((record) =>
     updateRecord(userId, record.id, record.score)

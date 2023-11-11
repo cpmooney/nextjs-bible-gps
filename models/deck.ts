@@ -1,3 +1,4 @@
+import { SaveChangedRequest } from "server/db-save-changed";
 import {Card} from "./card";
 import {Citation} from "./citation";
 
@@ -34,11 +35,16 @@ export class Deck {
   }
 
   public resetScore(): void {
-    this.currentCard.score = 0;
+    this.currentCard.resetScore();
   }
 
-  public getChangedCards(): Card[] {
+  private getChangedCards(): Card[] {
     return this.activeCards.filter((card) => card.changed);
+  }
+
+  public getChangeRequest(): SaveChangedRequest {
+    return this.getChangedCards()
+      .map((card) => { return { id: card.id, score: card.score }});
   }
 
   public resetChanged(): void {

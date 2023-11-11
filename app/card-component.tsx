@@ -53,8 +53,13 @@ export default function CardComponent(props: CardComponentProps) {
             <NoSymbolIcon className="h-10 w-10 mr-2" />
           </button>
         </div>
-        <div className="justify-end">
-          <div className="badge badge-outline">{card.score}</div>
+        <div>
+          <div className="justify-end">
+            <div className="badge badge-outline">{card.score}</div>
+          </div>
+          <div className="justify-end">
+            <div className="badge badge-outline">{card.id}</div>
+          </div>
         </div>
       </div>
     </div>

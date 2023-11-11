@@ -1,20 +1,35 @@
-import Chart from "app/chart";
-import { useEffect, useState } from "react";
+import { Chart, ChartOptions, ChartData, registerables } from "chart.js";
+import React from "react";
+import { Bar } from "react-chartjs-2";
+
+Chart.register(...registerables);
 
 const TestPicker = () => {
-    const [numberOfTests, setNumberOfTests] = useState(0);
-    const [testValues, setTestValues] = useState<number[]>([]);
+    const data: ChartData<'bar'> = {
+        labels: ['Red', 'Blue', 'Yellow', 'Green'],
+        datasets: [
+            {
+                data: [10, 20, 30, 80],
+            }
+        ]
+    };
 
-    useEffect(() => {
-        setTestValues(Array.from({length: numberOfTests}, () => Math.floor(Math.random() * 10) + 1));
-    }, [numberOfTests]);
-    
-    return (
-        <div>
-            <input type="number" value={numberOfTests} onChange={(e) => setNumberOfTests(parseInt(e.target.value))} />
-        <Chart data={testValues} />
-        </div>
-    );
-    }
+    const options: ChartOptions<'bar'> = {
+        scales: {
+            y: {
+                beginAtZero: true
+            },
+            x: {
+                beginAtZero: true
+            }
+        }
+     };
 
-export default TestPicker;
+  return (
+    <div>
+      <Bar data={data} options={options} />
+    </div>
+  );
+}
+
+export default TestPicker
