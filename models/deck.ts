@@ -21,6 +21,14 @@ export class Deck {
     return this.activeCards[this.index];
   }
 
+  public get activeNumber(): number {
+    return this.activeCards.length;
+  }
+
+  public get changedNumber(): number {
+    return this.getChangedCards().length;
+  }
+
   public nextCard(): Card {
     this.advanceIndex();
     return this.currentCard;
@@ -48,6 +56,6 @@ export class Deck {
   }
 
   public resetChanged(): void {
-    this.getChangedCards().forEach((card) => card.resetScore());
+    this.getChangedCards().forEach((card) => card.changed = false);
   }
 }
