@@ -3,8 +3,8 @@ import {Card} from "./card";
 import {Citation} from "./citation";
 
 export class Deck {
-  public static of(citations: Citation[]): Deck {
-    return new Deck(citations);
+  public static of(citations: Citation[] | undefined): Deck {
+    return new Deck(citations ?? []);
   }
 
   private constructor(citations: Citation[]) {

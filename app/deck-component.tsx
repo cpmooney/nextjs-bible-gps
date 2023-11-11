@@ -1,17 +1,21 @@
 import {Deck} from "@/models/deck";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import CardComponent from "./card-component";
 import "./globals.css";
 
 export const DeckComponent = (props: DeckComponentProps) => {
   const {deck} = props;
-
   const [currentCard, setCurrentCard] = useState(deck.currentCard);
+  const [showingAnswer, setShowingAnswer] = useState(false);
+
+  useEffect(() => {
+    setCurrentCard(deck.currentCard);
+  }, [deck]);
+
   const advanceToNextCard = () => {
     setCurrentCard(deck.nextCard());
   };
 
-  const [showingAnswer, setShowingAnswer] = useState(false);
   const toggleShowAnswer = () => {
     setShowingAnswer(!showingAnswer);
   };
@@ -28,19 +32,18 @@ export const DeckComponent = (props: DeckComponentProps) => {
     advanceToNextCard();
   };
 
+  if (!currentCard) {
+    return <div></div>;
+  }
+
   return (
-    <div>
-      <div>
-        <CardComponent
-          showingAnswer={showingAnswer}
-          card={currentCard}
-          correct={correct}
-          wrong={wrong}
-          toggleShowAnswer={toggleShowAnswer}
-          key={currentCard.id}
-        />
-      </div>
-    </div>
+    <CardComponent
+      showingAnswer={showingAnswer}
+      card={currentCard}
+      correct={correct}
+      wrong={wrong}
+      toggleShowAnswer={toggleShowAnswer}
+    />
   );
 };
 
