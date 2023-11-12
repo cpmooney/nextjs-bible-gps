@@ -1,5 +1,5 @@
 import {TRPCError, initTRPC} from "@trpc/server";
-import { Context } from "./trpc-context";
+import {Context} from "./trpc-context";
 
 // Avoid exporting the entire t-object
 // since it's not very descriptive.
@@ -7,15 +7,15 @@ import { Context } from "./trpc-context";
 // is common in i18n libraries.
 const t = initTRPC.context<Context>().create();
 
-export const isAuthed = t.middleware(({ next, ctx }) => {
+export const isAuthed = t.middleware(({next, ctx}) => {
   if (!ctx.auth.userId) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' })
+    throw new TRPCError({code: "UNAUTHORIZED"});
   }
   return next({
     ctx: {
-        auth: ctx.auth
+      auth: ctx.auth,
     },
-  })
+  });
 });
 
 // Base router and procedure helpers

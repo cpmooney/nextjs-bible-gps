@@ -1,4 +1,4 @@
-import {provide} from "@/types/container";
+import { provide } from "@/utilities/container";
 import {randomSegment} from "@/utilities/weighted-random-picker/weighted-random-picker";
 
 interface weightScore {

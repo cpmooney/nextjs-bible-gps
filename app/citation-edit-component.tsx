@@ -47,5 +47,6 @@ const starterCitation = (): Citation => {
       "For the Word of God is living and active, sharper than any 2 edged sword, piercing even to the division of soul and Spirit and of joints and marrow and is a discerner of the thoughts and intentions of the heart",
     active: true,
     userId: "test-user",
+    score: 0
   };
 };
