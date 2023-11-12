@@ -16,7 +16,7 @@ const saveChangedProcedure = usingDbSaveChangedProcedure();
 export const appRouter = router({
   ...dbProcedures,
   loadAllProcedure,
-  saveChangedProcedure,
+  saveChangedScoresProcedure: saveChangedProcedure,
 });
 
 // export type definition of API

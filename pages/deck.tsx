@@ -4,7 +4,7 @@ import { ClerkProvider, UserButton } from "@clerk/nextjs";
 import { ArrowDownOnSquareStackIcon } from "@heroicons/react/24/outline";
 import { DeckComponent } from "app/deck-component";
 import { trpc } from "../utilities/trpc";
-import { SaveChangedRequest } from "server/db-save-changed";
+import { SaveChangedRequest as SaveChangedScoresRequest } from "server/db-save-changed";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
 
@@ -32,7 +32,7 @@ const DeckPageWithBackground = () => {
 }
 
 const DeckPage = () => {
-  const saveChangedProcedure = trpc.saveChangedProcedure.useMutation();
+  const saveChangedScoresProcedure = trpc.saveChangedScoresProcedure.useMutation();
   const { data, isLoading } = trpc.loadAllProcedure.useQuery(
     {},
     {
@@ -54,9 +54,9 @@ const DeckPage = () => {
   }
 
   const syncScoresToDb = () => {
-    const changedCards: SaveChangedRequest = deck.getChangeRequest();
-    saveChangedProcedure.mutate(changedCards);
-    deck.resetChanged();
+    const changedCards: SaveChangedScoresRequest = deck.getChangedScoresRequest();
+    saveChangedScoresProcedure.mutate(changedCards);
+    deck.resetChangedScoresStatus();
   };
 
   return (

@@ -26,7 +26,7 @@ export class Deck {
   }
 
   public get changedNumber(): number {
-    return this.getChangedCards().length;
+    return this.getCardsWithChangedScores().length;
   }
 
   public nextCard(): Card {
@@ -46,16 +46,16 @@ export class Deck {
     this.currentCard.resetScore();
   }
 
-  private getChangedCards(): Card[] {
-    return this.activeCards.filter((card) => card.changed);
+  private getCardsWithChangedScores(): Card[] {
+    return this.activeCards.filter((card) => card.scoreHasChanged);
   }
 
-  public getChangeRequest(): SaveChangedRequest {
-    return this.getChangedCards()
+  public getChangedScoresRequest(): SaveChangedRequest {
+    return this.getCardsWithChangedScores()
       .map((card) => { return { id: card.id, score: card.score }});
   }
 
-  public resetChanged(): void {
-    this.getChangedCards().forEach((card) => card.changed = false);
+  public resetChangedScoresStatus(): void {
+    this.getCardsWithChangedScores().forEach((card) => card.scoreHasChanged = false);
   }
 }
