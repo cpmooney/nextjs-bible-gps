@@ -14,7 +14,7 @@ export class Card implements Citation {
     public active: boolean,
     public score: number,
     public userId: string,
-    public changed = false
+    public scoreHasChanged = false
   ) {
     this.bookNumber = bookNumber(book);
     this.fullCitation = `${book} ${chapter}:${firstVerse}${suffix}`;
@@ -25,12 +25,12 @@ export class Card implements Citation {
 
   public incrementScore() {
     this.score++;
-    this.changed = true;
+    this.scoreHasChanged = true;
   }
 
   public resetScore() {
     this.score = 0;
-    this.changed = true;
+    this.scoreHasChanged = true;
   }
 
   public static of(citation: Citation): Card {
