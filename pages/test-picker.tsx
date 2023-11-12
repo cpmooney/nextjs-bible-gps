@@ -4,12 +4,16 @@ import { Bar } from "react-chartjs-2";
 
 Chart.register(...registerables);
 
-const TestPicker = () => {
+interface TestPickerProps {
+    data: number[]
+}
+
+const TestPicker = (props: TestPickerProps) => {
     const data: ChartData<'bar'> = {
-        labels: ['Red', 'Blue', 'Yellow', 'Green'],
+        labels: props.data,
         datasets: [
             {
-                data: [10, 20, 30, 80],
+                data: props.data,
             }
         ]
     };
@@ -32,4 +36,13 @@ const TestPicker = () => {
   );
 }
 
-export default TestPicker
+const TestPickerPage = () => {
+    const data = Array.from({ length: 100 }, (_, i) => i + 1);
+    return (
+        <div>
+            <TestPicker data={data} />
+        </div>
+    )
+}
+
+export default TestPickerPage;
