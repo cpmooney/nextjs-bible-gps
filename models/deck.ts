@@ -1,6 +1,7 @@
 import { SaveChangedRequest } from "server/db-save-changed";
 import {Card} from "./card";
 import {Citation} from "./citation";
+import { bibleBooks } from "./books";
 
 export class Deck {
   public static of(citations: Citation[] | undefined): Deck {
@@ -9,7 +10,7 @@ export class Deck {
 
   private constructor(citations: Citation[]) {
     this.allCards = citations.map(Card.of);
-    this.activeCards = this.allCards.slice(0, 5);
+    this.activeCards = this.allCards.slice(0, 10);
   }
 
   private readonly allCards: Card[];
@@ -26,7 +27,7 @@ export class Deck {
   }
 
   public get changedNumber(): number {
-    return this.getChangedCards().length;
+    return this.getCardsWithChangedScores().length;
   }
 
   public nextCard(): Card {
@@ -46,16 +47,51 @@ export class Deck {
     this.currentCard.resetScore();
   }
 
-  private getChangedCards(): Card[] {
-    return this.activeCards.filter((card) => card.changed);
+  private getCardsWithChangedScores(): Card[] {
+    return this.activeCards.filter((card) => card.scoreHasChanged);
   }
 
-  public getChangeRequest(): SaveChangedRequest {
-    return this.getChangedCards()
+  public getChangedScoresRequest(): SaveChangedRequest {
+    return this.getCardsWithChangedScores()
       .map((card) => { return { id: card.id, score: card.score }});
   }
 
-  public resetChanged(): void {
-    this.getChangedCards().forEach((card) => card.changed = false);
+  public resetChangedScoresStatus(): void {
+    this.getCardsWithChangedScores().forEach((card) => card.scoreHasChanged = false);
   }
+
+  public orderedCards(): { book: string, cards: Card[] }[] {
+    const cardsByBookDictionary = this.cardsByBookDictionary();
+    const orderedPresentBooks = bibleBooks.filter((book) => cardsByBookDictionary[book]);
+    return orderedPresentBooks 
+      .map((book) => { return { book, cards: cardsByBookDictionary[book] }});
+  }
+
+  private cardsByBookDictionary(): Record<string, Card[]> {
+    const citationsByBook: Record<string, Card[]> = {};
+
+    this.allCards.forEach((card) => {
+        if (!citationsByBook[card.book]) {
+            citationsByBook[card.book] = [];
+        }
+        this.insertCardInOrder(citationsByBook[card.book], card);
+    });
+
+    return citationsByBook;
+  }
+
+  private insertCardInOrder(cards: Card[], card: Card): void {
+    const index = cards.findIndex((c) => Deck.compareCards(card, c));
+    if (index === -1) {
+      cards.push(card);
+    } else {
+      cards.splice(index, 0, card);
+    }
+  }
+
+  private static compareCards(a: Card, b: Card): number {
+    return b.chapter - a.chapter;
+  }
+
+
 }

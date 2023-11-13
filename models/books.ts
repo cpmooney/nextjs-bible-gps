@@ -6,7 +6,7 @@ export const bookNumber = (bookName: string): number => {
     return index;
 }
 
-const bibleBooks = [
+export const bibleBooks = [
     "Genesis",
     "Exodus",
     "Leviticus",
