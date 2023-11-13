@@ -51,11 +51,6 @@ export const DeckComponent = (props: DeckComponentProps) => {
       totalNumber={deck.activeNumber}
       changedNumber={deck.changedNumber}
     />
-    <div className="fixed bottom-0">
-    <a
-      href="https://www.freepik.com/free-photo/light-gray-concrete-wall_4139268.htm#query=texture%20background&position=0&from_view=keyword&track=ais"
-      >Image by rawpixel.com</a> on Freepik
-    </div>
 </div>
     );
   };
