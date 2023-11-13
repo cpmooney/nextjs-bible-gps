@@ -10,7 +10,7 @@ export class Deck {
 
   private constructor(citations: Citation[]) {
     this.allCards = citations.map(Card.of);
-    this.activeCards = this.allCards.slice(0, 5);
+    this.activeCards = this.allCards.slice(0, 10);
   }
 
   private readonly allCards: Card[];
