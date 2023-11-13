@@ -1,6 +1,7 @@
 import { SaveChangedRequest } from "server/db-save-changed";
 import {Card} from "./card";
 import {Citation} from "./citation";
+import { bibleBooks } from "./books";
 
 export class Deck {
   public static of(citations: Citation[] | undefined): Deck {
@@ -58,4 +59,39 @@ export class Deck {
   public resetChangedScoresStatus(): void {
     this.getCardsWithChangedScores().forEach((card) => card.scoreHasChanged = false);
   }
+
+  public orderedCards(): { book: string, cards: Card[] }[] {
+    const cardsByBookDictionary = this.cardsByBookDictionary();
+    const orderedPresentBooks = bibleBooks.filter((book) => cardsByBookDictionary[book]);
+    return orderedPresentBooks 
+      .map((book) => { return { book, cards: cardsByBookDictionary[book] }});
+  }
+
+  private cardsByBookDictionary(): Record<string, Card[]> {
+    const citationsByBook: Record<string, Card[]> = {};
+
+    this.allCards.forEach((card) => {
+        if (!citationsByBook[card.book]) {
+            citationsByBook[card.book] = [];
+        }
+        this.insertCardInOrder(citationsByBook[card.book], card);
+    });
+
+    return citationsByBook;
+  }
+
+  private insertCardInOrder(cards: Card[], card: Card): void {
+    const index = cards.findIndex((c) => Deck.compareCards(card, c));
+    if (index === -1) {
+      cards.push(card);
+    } else {
+      cards.splice(index, 0, card);
+    }
+  }
+
+  private static compareCards(a: Card, b: Card): number {
+    return b.chapter - a.chapter;
+  }
+
+
 }

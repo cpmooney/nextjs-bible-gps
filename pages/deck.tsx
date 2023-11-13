@@ -6,21 +6,7 @@ import { DeckComponent } from "app/deck-component";
 import { trpc } from "../utilities/trpc";
 import { SaveChangedRequest as SaveChangedScoresRequest } from "server/db-save-changed";
 import { useEffect, useState } from "react";
-import Image from 'next/image';
-
-const ImageBackground = () => {
-  return (
-    <div style={{overflow: 'hidden'}}>
-      <Image
-        style={{zIndex: -1 }}
-        src="/images/light-gray-concrete-wall.jpg"
-        alt="Background Image"
-        layout="fill"
-        objectFit="cover"
-        />
-    </div>
-  )
-}
+import { ImageBackground } from 'app/image-background';
 
 const DeckPageWithBackground = () => {
   return (
