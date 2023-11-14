@@ -40,9 +40,9 @@ const DeckPage = () => {
   }
 
   const syncScoresToDb = () => {
-    const changedCards: SaveChangedScoresRequest = deck.getChangedScoresRequest();
+    const changedCards: SaveChangedScoresRequest = deck.changedScoreRequest;
     saveChangedScoresProcedure.mutate(changedCards);
-    deck.resetChangedScoresStatus();
+    deck.cardsWithChangedScores = {};
   };
 
   return (

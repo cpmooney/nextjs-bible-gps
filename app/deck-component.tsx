@@ -50,6 +50,7 @@ export const DeckComponent = (props: DeckComponentProps) => {
       card={currentCard}
       totalNumber={deck.activeNumber}
       changedNumber={deck.changedNumber}
+      changedScoreRequest={deck.cardsWithChangedScores}
     />
 </div>
     );
