@@ -49,6 +49,11 @@ export class Deck {
     this.addCurrentCardWithChangedScore();
   }
 
+  public resetAllScores(): SaveChangedRequest {
+    this.allCards.forEach((card) => card.resetScore());
+    return this.allCards.map((card) => { return { id: card.id, score: 0 }});
+  }
+
   public cardsWithChangedScores: Record<number, number> = {};
 
   private addCurrentCardWithChangedScore(): void {
