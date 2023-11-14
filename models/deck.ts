@@ -27,7 +27,7 @@ export class Deck {
   }
 
   public get changedNumber(): number {
-    return this.getCardsWithChangedScores().length;
+    return Object.entries(this.cardsWithChangedScores).length;
   }
 
   public nextCard(): Card {
@@ -41,23 +41,28 @@ export class Deck {
 
   public incrementScore(): void {
     this.currentCard.incrementScore();
+    this.addCurrentCardWithChangedScore();
   }
 
   public resetScore(): void {
     this.currentCard.resetScore();
+    this.addCurrentCardWithChangedScore();
   }
 
-  private getCardsWithChangedScores(): Card[] {
-    return this.activeCards.filter((card) => card.scoreHasChanged);
+  public resetAllScores(): SaveChangedRequest {
+    this.allCards.forEach((card) => card.resetScore());
+    return this.allCards.map((card) => { return { id: card.id, score: 0 }});
   }
 
-  public getChangedScoresRequest(): SaveChangedRequest {
-    return this.getCardsWithChangedScores()
-      .map((card) => { return { id: card.id, score: card.score }});
+  public cardsWithChangedScores: Record<number, number> = {};
+
+  private addCurrentCardWithChangedScore(): void {
+    this.cardsWithChangedScores[this.currentCard.id] = this.currentCard.score;
   }
 
-  public resetChangedScoresStatus(): void {
-    this.getCardsWithChangedScores().forEach((card) => card.scoreHasChanged = false);
+  public get changedScoreRequest(): SaveChangedRequest {
+    return Object.entries(this.cardsWithChangedScores)
+      .map(([id, score]) => { return { id: parseInt(id), score }});
   }
 
   public orderedCards(): { book: string, cards: Card[] }[] {

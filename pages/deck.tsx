@@ -1,7 +1,7 @@
 "use client";
 import { Deck } from "@/models/deck";
 import { ClerkProvider, UserButton } from "@clerk/nextjs";
-import { ArrowDownOnSquareStackIcon } from "@heroicons/react/24/outline";
+import { ArrowDownOnSquareStackIcon, BackspaceIcon } from "@heroicons/react/24/outline";
 import { DeckComponent } from "app/deck-component";
 import { trpc } from "../utilities/trpc";
 import { SaveChangedRequest as SaveChangedScoresRequest } from "server/db-save-changed";
@@ -40,9 +40,13 @@ const DeckPage = () => {
   }
 
   const syncScoresToDb = () => {
-    const changedCards: SaveChangedScoresRequest = deck.getChangedScoresRequest();
+    const changedCards: SaveChangedScoresRequest = deck.changedScoreRequest;
     saveChangedScoresProcedure.mutate(changedCards);
-    deck.resetChangedScoresStatus();
+    deck.cardsWithChangedScores = {};
+  };
+
+  const resetAllScores = () => {
+    saveChangedScoresProcedure.mutate(deck.resetAllScores());
   };
 
   return (
