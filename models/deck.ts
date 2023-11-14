@@ -1,7 +1,7 @@
-import { SaveChangedRequest } from "server/db-save-changed";
+import {SaveChangedRequest} from "server/db-save-changed";
+import {bibleBooks} from "./books";
 import {Card} from "./card";
 import {Citation} from "./citation";
-import { bibleBooks } from "./books";
 
 export class Deck {
   public static of(citations: Citation[] | undefined): Deck {
@@ -36,7 +36,11 @@ export class Deck {
   }
 
   private advanceIndex(): void {
-    this.index = (this.index + 1) % this.activeCards.length;
+    this.index = this.randomCardIndex();
+  }
+
+  private randomCardIndex(): number {
+    return Math.floor(Math.random() * this.activeCards.length);
   }
 
   public incrementScore(): void {
@@ -51,7 +55,9 @@ export class Deck {
 
   public resetAllScores(): SaveChangedRequest {
     this.allCards.forEach((card) => card.resetScore());
-    return this.allCards.map((card) => { return { id: card.id, score: 0 }});
+    return this.allCards.map((card) => {
+      return {id: card.id, score: 0};
+    });
   }
 
   public cardsWithChangedScores: Record<number, number> = {};
@@ -61,25 +67,29 @@ export class Deck {
   }
 
   public get changedScoreRequest(): SaveChangedRequest {
-    return Object.entries(this.cardsWithChangedScores)
-      .map(([id, score]) => { return { id: parseInt(id), score }});
+    return Object.entries(this.cardsWithChangedScores).map(([id, score]) => {
+      return {id: parseInt(id), score};
+    });
   }
 
-  public orderedCards(): { book: string, cards: Card[] }[] {
+  public orderedCards(): {book: string; cards: Card[]}[] {
     const cardsByBookDictionary = this.cardsByBookDictionary();
-    const orderedPresentBooks = bibleBooks.filter((book) => cardsByBookDictionary[book]);
-    return orderedPresentBooks 
-      .map((book) => { return { book, cards: cardsByBookDictionary[book] }});
+    const orderedPresentBooks = bibleBooks.filter(
+      (book) => cardsByBookDictionary[book]
+    );
+    return orderedPresentBooks.map((book) => {
+      return {book, cards: cardsByBookDictionary[book]};
+    });
   }
 
   private cardsByBookDictionary(): Record<string, Card[]> {
     const citationsByBook: Record<string, Card[]> = {};
 
     this.allCards.forEach((card) => {
-        if (!citationsByBook[card.book]) {
-            citationsByBook[card.book] = [];
-        }
-        this.insertCardInOrder(citationsByBook[card.book], card);
+      if (!citationsByBook[card.book]) {
+        citationsByBook[card.book] = [];
+      }
+      this.insertCardInOrder(citationsByBook[card.book], card);
     });
 
     return citationsByBook;
@@ -97,6 +107,4 @@ export class Deck {
   private static compareCards(a: Card, b: Card): number {
     return b.chapter - a.chapter;
   }
-
-
 }
