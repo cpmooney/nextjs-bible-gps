@@ -3,7 +3,13 @@ import {and, eq} from "drizzle-orm";
 import {isAuthed, procedure} from "server/trpc";
 import {z} from "zod";
 import {obtainDatabase, usingDatabase} from "../utilities/database";
-import {debugLog, usingDebugger} from "../utilities/debugger";
+import {
+  DebugMessage,
+  ZodDebugMessage,
+  debugLog,
+  obtainDebugMessages,
+  usingDebugger,
+} from "../utilities/debugger";
 
 const ZodSaveChangedRequest = z.array(
   z.object({
@@ -18,6 +24,7 @@ export const usingDbSaveChangedProcedure = () =>
   procedure
     .use(isAuthed)
     .input(ZodSaveChangedRequest)
+    .output(z.array(ZodDebugMessage))
     .mutation(async ({ctx, input}) => {
       return await invokeDbSaveChangedAction(ctx.auth.userId, input);
     });
@@ -25,14 +32,22 @@ export const usingDbSaveChangedProcedure = () =>
 const invokeDbSaveChangedAction = async (
   userId: string,
   changedRequest: SaveChangedRequest
-) => {
+): Promise<DebugMessage[]> => {
   usingDatabase({CitationTable});
   usingDebugger("db-save-changed");
-  debugLog("info", `Saving changed citations for user ${userId}: ${JSON.stringify(changedRequest)}`);
-
-  changedRequest.forEach((record) =>
-    updateRecord(userId, record.id, record.score)
+  debugLog(
+    "info",
+    `Saving changed citations for user ${userId}: ${JSON.stringify(
+      changedRequest
+    )}`
   );
+
+  await Promise.all(
+    changedRequest.map((record) =>
+      updateRecord(userId, record.id, record.score)
+    )
+  );
+  return obtainDebugMessages();
 };
 
 const updateRecord = async (

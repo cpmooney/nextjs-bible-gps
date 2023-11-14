@@ -1,12 +1,12 @@
 "use client";
-import { Deck } from "@/models/deck";
-import { ClerkProvider, UserButton } from "@clerk/nextjs";
-import { ArrowDownOnSquareStackIcon, BackspaceIcon } from "@heroicons/react/24/outline";
-import { DeckComponent } from "app/deck-component";
-import { trpc } from "../utilities/trpc";
-import { SaveChangedRequest as SaveChangedScoresRequest } from "server/db-save-changed";
-import { useEffect, useState } from "react";
-import { ImageBackground } from 'app/image-background';
+import {Deck} from "@/models/deck";
+import {ClerkProvider, UserButton} from "@clerk/nextjs";
+import {ArrowDownOnSquareStackIcon} from "@heroicons/react/24/outline";
+import {DeckComponent} from "app/deck-component";
+import {ImageBackground} from "app/image-background";
+import {useEffect, useState} from "react";
+import {SaveChangedRequest as SaveChangedScoresRequest} from "server/db-save-changed";
+import {trpc} from "../utilities/trpc";
 
 const DeckPageWithBackground = () => {
   return (
@@ -14,12 +14,13 @@ const DeckPageWithBackground = () => {
       <ImageBackground />
       <DeckPage />
     </div>
-  )
-}
+  );
+};
 
 const DeckPage = () => {
-  const saveChangedScoresProcedure = trpc.saveChangedScoresProcedure.useMutation();
-  const { data, isLoading } = trpc.loadAllProcedure.useQuery(
+  const saveChangedScoresProcedure =
+    trpc.saveChangedScoresProcedure.useMutation();
+  const {data, isLoading} = trpc.loadAllProcedure.useQuery(
     {},
     {
       refetchOnWindowFocus: false,
@@ -39,9 +40,9 @@ const DeckPage = () => {
     return <div>User has no data</div>;
   }
 
-  const syncScoresToDb = () => {
+  const syncScoresToDb = async () => {
     const changedCards: SaveChangedScoresRequest = deck.changedScoreRequest;
-    saveChangedScoresProcedure.mutate(changedCards);
+    const results = await saveChangedScoresProcedure.mutateAsync(changedCards);
     deck.cardsWithChangedScores = {};
   };
 
