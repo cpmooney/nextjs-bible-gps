@@ -18,12 +18,8 @@ export class Deck {
   }
 
   private computeIntroCards(): void {
-    this.introCards.length = 0;
-    this.allCards.forEach((card) => {
-      if (card.score < INTRO_CUTOFF) {
-        this.introCards.push(card);
-      }
-    });
+    this.introCards = {};
+    this.replenishIntroCards();
   }
 
   private computeActiveCards(): void {
@@ -33,20 +29,28 @@ export class Deck {
         this.activeCards.push(card);
       }
     });
-    this.replenishIntoCards();
+    this.replenishIntroCards();
   }
 
-  private replenishIntoCards(): void {
-    if (this.introCards.length < INTRO_COUNT) {
-      this.allCards.forEach((card) => {
-        if (card.score === INTRO_CUTOFF) {
-          this.introCards.push(card);
+  private replenishIntroCards(): void {
+    if (this.numberOfIntroCards < INTRO_COUNT) {
+      this.allCards.some((card) => {
+        if (card.score < INTRO_CUTOFF) {
+          this.introCards[card.id] = true;
+          this.activeCards.push(card);
+          return this.numberOfIntroCards >= INTRO_COUNT;
         }
       });
     }
   }
 
-  private readonly introCards: Card[] = [];
+  private get numberOfIntroCards(): number {
+    return Object.entries(this.introCards).length;
+  }
+  public get introCardIds(): number[] {
+    return Object.keys(this.introCards).map((id) => parseInt(id));
+  }
+  private introCards: Record<number, boolean> = {};
 
   private readonly allCards: Card[] = [];
   public readonly activeCards: Card[] = [];
@@ -81,7 +85,14 @@ export class Deck {
   public incrementScore(): void {
     this.currentCard.incrementScore();
     this.addCurrentCardWithChangedScore();
-    this.replenishIntoCards();
+    this.removeCurrentFromIntroIfTooHighScore();
+    this.replenishIntroCards();
+  }
+
+  private removeCurrentFromIntroIfTooHighScore(): void {
+    if (this.currentCard.score >= INTRO_CUTOFF) {
+      delete this.introCards[this.currentCard.id];
+    }
   }
 
   public resetScore(): void {

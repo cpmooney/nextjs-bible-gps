@@ -26,26 +26,50 @@ interface CardContentComponentProps {
   card: Card,
   totalNumber: number,
   changedNumber: number,
-  changedScoreRequest: Record<number, number>
+  changedScoreRequest: Record<number, number>,
+  introCards: number[],
+}
+
+const IntroCardComponent = (props: CardContentComponentProps) => {
+  const { introCards } = props;
+  return (
+    <div className="flex flex-row max-w-full overflow-x-auto">
+      {introCards.map((cardId) => (
+        <div key={cardId} className="pr-3">
+          <div>{cardId}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const OneCardComponent = (props: CardContentComponentProps) => {
+  const { card, totalNumber, changedNumber, changedScoreRequest } = props;
+  return(
+    <div className="justify-end">
+      <div className="justify-end">
+        Score: {card.score}
+      </div>
+      <div className="justify-end">
+        ID: {card.id}
+      </div>
+      <div className="justify-end">
+        Total number: {totalNumber}
+      </div>
+      <div className="justify-end">
+        Changed: {changedNumber}
+      </div>
+    </div>
+  );
 }
 
 export default function CardStatComponent(props: CardContentComponentProps) {
-  const { card, totalNumber, changedNumber, changedScoreRequest } = props;
+  const { changedScoreRequest } = props;
   return (
     <div className="card w-96 bg-base-100 shadow-xl mt-4">
       <div className="card-body">
-          <div className="justify-end">
-            Score: {card.score}
-          </div>
-          <div className="justify-end">
-            ID: {card.id}
-          </div>
-          <div className="justify-end">
-            Total number: {totalNumber}
-          </div>
-          <div className="justify-end">
-            Changed: {changedNumber}
-          </div>
+        <OneCardComponent {...props} />
+        <IntroCardComponent {...props} />
           <div className="justify-end">
           <ScoreChangeRequestComponent changedScoreRequest={changedScoreRequest} />
           </div>
