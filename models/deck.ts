@@ -3,6 +3,9 @@ import {bibleBooks} from "./books";
 import {Card} from "./card";
 import {Citation} from "./citation";
 
+const INTRO_CUTOFF = 3;
+const INTRO_COUNT = 6;
+
 export class Deck {
   public static of(citations: Citation[] | undefined): Deck {
     return new Deck(citations ?? []);
@@ -10,11 +13,43 @@ export class Deck {
 
   private constructor(citations: Citation[]) {
     this.allCards = citations.map(Card.of);
-    this.activeCards = this.allCards.slice(0, 10);
+    this.computeIntroCards();
+    this.computeActiveCards();
   }
 
-  private readonly allCards: Card[];
-  public readonly activeCards: Card[];
+  private computeIntroCards(): void {
+    this.introCards.length = 0;
+    this.allCards.forEach((card) => {
+      if (card.score < INTRO_CUTOFF) {
+        this.introCards.push(card);
+      }
+    });
+  }
+
+  private computeActiveCards(): void {
+    this.activeCards.length = 0;
+    this.allCards.forEach((card) => {
+      if (card.score > 0) {
+        this.activeCards.push(card);
+      }
+    });
+    this.replenishIntoCards();
+  }
+
+  private replenishIntoCards(): void {
+    if (this.introCards.length < INTRO_COUNT) {
+      this.allCards.forEach((card) => {
+        if (card.score === INTRO_CUTOFF) {
+          this.introCards.push(card);
+        }
+      });
+    }
+  }
+
+  private readonly introCards: Card[] = [];
+
+  private readonly allCards: Card[] = [];
+  public readonly activeCards: Card[] = [];
 
   private index: number = 0;
 
@@ -46,6 +81,7 @@ export class Deck {
   public incrementScore(): void {
     this.currentCard.incrementScore();
     this.addCurrentCardWithChangedScore();
+    this.replenishIntoCards();
   }
 
   public resetScore(): void {
