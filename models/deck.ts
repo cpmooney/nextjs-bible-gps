@@ -13,8 +13,8 @@ export class Deck {
 
   private constructor(citations: Citation[]) {
     this.allCards = citations.map(Card.of);
-    this.computeIntroCards();
     this.computeActiveCards();
+    this.computeIntroCards();
   }
 
   private computeIntroCards(): void {
@@ -29,7 +29,6 @@ export class Deck {
         this.activeCards.push(card);
       }
     });
-    this.replenishIntroCards();
   }
 
   private replenishIntroCards(): void {

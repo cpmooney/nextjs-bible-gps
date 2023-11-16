@@ -69,7 +69,6 @@ export default function CardStatComponent(props: CardContentComponentProps) {
     <div className="card w-96 bg-base-100 shadow-xl mt-4">
       <div className="card-body">
         <OneCardComponent {...props} />
-        <IntroCardComponent {...props} />
           <div className="justify-end">
           <ScoreChangeRequestComponent changedScoreRequest={changedScoreRequest} />
           </div>
