@@ -51,6 +51,7 @@ export const DeckComponent = (props: DeckComponentProps) => {
       totalNumber={deck.activeNumber}
       changedNumber={deck.changedNumber}
       changedScoreRequest={deck.cardsWithChangedScores}
+      introCards={deck.introCardIds}
     />
 </div>
     );
