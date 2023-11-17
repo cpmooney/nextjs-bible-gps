@@ -15,6 +15,7 @@ export class Deck {
     this.allCards = citations.map(Card.of);
     this.computeActiveCards();
     this.computeIntroCards();
+    this.computeTotalScore();
   }
 
   private computeIntroCards(): void {
@@ -41,6 +42,19 @@ export class Deck {
         }
       });
     }
+  }
+
+  private initialScore: number = 0;
+  public totalScore: number = 0;
+  public computeTotalScore(): void {
+    this.totalScore = this.allCards.reduce((sum, card) => {
+      return sum + card.score;
+    }, 0);
+    this.initialScore = this.totalScore;
+  }
+
+  public get scoreIncrease(): number {
+    return this.totalScore - this.initialScore;
   }
 
   private get numberOfIntroCards(): number {
@@ -82,6 +96,7 @@ export class Deck {
   }
 
   public incrementScore(): void {
+    this.totalScore++;
     this.currentCard.incrementScore();
     this.addCurrentCardWithChangedScore();
     this.removeCurrentFromIntroIfTooHighScore();
@@ -95,6 +110,7 @@ export class Deck {
   }
 
   public resetScore(): void {
+    this.totalScore -= this.currentCard.score;
     this.currentCard.resetScore();
     this.addCurrentCardWithChangedScore();
   }

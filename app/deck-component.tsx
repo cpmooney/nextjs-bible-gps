@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import CardComponent from "./card-component";
 import "./globals.css";
 import CardStatComponent from "./card-stats";
+import TotalStatComponent from "./total-stat";
 
 export const DeckComponent = (props: DeckComponentProps) => {
   const {deck} = props;
@@ -46,14 +47,8 @@ export const DeckComponent = (props: DeckComponentProps) => {
     wrong={wrong}
     toggleShowAnswer={toggleShowAnswer}
     />
-    <CardStatComponent
-      card={currentCard}
-      totalNumber={deck.activeNumber}
-      changedNumber={deck.changedNumber}
-      changedScoreRequest={deck.cardsWithChangedScores}
-      introCards={deck.introCardIds}
-    />
-</div>
+    <TotalStatComponent totalScore={deck.totalScore} scoreIncrease={deck.changedNumber} />
+    </div>
     );
   };
   
