@@ -44,7 +44,7 @@ export class Deck {
     }
   }
 
-  private initialScore: number = 0;
+  public initialScore: number = 0;
   public totalScore: number = 0;
   public computeTotalScore(): void {
     this.totalScore = this.allCards.reduce((sum, card) => {
