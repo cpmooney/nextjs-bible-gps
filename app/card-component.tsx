@@ -5,10 +5,6 @@ import {
 } from "@heroicons/react/24/outline";
 import {Card} from "../models/card";
 
-// TODO:
-// - Filterable by tags
-// - Better grouping: Only 10 "lowest level" cards at a time
-
 interface CardContentComponentProps {
   answer: string;
   showingAnswer: boolean;
