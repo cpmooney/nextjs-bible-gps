@@ -47,7 +47,7 @@ export const DeckComponent = (props: DeckComponentProps) => {
     wrong={wrong}
     toggleShowAnswer={toggleShowAnswer}
     />
-    <TotalStatComponent initialScore={deck.initialScore} scoreIncrease={deck.changedNumber} />
+    <TotalStatComponent initialScore={deck.initialScore} scoreIncrease={deck.scoreIncrease} />
     </div>
     );
   };
