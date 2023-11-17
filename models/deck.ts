@@ -1,4 +1,4 @@
-import {SaveChangedRequest} from "server/db-save-changed";
+import {SaveChangedScoresRequest} from "server/db-save-changed";
 import {bibleBooks} from "./books";
 import {Card} from "./card";
 import {Citation} from "./citation";
@@ -15,6 +15,7 @@ export class Deck {
     this.allCards = citations.map(Card.of);
     this.computeActiveCards();
     this.computeIntroCards();
+    this.computeTotalScore();
   }
 
   private computeIntroCards(): void {
@@ -41,6 +42,24 @@ export class Deck {
         }
       });
     }
+  }
+
+  public initialScore: number = 0;
+  public totalScore: number = 0;
+  public computeTotalScore(): void {
+    this.totalScore = this.allCards.reduce((sum, card) => {
+      return sum + card.score;
+    }, 0);
+    this.initialScore = this.totalScore;
+  }
+
+  public get scoreIncrease(): number {
+    return this.totalScore - this.initialScore;
+  }
+
+  public addChangeScoreToTotal(): void {
+    this.totalScore = this.initialScore + this.scoreIncrease;
+    this.initialScore = this.totalScore;
   }
 
   private get numberOfIntroCards(): number {
@@ -82,6 +101,7 @@ export class Deck {
   }
 
   public incrementScore(): void {
+    this.totalScore++;
     this.currentCard.incrementScore();
     this.addCurrentCardWithChangedScore();
     this.removeCurrentFromIntroIfTooHighScore();
@@ -95,11 +115,12 @@ export class Deck {
   }
 
   public resetScore(): void {
+    this.totalScore -= this.currentCard.score;
     this.currentCard.resetScore();
     this.addCurrentCardWithChangedScore();
   }
 
-  public resetAllScores(): SaveChangedRequest {
+  public resetAllScores(): SaveChangedScoresRequest {
     this.allCards.forEach((card) => card.resetScore());
     return this.allCards.map((card) => {
       return {id: card.id, score: 0};
@@ -112,7 +133,7 @@ export class Deck {
     this.cardsWithChangedScores[this.currentCard.id] = this.currentCard.score;
   }
 
-  public get changedScoreRequest(): SaveChangedRequest {
+  public get changedScoreRequest(): SaveChangedScoresRequest {
     return Object.entries(this.cardsWithChangedScores).map(([id, score]) => {
       return {id: parseInt(id), score};
     });

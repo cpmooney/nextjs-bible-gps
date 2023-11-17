@@ -2,7 +2,9 @@ import {Deck} from "@/models/deck";
 import {useEffect, useState} from "react";
 import CardComponent from "./card-component";
 import "./globals.css";
-import CardStatComponent from "./card-stats";
+import TotalStatComponent from "./total-stat";
+import { SaveChangedScoresRequest } from "server/db-save-changed";
+import { trpc } from "@/utilities/trpc";
 
 export const DeckComponent = (props: DeckComponentProps) => {
   const {deck} = props;
@@ -12,6 +14,16 @@ export const DeckComponent = (props: DeckComponentProps) => {
   useEffect(() => {
     setCurrentCard(deck.currentCard);
   }, [deck]);
+
+  const saveChangedScoresProcedure =
+    trpc.saveChangedScoresProcedure.useMutation();
+
+  const syncScoresToDb = async () => {
+    const changedCards: SaveChangedScoresRequest = deck.changedScoreRequest;
+    const results = await saveChangedScoresProcedure.mutateAsync(changedCards);
+    deck.addChangeScoreToTotal();
+    deck.cardsWithChangedScores = {};
+  };
   
   const advanceToNextCard = () => {
     setCurrentCard(deck.nextCard());
@@ -46,14 +58,8 @@ export const DeckComponent = (props: DeckComponentProps) => {
     wrong={wrong}
     toggleShowAnswer={toggleShowAnswer}
     />
-    <CardStatComponent
-      card={currentCard}
-      totalNumber={deck.activeNumber}
-      changedNumber={deck.changedNumber}
-      changedScoreRequest={deck.cardsWithChangedScores}
-      introCards={deck.introCardIds}
-    />
-</div>
+    <TotalStatComponent initialScore={deck.initialScore} scoreIncrease={deck.scoreIncrease} syncScoresToDb={syncScoresToDb} />
+    </div>
     );
   };
   
