@@ -18,7 +18,7 @@ const ZodSaveChangedRequest = z.array(
   })
 );
 
-export type SaveChangedRequest = z.infer<typeof ZodSaveChangedRequest>;
+export type SaveChangedScoresRequest = z.infer<typeof ZodSaveChangedRequest>;
 
 export const usingDbSaveChangedProcedure = () =>
   procedure
@@ -31,7 +31,7 @@ export const usingDbSaveChangedProcedure = () =>
 
 const invokeDbSaveChangedAction = async (
   userId: string,
-  changedRequest: SaveChangedRequest
+  changedRequest: SaveChangedScoresRequest
 ): Promise<DebugMessage[]> => {
   usingDatabase({CitationTable});
   usingDebugger("db-save-changed");

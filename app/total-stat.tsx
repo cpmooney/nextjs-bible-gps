@@ -1,10 +1,13 @@
+import { ChevronDoubleRightIcon } from "@heroicons/react/24/outline";
+
 interface TotalStatComponentProps {
     initialScore: number,
     scoreIncrease: number,
+    syncScoresToDb: () => Promise<void>
 }
 
 export default function TotalStatComponent(props: TotalStatComponentProps) {
-    const { initialScore, scoreIncrease } = props;
+    const { syncScoresToDb, initialScore, scoreIncrease } = props;
 
     const getChangeColorClass = () => {
         if (scoreIncrease < 0) {
@@ -35,6 +38,9 @@ export default function TotalStatComponent(props: TotalStatComponentProps) {
         </div>
       </div>
     </div>
+    <button className="btn btn-btnPrimary" onClick={syncScoresToDb}>
+      <ChevronDoubleRightIcon className="w-8 h-8 mr-2" />
+    </button>
     <div className="card bg-base-100 shadow-xl mt-4 flex-1">
       <div className="card-body">
         <div className={`justify-center text-6xl ${getTotalScoreColorClass()}`}>

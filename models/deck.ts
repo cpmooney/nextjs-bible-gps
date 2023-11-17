@@ -1,4 +1,4 @@
-import {SaveChangedRequest} from "server/db-save-changed";
+import {SaveChangedScoresRequest} from "server/db-save-changed";
 import {bibleBooks} from "./books";
 import {Card} from "./card";
 import {Citation} from "./citation";
@@ -55,6 +55,11 @@ export class Deck {
 
   public get scoreIncrease(): number {
     return this.totalScore - this.initialScore;
+  }
+
+  public addChangeScoreToTotal(): void {
+    this.totalScore = this.initialScore + this.scoreIncrease;
+    this.initialScore = this.totalScore;
   }
 
   private get numberOfIntroCards(): number {
@@ -115,7 +120,7 @@ export class Deck {
     this.addCurrentCardWithChangedScore();
   }
 
-  public resetAllScores(): SaveChangedRequest {
+  public resetAllScores(): SaveChangedScoresRequest {
     this.allCards.forEach((card) => card.resetScore());
     return this.allCards.map((card) => {
       return {id: card.id, score: 0};
@@ -128,7 +133,7 @@ export class Deck {
     this.cardsWithChangedScores[this.currentCard.id] = this.currentCard.score;
   }
 
-  public get changedScoreRequest(): SaveChangedRequest {
+  public get changedScoreRequest(): SaveChangedScoresRequest {
     return Object.entries(this.cardsWithChangedScores).map(([id, score]) => {
       return {id: parseInt(id), score};
     });
