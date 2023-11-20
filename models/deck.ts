@@ -110,8 +110,6 @@ export class Deck {
     const cardsWithScore = this.activeCards.filter((card) => {
       return card.score === score;
     });
-    console.log("score", score);
-    console.log("cardsWithScore", cardsWithScore.map((card) => card.id));
     if (cardsWithScore.length > 0) {
       const choiceAmongCardsWithScore = Math.floor(Math.random() * cardsWithScore.length);
       return this.activeCards.indexOf(cardsWithScore[choiceAmongCardsWithScore]);
@@ -120,7 +118,7 @@ export class Deck {
   }
 
   private randomScore(): number {
-    const weightedRandomNumber = Math.random() ** 2;
+    const weightedRandomNumber = Math.random() ** 3;
     return Math.floor(weightedRandomNumber * (this.maxScore + 1));
   }
 
