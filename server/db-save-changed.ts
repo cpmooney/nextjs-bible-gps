@@ -46,7 +46,9 @@ const invokeDbSaveChangedAction = async (
   await Promise.all(
     changedRequest.map((record) =>
     {
+      debugLog("info", "lastReviewed" + record.lastReviewed);
       const lastReviewed = new Date(record.lastReviewed);
+      debugLog("info", "lastReviewed" + lastReviewed);
       updateRecord(userId, record.id, record.score, lastReviewed)
     }
     )
@@ -61,7 +63,6 @@ const updateRecord = async (
   lastReviewed: Date
 ) => {
   debugLog("info", `Updating score on citation ${citationId} to be ${score} with last reviewed ${lastReviewed}`);
-  try {
   await obtainDatabase()
     .update(CitationTable)
     .set({score: score, last_reviewed: lastReviewed})
@@ -69,8 +70,4 @@ const updateRecord = async (
       and(eq(CitationTable.id, citationId), eq(CitationTable.userId, userId))
     );
     debugLog("info", "Update complete!");
-  }
-  catch (e) {
-    debugLog("error", `Error updating citation ${citationId}: ${e}`);
-  }
 };
