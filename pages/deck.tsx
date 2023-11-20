@@ -5,6 +5,7 @@ import {DeckComponent} from "app/deck-component";
 import {ImageBackground} from "app/image-background";
 import {useEffect, useState} from "react";
 import {trpc} from "../utilities/trpc";
+import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
 
 const DeckPageWithBackground = () => {
   return (
@@ -25,7 +26,8 @@ const DeckPage = () => {
   const [deck, setDeck] = useState<Deck>(Deck.of([]));
 
   useEffect(() => {
-    setDeck(Deck.of(data));
+    const resolvedData = fixTrpcBug(data);
+    setDeck(Deck.of(resolvedData));
   }, [data]);
 
   if (isLoading) {

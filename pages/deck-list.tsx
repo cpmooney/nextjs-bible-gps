@@ -2,6 +2,7 @@ import { Card } from "@/models/card";
 import { Citation } from "@/models/citation";
 import { Deck } from "@/models/deck";
 import { trpc } from "@/utilities/trpc";
+import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
 import { useEffect, useState } from "react";
 
 type OrderedCitations = {
@@ -16,15 +17,7 @@ const DeckListView = () => {
   const orderedCards = deck.orderedCards();
   
   useEffect(() => {
-    // TODO TRPC bug
-    const resolvedData: Citation[] = data?.map((citation) => {
-      const lastReviewed = citation.lastReviewed ?
-      new Date(citation.lastReviewed) : undefined;
-      return {
-        ...citation,
-        lastReviewed
-      };
-    }) ?? [];
+    const resolvedData = fixTrpcBug(data);
     setDeck(Deck.of(resolvedData));
   }, [data]);
   
