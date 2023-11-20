@@ -44,12 +44,16 @@ const invokeDbSaveChangedAction = async (
   );
 
   await Promise.all(
-    changedRequest.map((record) =>
+    changedRequest.map(async (record) =>
     {
-      debugLog("info", "lastReviewed" + record.lastReviewed);
-      const lastReviewed = new Date(record.lastReviewed);
-      debugLog("info", "lastReviewed" + lastReviewed);
-      updateRecord(userId, record.id, record.score, lastReviewed)
+      try {
+        const lastReviewed = new Date(record.lastReviewed);
+        debugLog("info", "lastReviewed" + lastReviewed);
+        await updateRecord(userId, record.id, record.score, lastReviewed)
+      }
+      catch (e) {
+        debugLog("error", "Error updating record: " + e);
+    }
     }
     )
   );
