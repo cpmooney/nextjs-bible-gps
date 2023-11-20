@@ -33,6 +33,9 @@ export default function CardComponent(props: CardComponentProps) {
             showingAnswer={props.showingAnswer}
           />
         </button>
+        <div className="absolute right-0 bottom-0 p-2 text-xl">
+          {card.score}
+        </div>
         <div className="card-actions">
           <button
             className="flex-1 btn btn-btnPrimary enabled:bg-green-400 h-20"

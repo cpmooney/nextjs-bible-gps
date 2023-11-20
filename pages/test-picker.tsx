@@ -5,15 +5,27 @@ import { Bar } from "react-chartjs-2";
 Chart.register(...registerables);
 
 interface TestPickerProps {
-    data: number[]
+    max: number;
+    weight: number;
+    attempts: number;
 }
 
 const TestPicker = (props: TestPickerProps) => {
+    const { max, weight, attempts } = props;
+    const pickedArray: number[] = [];
+    pickedArray.length = max;
+    pickedArray.fill(0); 
+
+    for (let i = 0; i < attempts; i++) {
+        const picked = weightedRandomPicker(max, weight);
+        pickedArray[picked]++;
+    }
+
     const data: ChartData<'bar'> = {
-        labels: props.data,
+        labels: Array.from({ length: max }, (_, i) => i),
         datasets: [
             {
-                data: props.data,
+                data: pickedArray,
             }
         ]
     };
@@ -36,11 +48,15 @@ const TestPicker = (props: TestPickerProps) => {
   );
 }
 
+const weightedRandomPicker = (max: number, weight: number) => {
+    const randomNumber = Math.random() ** weight;
+    return Math.floor(randomNumber * (max + 1));
+}
+
 const TestPickerPage = () => {
-    const data = Array.from({ length: 100 }, (_, i) => i + 1);
     return (
         <div>
-            <TestPicker data={data} />
+            <TestPicker max={100} weight={2} attempts={10000} />
         </div>
     )
 }

@@ -5,6 +5,7 @@ import {
   pgTable,
   serial,
   text,
+  timestamp,
 } from "drizzle-orm/pg-core";
 
 export const CitationTable = pgTable("citations", {
@@ -19,4 +20,5 @@ export const CitationTable = pgTable("citations", {
   entire: text("entire").notNull(),
   active: boolean("active").notNull().default(false),
   score: integer("score").notNull().default(0),
+  last_reviewed: timestamp("last_reviewed"),
 });

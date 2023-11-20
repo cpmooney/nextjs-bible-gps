@@ -1,7 +1,6 @@
 "use client";
 import {Deck} from "@/models/deck";
 import {ClerkProvider, UserButton} from "@clerk/nextjs";
-import {ArrowDownOnSquareStackIcon} from "@heroicons/react/24/outline";
 import {DeckComponent} from "app/deck-component";
 import {ImageBackground} from "app/image-background";
 import {useEffect, useState} from "react";

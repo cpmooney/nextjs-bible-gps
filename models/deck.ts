@@ -2,6 +2,7 @@ import {SaveChangedScoresRequest} from "server/db-save-changed";
 import {bibleBooks} from "./books";
 import {Card} from "./card";
 import {Citation} from "./citation";
+import { z } from "zod";
 
 const INTRO_CUTOFF = 3;
 const INTRO_COUNT = 6;
@@ -16,6 +17,7 @@ export class Deck {
     this.computeActiveCards();
     this.computeIntroCards();
     this.computeTotalScore();
+    this.computeMaxScore();
   }
 
   private computeIntroCards(): void {
@@ -97,8 +99,40 @@ export class Deck {
   }
 
   private randomCardIndex(): number {
-    return Math.floor(Math.random() * this.activeCards.length);
+    let randomScore = this.randomScore();
+    return this.randomCardIndexWithScore(randomScore);
   }
+
+  private randomCardIndexWithScore(score: number): number {
+    if (score === -1) {
+      throw new Error("Cannot get random card with score 0");
+    }
+    const cardsWithScore = this.activeCards.filter((card) => {
+      return card.score === score;
+    });
+    console.log("score", score);
+    console.log("cardsWithScore", cardsWithScore.map((card) => card.id));
+    if (cardsWithScore.length > 0) {
+      const choiceAmongCardsWithScore = Math.floor(Math.random() * cardsWithScore.length);
+      return this.activeCards.indexOf(cardsWithScore[choiceAmongCardsWithScore]);
+    }
+    return this.randomCardIndexWithScore(score - 1);
+  }
+
+  private randomScore(): number {
+    const weightedRandomNumber = Math.random() ** 2;
+    return Math.floor(weightedRandomNumber * (this.maxScore + 1));
+  }
+
+  private computeMaxScore(): void {
+    this.allCards.forEach((card) => {
+      if (card.score > this.maxScore) {
+        this.maxScore = card.score;
+      }
+    });
+  }
+
+  private maxScore: number = 0;
 
   public incrementScore(): void {
     this.totalScore++;
@@ -120,22 +154,18 @@ export class Deck {
     this.addCurrentCardWithChangedScore();
   }
 
-  public resetAllScores(): SaveChangedScoresRequest {
-    this.allCards.forEach((card) => card.resetScore());
-    return this.allCards.map((card) => {
-      return {id: card.id, score: 0};
-    });
-  }
-
-  public cardsWithChangedScores: Record<number, number> = {};
+  public cardsWithChangedScores: Record<number, { score: number, lastReviewed: Date }> = {};
 
   private addCurrentCardWithChangedScore(): void {
-    this.cardsWithChangedScores[this.currentCard.id] = this.currentCard.score;
+    this.cardsWithChangedScores[this.currentCard.id] = {
+      score: this.currentCard.score,
+      lastReviewed: this.currentCard.lastReviewed,
+    };
   }
 
   public get changedScoreRequest(): SaveChangedScoresRequest {
-    return Object.entries(this.cardsWithChangedScores).map(([id, score]) => {
-      return {id: parseInt(id), score};
+    return Object.entries(this.cardsWithChangedScores).map(([id, changeInfo]) => {
+      return {id: parseInt(id), score: changeInfo.score, lastReviewed: changeInfo.lastReviewed.toDateString()};
     });
   }
 
