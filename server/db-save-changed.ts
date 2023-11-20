@@ -60,11 +60,17 @@ const updateRecord = async (
   score: number,
   lastReviewed: Date
 ) => {
+  debugLog("info", `Updating score on citation ${citationId} to be ${score} with last reviewed ${lastReviewed}`);
+  try {
   await obtainDatabase()
     .update(CitationTable)
     .set({score: score, last_reviewed: lastReviewed})
     .where(
       and(eq(CitationTable.id, citationId), eq(CitationTable.userId, userId))
     );
-  debugLog("info", `Updated score on citation ${citationId} to be ${score}`);
+    debugLog("info", "Update complete!");
+  }
+  catch (e) {
+    debugLog("error", `Error updating citation ${citationId}: ${e}`);
+  }
 };
