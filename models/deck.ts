@@ -154,18 +154,18 @@ export class Deck {
     this.addCurrentCardWithChangedScore();
   }
 
-  public cardsWithChangedScores: Record<number, { score: number, lastReviewed: Date }> = {};
+  public cardsWithChangedScores: Record<number, { score: number, lastReviewed: string }> = {};
 
   private addCurrentCardWithChangedScore(): void {
     this.cardsWithChangedScores[this.currentCard.id] = {
       score: this.currentCard.score,
-      lastReviewed: this.currentCard.lastReviewed,
+      lastReviewed: this.currentCard.lastReviewed.toISOString(),
     };
   }
 
   public get changedScoreRequest(): SaveChangedScoresRequest {
     return Object.entries(this.cardsWithChangedScores).map(([id, changeInfo]) => {
-      return {id: parseInt(id), score: changeInfo.score, lastReviewed: changeInfo.lastReviewed.toDateString()};
+      return {id: parseInt(id), score: changeInfo.score, lastReviewed: changeInfo.lastReviewed};
     });
   }
 
