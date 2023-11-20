@@ -2,7 +2,7 @@ import {SaveChangedScoresRequest} from "server/db-save-changed";
 import {bibleBooks} from "./books";
 import {Card} from "./card";
 import {Citation} from "./citation";
-import { z } from "zod";
+import { weightedRandomNumber } from "@/utilities/weighted-random-number";
 
 const INTRO_CUTOFF = 3;
 const INTRO_COUNT = 6;
@@ -107,19 +107,17 @@ export class Deck {
     if (score === -1) {
       throw new Error("Cannot get random card with score 0");
     }
-    const cardsWithScore = this.activeCards.filter((card) => {
+    const cardWithScore = this.activeCards.find((card) => {
       return card.score === score;
     });
-    if (cardsWithScore.length > 0) {
-      const choiceAmongCardsWithScore = Math.floor(Math.random() * cardsWithScore.length);
-      return this.activeCards.indexOf(cardsWithScore[choiceAmongCardsWithScore]);
+    if (cardWithScore) {
+      return this.activeCards.indexOf(cardWithScore);
     }
     return this.randomCardIndexWithScore(score - 1);
   }
 
   private randomScore(): number {
-    const weightedRandomNumber = Math.random() ** 3;
-    return Math.floor(weightedRandomNumber * (this.maxScore + 1));
+    return weightedRandomNumber(this.maxScore);
   }
 
   private computeMaxScore(): void {
