@@ -6,6 +6,7 @@ import {ImageBackground} from "app/image-background";
 import {useEffect, useState} from "react";
 import {trpc} from "../utilities/trpc";
 import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
+import { usingDeckIsReadySetter } from "@/utilities/card-arrays";
 
 const DeckPageWithBackground = () => {
   return (
@@ -24,6 +25,9 @@ const DeckPage = () => {
     }
   );
   const [deck, setDeck] = useState<Deck>(Deck.of([]));
+  const [deckIsReady, setDeckIsReady] = useState(false);
+
+  usingDeckIsReadySetter(setDeckIsReady);
 
   useEffect(() => {
     const resolvedData = fixTrpcBug(data);
@@ -31,7 +35,11 @@ const DeckPage = () => {
   }, [data]);
 
   if (isLoading) {
-    return <div></div>;
+    return <div>Loading</div>;
+  }
+
+  if (!deckIsReady) {
+    return <div>Building deck</div>
   }
 
   if (!data) {
