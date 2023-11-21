@@ -1,21 +1,20 @@
 import { Card } from "@/models/card";
-import { Dispatch, SetStateAction } from "react";
 
 export const usingCardArrays = (cards: Card[]): void => {
   allCards = cards;
   buildArraysFromNonZeroScores();
   replenishIntroArray();
-  setDeckIsReady?.(true);
+  handleDeckIsReady();
 }
 
-export const usingDeckIsReadySetter = (setter: Dispatch<SetStateAction<boolean>>) => {
-  setDeckIsReady = setter;
+export const usingDeckIsReadySetter = (handler: () => void) => {
+  handleDeckIsReady = handler;
 }
 
 export const drawCard = (): Card => {
-  guaranteeShuffledDeck();
-  const randomIndex = randomInRange(0, shuffledDeck.length - 1);
-  const chosenId = shuffledDeck.splice(randomIndex, 1)[0];
+  guaranteeDrawDeck();
+  const randomIndex = randomInRange(0, drawDeck.length - 1);
+  const chosenId = drawDeck.splice(randomIndex, 1)[0];
   const chosenCard = allCards.find((card) => card.id === chosenId);
   if (!chosenCard) {
     throw new Error(`drawCard: Could not find card with id ${chosenId}`);
@@ -54,6 +53,16 @@ export const dumpCardArrays = (): Record<ArrayType, Card[]> => {
   return result;
 }
 
+export const dumpDrawDeck = (): Card[] => {
+  return drawDeck.map((id) => {
+    const card = allCards.find((card) => card.id === id);
+    if (!card) {
+      throw new Error(`dumpDrawDeck: Could not find card with id ${id}`);
+    }
+    return card;
+  });
+}
+
 type ArrayType = 'intro' | 'intermediate' | 'advanced' | 'active';
 const arrayTypeList: ArrayType[] = ['intro', 'intermediate', 'advanced'];
 
@@ -89,26 +98,26 @@ const buildArraysFromNonZeroScores = (): void => {
   });
 }
 
-const guaranteeShuffledDeck = (): void => {
-  if (shuffledDeck.length == 0) {
+const guaranteeDrawDeck = (): void => {
+  if (drawDeck.length == 0) {
     idArray('intro').forEach((id) => {
-      shuffledDeck.push(id);
-      shuffledDeck.push(id);
-      shuffledDeck.push(id);
+      drawDeck.push(id);
+      drawDeck.push(id);
+      drawDeck.push(id);
     });
     idArray('intermediate').forEach((id) => {
-      shuffledDeck.push(id);
+      drawDeck.push(id);
     });
-    const advancedLength = Math.floor(shuffledDeck.length / 3);
+    const advancedLength = Math.floor(drawDeck.length / 3);
     for (let i = 0; i < advancedLength; i++) {
       // TODO: Take 'last reviewed' into account here
       const randomAdvancedId = idArray('advanced')[randomInRange(0, idArray('advanced').length - 1)];
-      shuffledDeck.push(randomAdvancedId);
+      drawDeck.push(randomAdvancedId);
     }
   }
 }
 
-const shuffledDeck: number[] = [];
+const drawDeck: number[] = [];
 
 const numberOfCards = (arrayType: ArrayType) =>
   Object.entries(cardArrays[arrayType]).length;
@@ -116,7 +125,6 @@ const numberOfCards = (arrayType: ArrayType) =>
 const idArray = (arrayType: ArrayType): number[]  => {
     return Object.keys(cardArrays[arrayType]).map((id) => parseInt(id));
   }
-
 
 const moveCard = (id: number, to: ArrayType): void => {
   arrayTypeList.forEach((arrayType) => {
@@ -131,4 +139,4 @@ const randomInRange = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-let setDeckIsReady: Dispatch<SetStateAction<boolean>> | undefined;
+let handleDeckIsReady: () => void;

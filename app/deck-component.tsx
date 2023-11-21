@@ -40,13 +40,13 @@ export const DeckComponent = (props: DeckComponentProps) => {
   
   const correct = () => {
     setShowingAnswer(false);
-    deck.incrementScore();
+    deck.incrementCardScore();
     advanceToNextCard();
   };
   
   const wrong = () => {
     setShowingAnswer(false);
-    deck.resetScore();
+    deck.resetCardScore();
     advanceToNextCard();
   };
   
@@ -64,7 +64,6 @@ export const DeckComponent = (props: DeckComponentProps) => {
     toggleShowAnswer={toggleShowAnswer}
     />
     <ScoreComponent initialScore={deck.initialScore} scoreIncrease={deck.scoreIncrease} syncScoresToDb={syncScoresToDb} />
-    <RandomCardPickerTest deck={deck} />
     </div>
     );
   };

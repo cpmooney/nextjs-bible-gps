@@ -5,14 +5,16 @@ import {Citation} from "./citation";
 import { drawCard, usingCardArrays } from "@/utilities/card-arrays";
 
 export class Deck {
-  public static of(citations: Citation[] | undefined): Deck {
-    return new Deck(citations ?? []);
+  public static of(citations: Citation[]): Deck {
+    return new Deck(citations);
   }
 
   private constructor(citations: Citation[]) {
-    this.allCards = citations.map(Card.of);
-    usingCardArrays(this.allCards);
-    this.computeTotalScore();
+    if (citations.length > 0) {
+      this.allCards = citations.map(Card.of);
+      usingCardArrays(this.allCards);
+      this.computeTotalScore();
+    }
   }
 
   public initialScore: number = 0;

@@ -3,7 +3,7 @@ import {Deck} from "@/models/deck";
 import {ClerkProvider, UserButton} from "@clerk/nextjs";
 import {DeckComponent} from "app/deck-component";
 import {ImageBackground} from "app/image-background";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {trpc} from "../utilities/trpc";
 import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
 import { usingDeckIsReadySetter } from "@/utilities/card-arrays";
@@ -24,17 +24,20 @@ const DeckPage = () => {
       refetchOnWindowFocus: false,
     }
   );
-  const [deck, setDeck] = useState<Deck>(Deck.of([]));
+  // TODO: Move Deck a handling to a context.
+  const [deck, setDeck] = useState<Deck | null>(null);
   const [deckIsReady, setDeckIsReady] = useState(false);
-
-  usingDeckIsReadySetter(setDeckIsReady);
+  const handleDeckIsReady = useCallback(() => {
+    setDeckIsReady(true);
+  }, []);
+  usingDeckIsReadySetter(handleDeckIsReady);
 
   useEffect(() => {
     const resolvedData = fixTrpcBug(data);
     setDeck(Deck.of(resolvedData));
   }, [data]);
 
-  if (isLoading) {
+  if (isLoading || !deck) {
     return <div>Loading</div>;
   }
 
