@@ -2,45 +2,18 @@ import {SaveChangedScoresRequest} from "server/db-save-changed";
 import {bibleBooks} from "./books";
 import {Card} from "./card";
 import {Citation} from "./citation";
-
-const INTRO_CUTOFF = 3;
-const INTRO_COUNT = 6;
+import { drawCard, usingCardArrays } from "@/utilities/card-arrays";
 
 export class Deck {
-  public static of(citations: Citation[] | undefined): Deck {
-    return new Deck(citations ?? []);
+  public static of(citations: Citation[]): Deck {
+    return new Deck(citations);
   }
 
   private constructor(citations: Citation[]) {
-    this.allCards = citations.map(Card.of);
-    this.computeActiveCards();
-    this.computeIntroCards();
-    this.computeTotalScore();
-  }
-
-  private computeIntroCards(): void {
-    this.introCards = {};
-    this.replenishIntroCards();
-  }
-
-  private computeActiveCards(): void {
-    this.activeCards.length = 0;
-    this.allCards.forEach((card) => {
-      if (card.score > 0) {
-        this.activeCards.push(card);
-      }
-    });
-  }
-
-  private replenishIntroCards(): void {
-    if (this.numberOfIntroCards < INTRO_COUNT) {
-      this.allCards.some((card) => {
-        if (card.score < INTRO_CUTOFF) {
-          this.introCards[card.id] = true;
-          this.activeCards.push(card);
-          return this.numberOfIntroCards >= INTRO_COUNT;
-        }
-      });
+    if (citations.length > 0) {
+      this.allCards = citations.map(Card.of);
+      usingCardArrays(this.allCards);
+      this.computeTotalScore();
     }
   }
 
@@ -62,80 +35,49 @@ export class Deck {
     this.initialScore = this.totalScore;
   }
 
-  private get numberOfIntroCards(): number {
-    return Object.entries(this.introCards).length;
+  public get currentCard(): Card {
+    if (!this._currentCard) {
+      this._currentCard = drawCard();
+    }
+    return this._currentCard;
   }
-  public get introCardIds(): number[] {
-    return Object.keys(this.introCards).map((id) => parseInt(id));
-  }
-  private introCards: Record<number, boolean> = {};
 
   private readonly allCards: Card[] = [];
-  public readonly activeCards: Card[] = [];
-
-  private index: number = 0;
-
-  public get currentCard(): Card {
-    return this.activeCards[this.index];
-  }
-
-  public get activeNumber(): number {
-    return this.activeCards.length;
-  }
+  private _currentCard: Card | undefined
 
   public get changedNumber(): number {
     return Object.entries(this.cardsWithChangedScores).length;
   }
 
   public nextCard(): Card {
-    this.advanceIndex();
+    this._currentCard = drawCard();
     return this.currentCard;
   }
 
-  private advanceIndex(): void {
-    this.index = this.randomCardIndex();
-  }
-
-  private randomCardIndex(): number {
-    return Math.floor(Math.random() * this.activeCards.length);
-  }
-
-  public incrementScore(): void {
+  public incrementCardScore(): void {
     this.totalScore++;
     this.currentCard.incrementScore();
     this.addCurrentCardWithChangedScore();
-    this.removeCurrentFromIntroIfTooHighScore();
-    this.replenishIntroCards();
   }
 
-  private removeCurrentFromIntroIfTooHighScore(): void {
-    if (this.currentCard.score >= INTRO_CUTOFF) {
-      delete this.introCards[this.currentCard.id];
-    }
-  }
-
-  public resetScore(): void {
+  public resetCardScore(): void {
     this.totalScore -= this.currentCard.score;
     this.currentCard.resetScore();
     this.addCurrentCardWithChangedScore();
   }
 
-  public resetAllScores(): SaveChangedScoresRequest {
-    this.allCards.forEach((card) => card.resetScore());
-    return this.allCards.map((card) => {
-      return {id: card.id, score: 0};
-    });
-  }
-
-  public cardsWithChangedScores: Record<number, number> = {};
+  public cardsWithChangedScores: Record<number, { score: number, lastReviewed: string }> = {};
 
   private addCurrentCardWithChangedScore(): void {
-    this.cardsWithChangedScores[this.currentCard.id] = this.currentCard.score;
+    this.cardsWithChangedScores[this.currentCard.id] = {
+      score: this.currentCard.score,
+      lastReviewed: this.currentCard.lastReviewed.toISOString(),
+    };
   }
 
   public get changedScoreRequest(): SaveChangedScoresRequest {
-    return Object.entries(this.cardsWithChangedScores).map(([id, score]) => {
-      return {id: parseInt(id), score};
+    return Object.entries(this.cardsWithChangedScores).map(([id, changeInfo]) => {
+      return {id: parseInt(id), score: changeInfo.score, lastReviewed: changeInfo.lastReviewed};
     });
   }
 

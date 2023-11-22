@@ -1,50 +1,53 @@
 import { Card } from "@/models/card";
+import { Citation } from "@/models/citation";
 import { Deck } from "@/models/deck";
 import { trpc } from "@/utilities/trpc";
+import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
 import { useEffect, useState } from "react";
 
 type OrderedCitations = {
-    book: string;
-    card: Card[];
+  book: string;
+  card: Card[];
 }[];
 
 const DeckListView = () => {
-// TODO: Is this the ideal pattern?  Should data be in a store?
-const { data, isLoading } = trpc.loadAllProcedure.useQuery({});
+  // TODO: Is this the ideal pattern?  Should data be in a store?
+  const { data, isLoading } = trpc.loadAllProcedure.useQuery({});
   const [deck, setDeck] = useState<Deck>(Deck.of([]));
   const orderedCards = deck.orderedCards();
-
+  
   useEffect(() => {
-    setDeck(Deck.of(data));
+    const resolvedData = fixTrpcBug(data);
+    setDeck(Deck.of(resolvedData));
   }, [data]);
-
+  
   if (isLoading) {
     return <div></div>;
   }
-
+  
   if (!data) {
     return <div>User has no data</div>;
   }
-
+  
   return (
     <div>
-      <h1>Deck List View</h1>
+    <h1>Deck List View</h1>
+    <ul>
+    {orderedCards.map((cardsByBook) => (
+      <li key={cardsByBook.book}>
+      <h2>{cardsByBook.book}</h2>
       <ul>
-        {orderedCards.map((cardsByBook) => (
-          <li key={cardsByBook.book}>
-            <h2>{cardsByBook.book}</h2>
-            <ul>
-              {cardsByBook.cards.map((card) => (
-                <li key={card.id}>
-                  <h3>{card.fullCitation}</h3>
-                </li>
-              ))}
-            </ul>
-          </li>
+      {cardsByBook.cards.map((card) => (
+        <li key={card.id}>
+        <h3>{card.fullCitation}</h3>
+        </li>
         ))}
-      </ul>
-    </div>
-  )
-}
-
-export default trpc.withTRPC(DeckListView);
+        </ul>
+        </li>
+        ))}
+        </ul>
+        </div>
+        )
+      }
+      
+      export default trpc.withTRPC(DeckListView);

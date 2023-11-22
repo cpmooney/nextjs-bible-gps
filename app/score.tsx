@@ -6,7 +6,7 @@ interface TotalStatComponentProps {
   syncScoresToDb: () => Promise<void>;
 }
 
-export default function TotalStatComponent(props: TotalStatComponentProps) {
+export default function ScoreComponent(props: TotalStatComponentProps) {
   const {syncScoresToDb, initialScore, scoreIncrease} = props;
 
   const getChangeColorClass = () => {

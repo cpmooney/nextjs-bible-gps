@@ -4,16 +4,19 @@ import { Bar } from "react-chartjs-2";
 
 Chart.register(...registerables);
 
-interface TestPickerProps {
-    data: number[]
+interface BarGraphProps {
+    labels: string[];
+    values: number[];
 }
 
-const TestPicker = (props: TestPickerProps) => {
+export const BarGraph = (props: BarGraphProps) => {
+    const { labels, values } = props;
+
     const data: ChartData<'bar'> = {
-        labels: props.data,
+        labels: labels,
         datasets: [
             {
-                data: props.data,
+                data: values,
             }
         ]
     };
@@ -30,19 +33,10 @@ const TestPicker = (props: TestPickerProps) => {
      };
 
   return (
-    <div>
+    <div className="card mt-4 bg-base-100 shadow-xl flex-grow">
+      <div className="card-body">
       <Bar data={data} options={options} />
+      </div>
     </div>
   );
 }
-
-const TestPickerPage = () => {
-    const data = Array.from({ length: 100 }, (_, i) => i + 1);
-    return (
-        <div>
-            <TestPicker data={data} />
-        </div>
-    )
-}
-
-export default TestPickerPage;

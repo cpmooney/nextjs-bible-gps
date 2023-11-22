@@ -1,0 +1,1 @@
+ALTER TABLE "citations" ADD COLUMN "last_reviewed" timestamp;

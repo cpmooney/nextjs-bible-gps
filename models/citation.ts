@@ -12,6 +12,7 @@ export const ZodCitation = z.object({
   entire: z.string(),
   active: z.boolean(),
   score: z.number(),
+  lastReviewed: z.optional(z.date()),
 });
 
 export type Citation = z.infer<typeof ZodCitation>;

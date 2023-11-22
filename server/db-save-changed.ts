@@ -15,6 +15,7 @@ const ZodSaveChangedRequest = z.array(
   z.object({
     id: z.number(),
     score: z.number(),
+    lastReviewed: z.string(), // TODO Workaround for a bug with trpc
   })
 );
 
@@ -43,8 +44,17 @@ const invokeDbSaveChangedAction = async (
   );
 
   await Promise.all(
-    changedRequest.map((record) =>
-      updateRecord(userId, record.id, record.score)
+    changedRequest.map(async (record) =>
+    {
+      try {
+        const lastReviewed = new Date(record.lastReviewed);
+        debugLog("info", "lastReviewed" + lastReviewed);
+        await updateRecord(userId, record.id, record.score, lastReviewed)
+      }
+      catch (e) {
+        debugLog("error", "Error updating record: " + e);
+    }
+    }
     )
   );
   return obtainDebugMessages();
@@ -53,13 +63,15 @@ const invokeDbSaveChangedAction = async (
 const updateRecord = async (
   userId: string,
   citationId: number,
-  score: number
+  score: number,
+  lastReviewed: Date
 ) => {
+  debugLog("info", `Updating score on citation ${citationId} to be ${score} with last reviewed ${lastReviewed}`);
   await obtainDatabase()
     .update(CitationTable)
-    .set({score: score})
+    .set({score: score, last_reviewed: lastReviewed})
     .where(
       and(eq(CitationTable.id, citationId), eq(CitationTable.userId, userId))
     );
-  debugLog("info", `Updated score on citation ${citationId} to be ${score}`);
+    debugLog("info", "Update complete!");
 };

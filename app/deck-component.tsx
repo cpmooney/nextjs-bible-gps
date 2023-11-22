@@ -2,9 +2,14 @@ import {Deck} from "@/models/deck";
 import {useEffect, useState} from "react";
 import CardComponent from "./card-component";
 import "./globals.css";
-import TotalStatComponent from "./total-stat";
+import ScoreComponent from "./score";
 import { SaveChangedScoresRequest } from "server/db-save-changed";
 import { trpc } from "@/utilities/trpc";
+import { RandomCardPickerTest } from "./random-card-picker-test";
+
+interface DeckComponentProps {
+  deck: Deck;
+}
 
 export const DeckComponent = (props: DeckComponentProps) => {
   const {deck} = props;
@@ -35,13 +40,13 @@ export const DeckComponent = (props: DeckComponentProps) => {
   
   const correct = () => {
     setShowingAnswer(false);
-    deck.incrementScore();
+    deck.incrementCardScore();
     advanceToNextCard();
   };
   
   const wrong = () => {
     setShowingAnswer(false);
-    deck.resetScore();
+    deck.resetCardScore();
     advanceToNextCard();
   };
   
@@ -58,12 +63,9 @@ export const DeckComponent = (props: DeckComponentProps) => {
     wrong={wrong}
     toggleShowAnswer={toggleShowAnswer}
     />
-    <TotalStatComponent initialScore={deck.initialScore} scoreIncrease={deck.scoreIncrease} syncScoresToDb={syncScoresToDb} />
+    <ScoreComponent initialScore={deck.initialScore} scoreIncrease={deck.scoreIncrease} syncScoresToDb={syncScoresToDb} />
     </div>
     );
   };
-  
-  interface DeckComponentProps {
-    deck: Deck;
-  }
-  
+
+ 

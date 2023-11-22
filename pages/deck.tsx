@@ -1,11 +1,12 @@
 "use client";
 import {Deck} from "@/models/deck";
 import {ClerkProvider, UserButton} from "@clerk/nextjs";
-import {ArrowDownOnSquareStackIcon} from "@heroicons/react/24/outline";
 import {DeckComponent} from "app/deck-component";
 import {ImageBackground} from "app/image-background";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {trpc} from "../utilities/trpc";
+import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
+import { usingDeckIsReadySetter } from "@/utilities/card-arrays";
 
 const DeckPageWithBackground = () => {
   return (
@@ -23,14 +24,25 @@ const DeckPage = () => {
       refetchOnWindowFocus: false,
     }
   );
-  const [deck, setDeck] = useState<Deck>(Deck.of([]));
+  // TODO: Move Deck a handling to a context.
+  const [deck, setDeck] = useState<Deck | null>(null);
+  const [deckIsReady, setDeckIsReady] = useState(false);
+  const handleDeckIsReady = useCallback(() => {
+    setDeckIsReady(true);
+  }, []);
+  usingDeckIsReadySetter(handleDeckIsReady);
 
   useEffect(() => {
-    setDeck(Deck.of(data));
+    const resolvedData = fixTrpcBug(data);
+    setDeck(Deck.of(resolvedData));
   }, [data]);
 
-  if (isLoading) {
-    return <div></div>;
+  if (isLoading || !deck) {
+    return <div>Loading</div>;
+  }
+
+  if (!deckIsReady) {
+    return <div>Building deck</div>
   }
 
   if (!data) {
