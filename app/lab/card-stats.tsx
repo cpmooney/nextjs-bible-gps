@@ -1,4 +1,4 @@
-import {Card} from "../models/card";
+import {Card} from "../../models/card";
 
 interface ScoreChangeRequestComponentProps {
   changedScoreRequest: Record<number, number>;

@@ -1,7 +1,5 @@
 import {
-  ChartBarIcon,
   CheckCircleIcon,
-  InformationCircleIcon,
   NoSymbolIcon,
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";

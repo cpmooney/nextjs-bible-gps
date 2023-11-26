@@ -26,9 +26,9 @@ const App = ({
     } else {
       appendDebugMessage([
         {
-          action: "attempted unauthenticated db action",
+          actionName: "attempted unauthenticated db actionName",
           level: "error",
-          message: "You cannot perform this action in production.",
+          message: "You cannot perform this actionName in production.",
           timestamp: new Date().getTime(),
         },
       ]);
@@ -38,7 +38,7 @@ const App = ({
   const testDebugMessage = () => {
     appendDebugMessage([
       {
-        action: "test debug message",
+        actionName: "test debug message",
         level: "info",
         message: "This is a test debug message.",
         timestamp: new Date().getTime(),

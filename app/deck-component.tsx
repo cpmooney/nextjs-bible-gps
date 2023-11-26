@@ -5,7 +5,7 @@ import "./globals.css";
 import ScoreComponent from "./score";
 import { SaveChangedScoresRequest } from "server/db-save-changed";
 import { trpc } from "@/utilities/trpc";
-import { RandomCardPickerTest } from "./random-card-picker-test";
+import { AdditionalActionComponents } from "./additional-actions";
 
 interface DeckComponentProps {
   deck: Deck;
@@ -64,6 +64,7 @@ export const DeckComponent = (props: DeckComponentProps) => {
     toggleShowAnswer={toggleShowAnswer}
     />
     <ScoreComponent initialScore={deck.initialScore} scoreIncrease={deck.scoreIncrease} syncScoresToDb={syncScoresToDb} />
+    <AdditionalActionComponents citation={deck.currentCard} />
     </div>
     );
   };

@@ -1,9 +1,11 @@
 import { z } from "zod";
+import { obtainUserId } from "./current-auth";
 
 const ZodLogLevel = z.enum(["info", "warn", "error"]);
 
 export const ZodDebugMessage = z.object({
-  action: z.string(),
+  userId: z.string().optional(),
+  actionName: z.string(),
   message: z.string(),
   level: ZodLogLevel,
   timestamp: z.number(),
@@ -27,29 +29,16 @@ export const debugLog = (level: LogLevel, message: string) => {
   if (!actionName) {
     throw new Error("Debugger not initialized");
   }
-  const debugMessage = `db-action: ${actionName} ${message}`;
   const timestamp = now();
-  console.log(`${formatUnixTimeAsLocaleString(timestamp)} ${debugMessage}`);
-  debugMessages.push({
-    message: debugMessage,
+  const userId = obtainUserId();
+  const debugMessage: DebugMessage = {
+    userId,
+    message,
     level,
     timestamp,
-    action: actionName,
-  });
-}
-
-const formatUnixTimeAsLocaleString = (unixTime: number): string => {
-  return new Date(unixTime).toLocaleString(undefined, { 
-    year: 'numeric', 
-    month: '2-digit', 
-    day: '2-digit', 
-    hour: '2-digit', 
-    minute: '2-digit', 
-    second: '2-digit', 
-    hour12: false,
-    timeZoneName: 'short',
-    fractionalSecondDigits: 3
-  });
+    actionName,
+  };
+  debugMessages.push(debugMessage);
 }
 
 const now = (): number => {
