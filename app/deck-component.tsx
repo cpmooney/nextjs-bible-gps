@@ -64,7 +64,7 @@ export const DeckComponent = (props: DeckComponentProps) => {
     toggleShowAnswer={toggleShowAnswer}
     />
     <ScoreComponent initialScore={deck.initialScore} scoreIncrease={deck.scoreIncrease} syncScoresToDb={syncScoresToDb} />
-    <AdditionalActionComponents citation={deck.currentCard} />
+    <AdditionalActionComponents card={deck.currentCard} />
     </div>
     );
   };

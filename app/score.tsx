@@ -33,7 +33,7 @@ export default function ScoreComponent(props: TotalStatComponentProps) {
     <div className="flex flex-row w-96">
       <div className="card bg-base-100 shadow-xl mr-4 mt-4 flex-1">
         <div className="card-body">
-          <div className={`justify-center text-6xl ${getChangeColorClass()}`}>
+          <div className={`justify-center text-5xl ${getChangeColorClass()}`}>
             {scoreIncrease}
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function ScoreComponent(props: TotalStatComponentProps) {
       <div className="card bg-base-100 shadow-xl mt-4 flex-1">
         <div className="card-body">
           <div
-            className={`justify-center text-6xl ${getTotalScoreColorClass()}`}
+            className={`justify-center text-4xl ${getTotalScoreColorClass()}`}
           >
             {initialScore}
           </div>

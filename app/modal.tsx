@@ -1,13 +1,23 @@
+import { XMarkIcon } from "@heroicons/react/24/outline";
+
 interface ModalProps {
   contents: JSX.Element;
   name: string;
 }
 
 export const Modal = (props: ModalProps) => {
-  const modalId = makeModalId(props.name);
+  const { name } = props;
+  const modalId = makeModalId(name);
+  const closeMe = () => closeModal(name);
   return (
     <dialog id={modalId} className="modal">
       <div className="modal-box">
+        <button
+          className="btn btn-sm btn-circle absolute right-2 top-2"
+          onClick={closeMe}
+        >
+          <XMarkIcon className="h-8 w-8" />
+        </button>
         {props.contents}
       </div>
     </dialog>
@@ -15,18 +25,18 @@ export const Modal = (props: ModalProps) => {
 };
 
 export const showModal = (name: string) => {
-    const modal = obtainModal(name);
-    if (modal) {
-        modal.showModal();
-    }
-}
+  const modal = obtainModal(name);
+  if (modal) {
+    modal.showModal();
+  }
+};
 
 export const closeModal = (name: string) => {
-    const modal = obtainModal(name);
-    if (modal) {
-        modal.close();
-    }
-}
+  const modal = obtainModal(name);
+  if (modal) {
+    modal.close();
+  }
+};
 
 const makeModalId = (name: string) => {
   return `modal_${name}`;

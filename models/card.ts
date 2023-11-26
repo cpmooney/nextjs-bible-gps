@@ -21,6 +21,10 @@ export class Card implements Citation {
     this.fullCitation = `${book} ${chapter}:${firstVerse}${suffix}`;
   }
 
+  public get bibleGatewayUrl() {
+  return `https://www.biblegateway.com/passage/?search=${encodeURIComponent(`${this.book} ${this.chapter}`)}&version=NKJV`;
+}
+
   public readonly bookNumber: number;
   public fullCitation: string;
 

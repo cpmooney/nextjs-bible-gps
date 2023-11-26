@@ -1,6 +1,6 @@
 import { trpc } from "@/utilities/trpc";
 import { Modal, closeModal } from "./modal";
-import { CheckCircleIcon, NoSymbolIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export const PartialCitationModal = () => {
   const createPartialCitationProcedure =
@@ -36,11 +36,6 @@ export const PartialCitationModal = () => {
             onClick={saveAndClose}
           >
             <CheckCircleIcon className="h-8 w-8" />
-          </button>
-          <button
-            className="btn btn-sm btn-circle absolute right-2 top-2"
-            onClick={closeMe}>
-            <XMarkIcon className="h-8 w-8" />
           </button>
         </div>
       </div>

@@ -1,21 +1,19 @@
-import { BookOpenIcon, InformationCircleIcon, LightBulbIcon, PencilIcon, Square2StackIcon } from "@heroicons/react/24/outline";
+import { ChartBarIcon, InformationCircleIcon, LightBulbIcon, PencilIcon } from "@heroicons/react/24/outline";
 import { showModal } from "./modal";
-import { Citation } from "@/models/citation";
 import { PartialCitationModal } from "./partial-citations";
+import { CitationInfo } from "./citation-info";
+import { Card } from '@/models/card'
+import { CardEditModal } from "./card-edit-modal";
 
 interface AdditionalActionProps {
     // TODO: Need to move this kind of thing to context
-    citation: Citation;
+    card: Card;
 }
 
 export const AdditionalActionComponents = (props: AdditionalActionProps) => {
-    const {citation} = props;
   const showFullCitation = () => showModal("full_citation");
   const editCitation = () => showModal("edit_citation");
   const createPartialCitation = () => showModal("create_partial_citation");
-  const showInBibleApp = () => {
-    window.open(bibleGatewayUrl(citation), "_blank");
-  }
 
   return (
     <>
@@ -35,9 +33,8 @@ export const AdditionalActionComponents = (props: AdditionalActionProps) => {
           </button>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
-            onClick={showInBibleApp}
           >
-            <BookOpenIcon className="h-8 w-8" />
+            <ChartBarIcon className="h-8 w-8" />
           </button>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
@@ -49,12 +46,11 @@ export const AdditionalActionComponents = (props: AdditionalActionProps) => {
       </div>
       <div>
         <PartialCitationModal />
+        <CitationInfo card={props.card}/>
+        <CardEditModal card={props.card}/>
       </div>
     </>
   );
 };
 
-const bibleGatewayUrl = (citation: Citation) => {
-  const {book, chapter} = citation;
-  return `https://www.biblegateway.com/passage/?search=${encodeURIComponent(`${book} ${chapter}`)}&version=NKJV`;
-}
+
