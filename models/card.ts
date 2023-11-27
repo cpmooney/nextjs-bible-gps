@@ -3,7 +3,7 @@ import {Citation} from "./citation";
 
 export class Card implements Citation {
   private constructor(
-    public id: number,
+    public id: number | undefined,
     public fragment: string,
     public book: string,
     public chapter: number,
@@ -23,7 +23,11 @@ export class Card implements Citation {
 
   public get bibleGatewayUrl() {
   return `https://www.biblegateway.com/passage/?search=${encodeURIComponent(`${this.book} ${this.chapter}`)}&version=NKJV`;
-}
+  }
+
+  public static get empty() {
+    return new Card(undefined, "", "", 0, 0, "", [], "", false, 0, "");
+  }
 
   public readonly bookNumber: number;
   public fullCitation: string;
@@ -45,7 +49,7 @@ export class Card implements Citation {
 
   public static of(citation: Citation): Card {
     return new Card(
-      citation.id!,
+      citation.id,
       citation.fragment,
       citation.book,
       citation.chapter,

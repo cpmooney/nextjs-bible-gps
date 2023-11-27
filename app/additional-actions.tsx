@@ -1,4 +1,4 @@
-import { ChartBarIcon, InformationCircleIcon, LightBulbIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { ChartBarIcon, InformationCircleIcon, LightBulbIcon, PencilIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { showModal } from "./modal";
 import { PartialCitationModal } from "./partial-citations";
 import { CitationInfo } from "./citation-info";
@@ -14,6 +14,7 @@ export const AdditionalActionComponents = (props: AdditionalActionProps) => {
   const showFullCitation = () => showModal("full_citation");
   const editCitation = () => showModal("edit_citation");
   const createPartialCitation = () => showModal("create_partial_citation");
+  const addNewCitation = () => showModal("edit_citation");
 
   return (
     <>
@@ -41,6 +42,12 @@ export const AdditionalActionComponents = (props: AdditionalActionProps) => {
             onClick={createPartialCitation}
           >
             <LightBulbIcon className="h-8 w-8" />
+          </button>
+          <button
+            className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
+            onClick={addNewCitation}
+          >
+            <PlusCircleIcon className="h-8 w-8" />
           </button>
         </div>
       </div>
