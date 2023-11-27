@@ -10,6 +10,7 @@ import {
   obtainDebugMessages,
   usingDebugger,
 } from "../utilities/debugger";
+import { obtainGuaranteedUserId } from "@/utilities/current-auth";
 
 const ZodSaveChangedRequest = z.array(
   z.object({
@@ -26,19 +27,18 @@ export const usingDbSaveChangedProcedure = () =>
     .use(isAuthed)
     .input(ZodSaveChangedRequest)
     .output(z.array(ZodDebugMessage))
-    .mutation(async ({ctx, input}) => {
-      return await invokeDbSaveChangedAction(ctx.auth.userId, input);
+    .mutation(async ({input}) => {
+      return await invokeDbSaveChangedAction(input);
     });
 
 const invokeDbSaveChangedAction = async (
-  userId: string,
   changedRequest: SaveChangedScoresRequest
 ): Promise<DebugMessage[]> => {
   usingDatabase({CitationTable});
   usingDebugger("db-save-changed");
   debugLog(
     "info",
-    `Saving changed citations for user ${userId}: ${JSON.stringify(
+    `Saving changed citations: ${JSON.stringify(
       changedRequest
     )}`
   );
@@ -49,24 +49,22 @@ const invokeDbSaveChangedAction = async (
       try {
         const lastReviewed = new Date(record.lastReviewed);
         debugLog("info", "lastReviewed" + lastReviewed);
-        await updateRecord(userId, record.id, record.score, lastReviewed)
+        await updateRecord(record.id, record.score, lastReviewed)
       }
       catch (e) {
         debugLog("error", "Error updating record: " + e);
-    }
-    }
-    )
+    }})
   );
   return obtainDebugMessages();
 };
 
 const updateRecord = async (
-  userId: string,
   citationId: number,
   score: number,
   lastReviewed: Date
 ) => {
   debugLog("info", `Updating score on citation ${citationId} to be ${score} with last reviewed ${lastReviewed}`);
+  const userId = obtainGuaranteedUserId();
   await obtainDatabase()
     .update(CitationTable)
     .set({score: score, last_reviewed: lastReviewed})

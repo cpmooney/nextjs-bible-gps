@@ -1,5 +1,6 @@
 import {TRPCError, initTRPC} from "@trpc/server";
 import {Context} from "./trpc-context";
+import { usingUser } from "@/utilities/current-auth";
 
 // Avoid exporting the entire t-object
 // since it's not very descriptive.
@@ -8,9 +9,11 @@ import {Context} from "./trpc-context";
 const t = initTRPC.context<Context>().create();
 
 export const isAuthed = t.middleware(({next, ctx}) => {
-  if (!ctx.auth.userId) {
+  const userId = ctx?.auth?.userId;
+  if (!userId) {
     throw new TRPCError({code: "UNAUTHORIZED"});
   }
+  usingUser(userId);
   return next({
     ctx: {
       auth: ctx.auth,
