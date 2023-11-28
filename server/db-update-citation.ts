@@ -1,41 +1,42 @@
 import {isAuthed, procedure} from "server/trpc";
-import {z} from "zod";
 import {obtainDatabase, usingDatabase} from "../utilities/database";
 import {
   debugLog,
   usingDebugger,
 } from "../utilities/debugger";
-import { PartialCitationTable } from "db/schema/partial-citation-table";
 import { obtainGuaranteedUserId } from "@/utilities/current-auth";
+import { CitationTable } from "db/schema/citation-table";
+import { Citation, ZodCitation } from "@/models/citation";
 
-const ZodSavePartialCitationRequest = 
-z.object({
-  fragment: z.string(),
-});
-
-export type SavePartialCitationRequest = z.infer<typeof ZodSavePartialCitationRequest>;
-
-export const usingDbSavePartialCitationProcedure = () =>
+export const usingDbUpdateCitationProcedure = () =>
   procedure
     .use(isAuthed)
-    .input(ZodSavePartialCitationRequest)
+    .input(ZodCitation)
     .mutation(async ({input}) => {
-      return await invokeDbSavePartialCitationAction(input);
+      return await invokeDbUpdateCitationAction(input);
     });
 
-const invokeDbSavePartialCitationAction = async (
-  request: SavePartialCitationRequest
+const invokeDbUpdateCitationAction = async (
+  citation: Citation
 ): Promise<void> => {
-  usingDatabase({PartialCitationTable});
+  usingDatabase({CitationTable});
   usingDebugger("db-save-partial-citation");
-  const { fragment } = request;
-  debugLog("info", `Saving partial citation ${fragment}.`);
-  await updateRecord(fragment)
+  const fullCitation = `${citation.book} ${citation.chapter}:${citation.firstVerse}${citation.suffix}`;
+  debugLog("info", `Saving citation ${fullCitation}`);
+  const userId = obtainGuaranteedUserId();
+  citation.userId = userId;
+
+  await obtainDatabase()
+    .insert(CitationTable)
+    .values([citation])
+    .onConflictDoUpdate({
+      target: CitationTable.id,
+      set: citationWithoutId(citation), 
+    })
+    .execute();
 };
 
-const updateRecord = async (
-  fragment: string
-) => {
-  const userId = obtainGuaranteedUserId();
-  await obtainDatabase().insert(PartialCitationTable).values({ userId, fragment }).execute();
-};
+const citationWithoutId = (citation: Citation): Citation => {
+  const {id, ...citationWithoutId} = citation;
+  return citationWithoutId;
+}

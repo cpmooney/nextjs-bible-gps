@@ -34,8 +34,9 @@ export const AdditionalActionComponents = (props: AdditionalActionProps) => {
           </button>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
+            onClick={addNewCitation}
           >
-            <ChartBarIcon className="h-8 w-8" />
+            <PlusCircleIcon className="h-8 w-8" />
           </button>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
@@ -45,16 +46,15 @@ export const AdditionalActionComponents = (props: AdditionalActionProps) => {
           </button>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
-            onClick={addNewCitation}
           >
-            <PlusCircleIcon className="h-8 w-8" />
+            <ChartBarIcon className="h-8 w-8" />
           </button>
         </div>
       </div>
       <div>
         <PartialCitationModal />
         <CitationInfo card={props.card}/>
-        <CardEditModal card={props.card}/>
+        <CardEditModal />
       </div>
     </>
   );

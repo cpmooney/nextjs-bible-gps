@@ -29,7 +29,7 @@ export const CardEditModal = (props: CardEditProps) => {
   }};
 
   const updateCitationProcedure =
-    trpc.editCitationProcedure.useMutation();
+    trpc.updateCitationRequest.useMutation();
 
   const closeMe = () => closeModal("edit_citation");
   const saveAndClose = async () => {

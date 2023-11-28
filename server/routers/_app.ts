@@ -5,6 +5,7 @@ import {usingDbLoadAllProcedure} from "server/db-load-all-rows";
 import {usingDbSaveChangedProcedure} from "server/db-save-changed";
 import {router} from "../trpc";
 import { usingDbSavePartialCitationProcedure } from "server/db-save-partial-citation";
+import { usingDbUpdateCitationProcedure } from "server/db-update-citation";
 
 const dbProcedures = usingDbProcedures({
   rowType: ZodCitation,
@@ -14,12 +15,14 @@ const dbProcedures = usingDbProcedures({
 const loadAllProcedure = usingDbLoadAllProcedure();
 const saveChangedScoresProcedure = usingDbSaveChangedProcedure();
 const savePartialCitationProcedure = usingDbSavePartialCitationProcedure();
+const updateCitationRequest = usingDbUpdateCitationProcedure();
 
 export const appRouter = router({
   ...dbProcedures,
   loadAllProcedure,
   saveChangedScoresProcedure,
   savePartialCitationProcedure,
+  updateCitationRequest
 });
 
 // export type definition of API
