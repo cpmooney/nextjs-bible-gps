@@ -13,7 +13,6 @@ export class Card implements Citation {
     public entire: string,
     public active: boolean,
     public score: number,
-    public userId: string,
     public lastReviewed: Date = new Date(),
     public scoreHasChanged = false
   ) {
@@ -26,7 +25,7 @@ export class Card implements Citation {
   }
 
   public static get empty() {
-    return new Card(undefined, "", "", 0, 0, "", [], "", false, 0, "");
+    return new Card(undefined, "", "", 0, 0, "", [], "", false, 0);
   }
 
   public readonly bookNumber: number;
@@ -59,7 +58,6 @@ export class Card implements Citation {
       citation.entire,
       citation.active,
       citation.score,
-      citation.userId
     );
   }
 }

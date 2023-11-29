@@ -2,7 +2,6 @@ import {z} from "zod";
 
 export const ZodCitation = z.object({
   id: z.optional(z.number()),
-  userId: z.string(),
   fragment: z.string(),
   book: z.string(),
   chapter: z.number(),
