@@ -23,13 +23,13 @@ export const drawCard = (): Card => {
 }
 
 export const recomputeCard = (card: Card): void => {
-  const { id, score } = card;
+  const { guaranteedId, score } = card;
   if (score <= 6) {
-    moveCard(id, 'intro');
+    moveCard(guaranteedId, 'intro');
   } else if (score <= 20) {
-    moveCard(id, 'intermediate');
+    moveCard(guaranteedId, 'intermediate');
   } else {
-    moveCard(id, 'advanced');
+    moveCard(guaranteedId, 'advanced');
   }
   replenishIntroArray();
 }
@@ -80,7 +80,7 @@ const replenishIntroArray = () => {
   if (numberOfIntroCards < 3) {
     allCards.some((card) => {
       if (card.score === 0) {
-        cardArrays.intro[card.id] = true;
+        cardArrays.intro[card.guaranteedId] = true;
         numberOfIntroCards++;
       }
       return numberOfIntroCards >= 3;
@@ -90,9 +90,9 @@ const replenishIntroArray = () => {
 
 const buildArraysFromNonZeroScores = (): void => {
   allCards.forEach((card) => {
-    const { id, score } = card;
+    const { guaranteedId, score } = card;
     if (score > 0) {
-      cardArrays.active[id] = true;
+      cardArrays.active[guaranteedId] = true;
       recomputeCard(card);
     }
   });

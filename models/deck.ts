@@ -69,7 +69,7 @@ export class Deck {
   public cardsWithChangedScores: Record<number, { score: number, lastReviewed: string }> = {};
 
   private addCurrentCardWithChangedScore(): void {
-    this.cardsWithChangedScores[this.currentCard.id] = {
+    this.cardsWithChangedScores[this.currentCard.guaranteedId] = {
       score: this.currentCard.score,
       lastReviewed: this.currentCard.lastReviewed.toISOString(),
     };

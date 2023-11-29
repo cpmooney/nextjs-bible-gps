@@ -28,6 +28,13 @@ export class Card implements Citation {
     return new Card(undefined, "", "", 0, 0, "", [], "", false, 0);
   }
 
+  public get guaranteedId(): number {
+    if (this.id === undefined) {
+      throw new Error("Card has no ID");
+    }
+    return this.id;
+  }
+
   public readonly bookNumber: number;
   public fullCitation: string;
 

@@ -24,11 +24,10 @@ const invokeDbUpdateCitationAction = async (
   const fullCitation = `${citation.book} ${citation.chapter}:${citation.firstVerse}${citation.suffix}`;
   debugLog("info", `Saving citation ${fullCitation}`);
   const userId = obtainGuaranteedUserId();
-  citation.userId = userId;
 
   await obtainDatabase()
     .insert(CitationTable)
-    .values([citation])
+    .values([{...citation, userId}])
     .onConflictDoUpdate({
       target: CitationTable.id,
       set: citationWithoutId(citation), 
