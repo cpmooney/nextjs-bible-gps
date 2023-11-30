@@ -3,12 +3,7 @@ import {bibleBooks} from "./books";
 import {Card} from "./card";
 import {Citation} from "./citation";
 import { drawCard, usingCardArrays } from "@/utilities/card-arrays";
-
-let handleDeckIsReady: () => void;
-
-export const usingDeckIsReadySetter = (handler: () => void) => {
-  handleDeckIsReady = handler;
-}
+import { declareDeckIsReady } from "@/utilities/ready-handler";
 
 export class Deck {
   public static of(citations: Citation[]): Deck {
@@ -21,7 +16,7 @@ export class Deck {
       usingCardArrays(this.allCards);
       this.computeTotalScore();
     }
-    handleDeckIsReady();
+    declareDeckIsReady();
   }
 
   public initialScore: number = 0;

@@ -4,11 +4,6 @@ export const usingCardArrays = (cards: Card[]): void => {
   allCards = cards;
   buildArraysFromNonZeroScores();
   replenishIntroArray();
-  handleDeckIsReady();
-}
-
-export const usingDeckIsReadySetter = (handler: () => void) => {
-  handleDeckIsReady = handler;
 }
 
 export const drawCard = (): Card => {
@@ -138,5 +133,3 @@ const moveCard = (id: number, to: ArrayType): void => {
 const randomInRange = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-let handleDeckIsReady: () => void;

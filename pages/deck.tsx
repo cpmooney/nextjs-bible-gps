@@ -1,11 +1,12 @@
 "use client";
-import {Deck, usingDeckIsReadySetter} from "@/models/deck";
+import {Deck} from "@/models/deck";
 import {ClerkProvider, UserButton} from "@clerk/nextjs";
 import {DeckComponent} from "app/deck-component";
 import {ImageBackground} from "app/image-background";
 import {useCallback, useEffect, useState} from "react";
 import {trpc} from "../utilities/trpc";
 import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
+import { usingDeckIsReadySetter } from "@/utilities/ready-handler";
 
 const DeckPageWithBackground = () => {
   return (
@@ -33,8 +34,11 @@ const DeckPage = () => {
 
   useEffect(() => {
     const resolvedData = fixTrpcBug(data);
-    setDeck(Deck.of(resolvedData));
-  }, [data]);
+    // TODO: There has got to be a better pattern than this!
+    if (!isLoading) {
+      setDeck(Deck.of(resolvedData));
+    }
+  }, [data, isLoading]);
 
   if (isLoading || !deck) {
     return <div>Loading</div>;
