@@ -21,33 +21,33 @@ export const AdditionalActionComponents = (props: AdditionalActionProps) => {
       <div className="card w-96 bg-base-100 shadow-xl mt-4">
         <div className="card-actions">
           <button
-            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 flex-1"
+            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2"
             onClick={showFullCitation}
           >
-            <InformationCircleIcon className="h-8 w-8" />
+            <InformationCircleIcon className="w-6" />
           </button>
           <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
+            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
             onClick={editCitation}
           >
-            <PencilIcon className="h-8 w-8" />
+            <PencilIcon className="w-6" />
           </button>
           <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
+            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
             onClick={addNewCitation}
           >
-            <PlusCircleIcon className="h-8 w-8" />
+            <PlusCircleIcon className="w-6" />
           </button>
           <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
+            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
             onClick={createPartialCitation}
           >
-            <LightBulbIcon className="h-8 w-8" />
+            <LightBulbIcon className="w-6" />
           </button>
           <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
+            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
           >
-            <ChartBarIcon className="h-8 w-8" />
+            <ChartBarIcon className="w-6" />
           </button>
         </div>
       </div>
