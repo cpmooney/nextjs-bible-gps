@@ -1,12 +1,11 @@
 "use client";
-import {Deck} from "@/models/deck";
+import {Deck, usingDeckIsReadySetter} from "@/models/deck";
 import {ClerkProvider, UserButton} from "@clerk/nextjs";
 import {DeckComponent} from "app/deck-component";
 import {ImageBackground} from "app/image-background";
 import {useCallback, useEffect, useState} from "react";
 import {trpc} from "../utilities/trpc";
 import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
-import { usingDeckIsReadySetter } from "@/utilities/card-arrays";
 
 const DeckPageWithBackground = () => {
   return (
