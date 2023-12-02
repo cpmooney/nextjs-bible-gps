@@ -1,14 +1,15 @@
-import { useDeckContext } from 'app/deck-context';
+import { useDeckStateContext } from 'app/providers/deck-state-provider';
 import { BarGraph } from './bar-graph';
+import { Citation } from '@/models/citation';
 
 export const RandomCardPickerTest = () => {
-  const { nextCard } = useDeckContext();
+  const { drawCitation } = useDeckStateContext();
   const drawScores: number[] = [];
   drawScores.length = 100;
   drawScores.fill(0);
 
   for (let i = 0; i < 1000; i++) {
-    const card = nextCard();
+    const card: Citation = drawCitation();
     drawScores[card.score]++;
   }
 

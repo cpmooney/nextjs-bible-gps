@@ -1,10 +1,10 @@
 import { Citation } from "@/models/citation";
 import { buildFullCitation } from "@/utilities/additional-citation-methods";
-import { useDeckContext } from "app/deck-context";
+import { useDeckContext } from "app/providers/deck-provider";
 
 export const DeckListView = () => {
-  const deckContext = useDeckContext();
-  const orderedCards = deckContext.obtainCardsByBook();
+  const { obtainCardsByBook } = useDeckContext();
+  const orderedCards = obtainCardsByBook();
 
   return (
     <div>

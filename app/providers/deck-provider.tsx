@@ -12,21 +12,7 @@ import { trpc } from "@/utilities/trpc";
 import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Loader } from "../loader-component";
-
-export interface DeckContext {
-  nextCard: () => Citation;
-  isReady: () => boolean;
-  userHadNoData: () => boolean;
-  syncScoresToDb: () => Promise<void>;
-  incrementCardScore: () => void;
-  resetCardScore: () => void;
-  obtainCardsByBook: () => OrderedCardsByBook;
-  obtainUnbankedScore: () => number;
-  obtainBankedScore: () => number;
-  obtainCurrentCard: () => Citation;
-}
-
-const DeckContext = createContext<DeckContext | null>(null);
+import { CardArrayProvider } from "./deck-state-provider";
 
 export const useDeckContext = () => {
   const context = useContext(DeckContext);
@@ -48,25 +34,8 @@ export const DeckProvider = ({ children }: DeckProviderProps) => {
   const allCards = useRef<Citation[] | null>(null);
   const bankedScore = useRef<number>(0);
   const unbankedScore = useRef<number>(0);
-  const currentCard = useRef<Citation | null>(null);
 
   const [isReady, setIsReady] = useState<boolean>(false);
-
-  const nextCard = (): Citation => {
-    const nextCard = drawCitation();
-    currentCard.current = nextCard;
-    return nextCard;
-  };
-
-  const guaranteeCurrentCard = (): Citation => {
-    if (!currentCard.current) {
-      nextCard();
-    }
-    if (!currentCard.current) {
-      throw new Error("currentCard is null");
-    }
-    return currentCard.current;
-  };
 
   const guaranteeAllCards = (): Citation[] => {
     if (!allCards.current) {
@@ -83,43 +52,54 @@ export const DeckProvider = ({ children }: DeckProviderProps) => {
   }, [isLoading, data]);
 
   const deckContext: DeckContext = {
-    nextCard,
-    obtainCurrentCard: (): Citation => {
-      return guaranteeCurrentCard();
-    },
     obtainUnbankedScore: (): number => unbankedScore.current,
     obtainBankedScore: (): number => bankedScore.current,
-    isReady: (): boolean => isReady,
     userHadNoData: (): boolean => guaranteeAllCards().length === 0,
     syncScoresToDb: async (): Promise<void> => {
       await saveScoreProcedure.mutateAsync(obtainChangedScoreRequest());
       bankedScore.current += unbankedScore.current;
       unbankedScore.current = 0;
     },
-    incrementCardScore: (): void =>
+    incrementCardScore: (card: Citation): void =>
       recordScoreChange(
-        guaranteeCurrentCard(),
+        card,
         ScoreChange.Increment,
         unbankedScore
       ),
-    resetCardScore: (): void =>
+    resetCardScore: (card: Citation): void =>
       recordScoreChange(
-        guaranteeCurrentCard(),
+        card,
         ScoreChange.Reset,
         unbankedScore
       ),
     obtainCardsByBook: (): OrderedCardsByBook =>
       buildCardsByBook(guaranteeAllCards()),
+    obtainAllCitations: (): Citation[] => guaranteeAllCards(),
   };
 
   if (!isReady) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
-    <DeckContext.Provider value={deckContext}>{children}</DeckContext.Provider>
+    <DeckContext.Provider value={deckContext}>
+      <CardArrayProvider citations={guaranteeAllCards()}>{children}</CardArrayProvider>
+    </DeckContext.Provider>
   );
 };
+
+export interface DeckContext {
+  userHadNoData: () => boolean;
+  syncScoresToDb: () => Promise<void>;
+  incrementCardScore: (card: Citation) => void;
+  resetCardScore: (card: Citation) => void;
+  obtainCardsByBook: () => OrderedCardsByBook;
+  obtainUnbankedScore: () => number;
+  obtainBankedScore: () => number;
+  obtainAllCitations: () => Citation[];
+}
+
+const DeckContext = createContext<DeckContext | null>(null);
 
 interface DeckProviderProps {
   children: React.ReactNode;

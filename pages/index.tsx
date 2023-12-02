@@ -3,7 +3,7 @@ import {ClerkProvider, UserButton} from "@clerk/nextjs";
 import {DeckComponent} from "app/deck-component";
 import {ImageBackground} from "app/image-background";
 import {trpc} from "../utilities/trpc";
-import { DeckProvider } from "app/deck-context";
+import { DeckProvider } from "app/providers/deck-provider";
 
 const DeckPageWithBackground = () => {
   return (

@@ -1,10 +1,10 @@
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { Modal } from "./modal";
-import { useDeckContext } from "./providers/deck-provider";
 import { buildExternalUrl, buildFullCitation } from "@/utilities/additional-citation-methods";
+import { useDeckStateContext } from "./providers/deck-state-provider";
 
 export const CitationInfo = () => {
-  const { obtainCurrentCard } = useDeckContext();
+  const { obtainCurrentCard } = useDeckStateContext();
 
   const currentCard = obtainCurrentCard();
   const entire = currentCard.entire;

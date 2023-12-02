@@ -5,18 +5,18 @@ import {
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { useDeckContext } from "./providers/deck-provider";
 import { buildFullCitation } from "@/utilities/additional-citation-methods";
+import { useDeckStateContext } from "./providers/deck-state-provider";
 
 export default function CardComponent() {
-  const deckContext = useDeckContext();
+  const deckStateContext = useDeckStateContext();
   const [showingAnswer, setShowingAnswer] = useState(false);
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
 
-  setCurrentCard(deckContext.obtainCurrentCard());
+  setCurrentCard(deckStateContext.obtainCurrentCard());
 
   const advanceToNextCard = () => {
-    setCurrentCard(deckContext.nextCard());
+    setCurrentCard(deckStateContext.drawCitation());
   };
   
   const toggleShowAnswer = () => {
@@ -25,13 +25,13 @@ export default function CardComponent() {
   
   const correct = () => {
     setShowingAnswer(false);
-    deckContext.incrementCardScore();
+    deckStateContext.incrementCurrentCardScore();
     advanceToNextCard();
   };
   
   const wrong = () => {
     setShowingAnswer(false);
-    deckContext.resetCardScore();
+    deckStateContext.resetCurrentCardScore();
     advanceToNextCard();
   };
 
