@@ -2,7 +2,7 @@ import { Citation } from "@/models/citation";
 import { buildFullCitation } from "@/utilities/additional-citation-methods";
 import { useDeckContext } from "app/deck-context";
 
-const DeckListView = () => {
+export const DeckListView = () => {
   const deckContext = useDeckContext();
   const orderedCards = deckContext.obtainCardsByBook();
 
@@ -28,7 +28,7 @@ const SingleCardView = (props: { card: Citation }) => {
   const fullCitation = buildFullCitation(card);
 
   return (
-    <li key={card.id}>
+    <li>
       <h3>{fullCitation}</h3>
     </li>);
 }
