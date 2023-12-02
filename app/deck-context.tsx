@@ -1,18 +1,46 @@
-import { Deck } from "@/models/deck";
+import { Citation } from "@/models/citation";
 import { createContext, useContext, useState } from "react";
 
-const DeckContext = createContext<Deck | null>(null);
+enum Status {
+    PreLoad,
+    Loading,
+    Loaded,
+    Built,
+    Error
+}
 
-export const useDeck = () => useContext(DeckContext);
+export interface DeckContext {
+    nextCard: () => Citation;
+    initialScore: () => number;
+    totalScore: () => number;
+    status: () => Status;
+}
+
+const DeckContext = createContext<DeckContext | null>(null);
+
+export const useDeckContext = () => useContext(DeckContext);
 
 interface DeckProviderProps {
     children: React.ReactNode;
 }
 
 export const DeckProvider = ({ children }: DeckProviderProps ) => {
-    const [deck, setDeck] = useState<Deck>(Deck.of([]));
+    const [allCards, setAllCards] = useState<Citation[]>([]);
+    const [deckIsBuilt, setDeckIsBuilt] = useState(false);
+
+    const deckContext: DeckContext = {
+        nextCard: (): Citation => {
+        },
+        initialScore: (): number => {
+        },
+        totalScore: (): number => {
+        },
+        status: (): Status => {
+        },
+    };
+
     return (
-        <DeckContext.Provider value={deck}>
+        <DeckContext.Provider value={deckContext}>
             {children}
         </DeckContext.Provider>
     );
