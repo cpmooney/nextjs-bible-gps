@@ -45,7 +45,7 @@ const DeckPage = () => {
     return <div>Building deck</div>;
   }
 
-  if (!data) {
+  if (!data || data.length === 0) {
     return <div>User has no data</div>;
   }
 
