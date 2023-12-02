@@ -11,9 +11,7 @@ import { useDeckStateContext } from "./providers/deck-state-provider";
 export default function CardComponent() {
   const deckStateContext = useDeckStateContext();
   const [showingAnswer, setShowingAnswer] = useState(false);
-  const [currentCard, setCurrentCard] = useState<Citation | null>(null);
-
-  setCurrentCard(deckStateContext.obtainCurrentCard());
+  const [currentCard, setCurrentCard] = useState<Citation>(deckStateContext.obtainCurrentCard());
 
   const advanceToNextCard = () => {
     setCurrentCard(deckStateContext.drawCitation());
