@@ -5,13 +5,15 @@ import {
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { useDeckContext } from "./deck-context";
-import { buildExternalUrl, buildFullCitation } from "@/utilities/additional-citation-methods";
+import { useDeckContext } from "./providers/deck-provider";
+import { buildFullCitation } from "@/utilities/additional-citation-methods";
 
 export default function CardComponent() {
   const deckContext = useDeckContext();
   const [showingAnswer, setShowingAnswer] = useState(false);
-  const [currentCard, setCurrentCard] = useState<Citation>(deckContext.obtainCurrentCard()); // [1
+  const [currentCard, setCurrentCard] = useState<Citation | null>(null);
+
+  setCurrentCard(deckContext.obtainCurrentCard());
 
   const advanceToNextCard = () => {
     setCurrentCard(deckContext.nextCard());
@@ -32,6 +34,10 @@ export default function CardComponent() {
     deckContext.resetCardScore();
     advanceToNextCard();
   };
+
+  if (!currentCard) {
+    throw new Error("currentCard is null");
+  }
 
   const fullCitation = buildFullCitation(currentCard);
 

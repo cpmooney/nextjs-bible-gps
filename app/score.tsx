@@ -1,5 +1,5 @@
 import {ChevronDoubleRightIcon} from "@heroicons/react/24/outline";
-import { useDeckContext } from "./deck-context";
+import { useDeckContext } from "./providers/deck-provider";
 
 export default function ScoreComponent() {
   const {syncScoresToDb, obtainBankedScore, obtainUnbankedScore} = useDeckContext();

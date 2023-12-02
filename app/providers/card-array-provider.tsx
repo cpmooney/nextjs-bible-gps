@@ -1,7 +1,8 @@
 import { Citation } from "@/models/citation";
+import { useRef } from "react";
 
 export const usingCitationArrays = (cards: Citation[]): void => {
-  allCitations = cards;
+  allCitations.current = cards;
   buildArraysFromNonZeroScores();
   replenishIntroArray();
 }
@@ -10,7 +11,7 @@ export const drawCitation = (): Citation => {
   guaranteeDrawDeck();
   const randomIndex = randomInRange(0, drawDeck.length - 1);
   const chosenId = drawDeck.splice(randomIndex, 1)[0];
-  const chosenCitation = allCitations.find((card) => card.id === chosenId);
+  const chosenCitation = guaranteeAllCitations().find((card) => card.id === chosenId);
   if (!chosenCitation) {
     throw new Error(`drawCitation: Could not find card with id ${chosenId}`);
   }
@@ -41,7 +42,7 @@ export const dumpCitationArrays = (): Record<ArrayType, Citation[]> => {
   };
   arrayTypeList.forEach((arrayType) => {
     idArray(arrayType).forEach((id) => {
-      const card = allCitations.find((card) => card.id === id);
+      const card = guaranteeAllCitations().find((card) => card.id === id);
       if (!card) {
         throw new Error(`dumpCitationArrays: Could not find card with id ${id}`);
       }
@@ -53,7 +54,7 @@ export const dumpCitationArrays = (): Record<ArrayType, Citation[]> => {
 
 export const dumpDrawDeck = (): Citation[] => {
   return drawDeck.map((id) => {
-    const card = allCitations.find((card) => card.id === id);
+    const card = guaranteeAllCitations().find((card) => card.id === id);
     if (!card) {
       throw new Error(`dumpDrawDeck: Could not find card with id ${id}`);
     }
@@ -71,12 +72,19 @@ const cardArrays: Record<ArrayType, Record<number, boolean>> = {
   active: {}
 };
 
-let allCitations: Citation[];
+const allCitations = useRef<Citation[] | null>(null);
+
+const guaranteeAllCitations = (): Citation[] => {
+  if (!allCitations.current) {
+    throw new Error(`guaranteeAllCitations: allCitations.current is null`);
+  }
+  return allCitations.current;
+}
 
 const replenishIntroArray = () => {
   let numberOfIntroCitations = numberOfCitations('intro');
   if (numberOfIntroCitations < 3) {
-    allCitations.some((card) => {
+    guaranteeAllCitations().some((card) => {
       const { id, score } = card;
       if (!id) {
         throw new Error(`replenishIntroArray: Card has no id`);
@@ -91,7 +99,7 @@ const replenishIntroArray = () => {
 }
 
 const buildArraysFromNonZeroScores = (): void => {
-  allCitations.forEach((card) => {
+  guaranteeAllCitations().forEach((card) => {
     const { id, score } = card;
     if (!id) {
       throw new Error(`buildArraysFromNonZeroScores: Card has no id`);

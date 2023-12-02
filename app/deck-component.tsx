@@ -1,4 +1,3 @@
-import {useState} from "react";
 import CardComponent from "./card-component";
 import "./globals.css";
 import ScoreComponent from "./score";

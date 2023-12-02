@@ -1,10 +1,17 @@
 import { Citation } from "@/models/citation";
-import { drawCitation } from "@/utilities/card-arrays";
-import { OrderedCardsByBook, buildCardsByBook } from "@/utilities/card-by-book-builder";
-import { ScoreChange, obtainChangedScoreRequest, recordScoreChange } from "@/utilities/score-recorder";
+import {
+  OrderedCardsByBook,
+  buildCardsByBook,
+} from "@/utilities/card-by-book-builder";
+import {
+  ScoreChange,
+  obtainChangedScoreRequest,
+  recordScoreChange,
+} from "@/utilities/score-recorder";
 import { trpc } from "@/utilities/trpc";
 import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { Loader } from "../loader-component";
 
 export interface DeckContext {
   nextCard: () => Citation;
@@ -22,12 +29,12 @@ export interface DeckContext {
 const DeckContext = createContext<DeckContext | null>(null);
 
 export const useDeckContext = () => {
-    const context = useContext(DeckContext);
-    if (!context) {
-        throw new Error("useDeckContext must be used within a DeckProvider");
-    }
-    return context;
-}
+  const context = useContext(DeckContext);
+  if (!context) {
+    throw new Error("useDeckContext must be used within a DeckProvider");
+  }
+  return context;
+};
 
 export const DeckProvider = ({ children }: DeckProviderProps) => {
   const { data, isLoading } = trpc.loadAllProcedure.useQuery(
@@ -45,50 +52,69 @@ export const DeckProvider = ({ children }: DeckProviderProps) => {
 
   const [isReady, setIsReady] = useState<boolean>(false);
 
+  const nextCard = (): Citation => {
+    const nextCard = drawCitation();
+    currentCard.current = nextCard;
+    return nextCard;
+  };
+
   const guaranteeCurrentCard = (): Citation => {
     if (!currentCard.current) {
-      throw new Error("Current card is null");
+      nextCard();
+    }
+    if (!currentCard.current) {
+      throw new Error("currentCard is null");
     }
     return currentCard.current;
-  }
+  };
 
   const guaranteeAllCards = (): Citation[] => {
     if (!allCards.current) {
       throw new Error("allCards is null");
     }
     return allCards.current;
-  }
+  };
 
-  if (!isLoading) {
-    allCards.current = fixTrpcBug(data);
-    setIsReady(true);
-  }
+  useEffect(() => {
+    if (!isLoading) {
+      allCards.current = fixTrpcBug(data);
+      setIsReady(true);
+    }
+  }, [isLoading, data]);
 
   const deckContext: DeckContext = {
-    nextCard: (): Citation => {
-      const nextCard = drawCitation();
-      currentCard.current = nextCard;
-      return nextCard;
-    },
+    nextCard,
     obtainCurrentCard: (): Citation => {
-        return guaranteeCurrentCard();
+      return guaranteeCurrentCard();
     },
     obtainUnbankedScore: (): number => unbankedScore.current,
     obtainBankedScore: (): number => bankedScore.current,
     isReady: (): boolean => isReady,
     userHadNoData: (): boolean => guaranteeAllCards().length === 0,
     syncScoresToDb: async (): Promise<void> => {
-        await saveScoreProcedure.mutateAsync(obtainChangedScoreRequest());
-        bankedScore.current += unbankedScore.current;
-        unbankedScore.current = 0;
+      await saveScoreProcedure.mutateAsync(obtainChangedScoreRequest());
+      bankedScore.current += unbankedScore.current;
+      unbankedScore.current = 0;
     },
-    incrementCardScore: (): void => 
-        recordScoreChange(guaranteeCurrentCard(), ScoreChange.Increment, unbankedScore),
-    resetCardScore: (): void => 
-        recordScoreChange(guaranteeCurrentCard(), ScoreChange.Reset, unbankedScore),
-    obtainCardsByBook: (): OrderedCardsByBook => 
-        buildCardsByBook(guaranteeAllCards()),
+    incrementCardScore: (): void =>
+      recordScoreChange(
+        guaranteeCurrentCard(),
+        ScoreChange.Increment,
+        unbankedScore
+      ),
+    resetCardScore: (): void =>
+      recordScoreChange(
+        guaranteeCurrentCard(),
+        ScoreChange.Reset,
+        unbankedScore
+      ),
+    obtainCardsByBook: (): OrderedCardsByBook =>
+      buildCardsByBook(guaranteeAllCards()),
   };
+
+  if (!isReady) {
+    return <Loader />
+  }
 
   return (
     <DeckContext.Provider value={deckContext}>{children}</DeckContext.Provider>
