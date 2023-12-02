@@ -103,7 +103,7 @@ const guaranteeDrawDeck = (): void => {
     idArray('intermediate').forEach((id) => {
       drawDeck.push(id);
     });
-    const advancedLength = Math.floor(drawDeck.length / 3);
+    const advancedLength = Math.max(Math.floor(drawDeck.length / 10), 10);
     for (let i = 0; i < advancedLength; i++) {
       // TODO: Take 'last reviewed' into account here
       const randomAdvancedId = idArray('advanced')[randomInRange(0, idArray('advanced').length - 1)];

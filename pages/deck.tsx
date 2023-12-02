@@ -3,10 +3,9 @@ import {Deck} from "@/models/deck";
 import {ClerkProvider, UserButton} from "@clerk/nextjs";
 import {DeckComponent} from "app/deck-component";
 import {ImageBackground} from "app/image-background";
-import {useCallback, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {trpc} from "../utilities/trpc";
 import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
-import { usingDeckIsReadySetter } from "@/utilities/ready-handler";
 
 const DeckPageWithBackground = () => {
   return (
@@ -24,19 +23,17 @@ const DeckPage = () => {
       refetchOnWindowFocus: false,
     }
   );
+
   // TODO: Move Deck a handling to a context.
   const [deck, setDeck] = useState<Deck | null>(null);
-  const [deckIsReady, setDeckIsReady] = useState(false);
-  const handleDeckIsReady = useCallback(() => {
-    setDeckIsReady(true);
-  }, []);
-  usingDeckIsReadySetter(handleDeckIsReady);
+  const [deckIsBuilt, setDeckIsBuilt] = useState(false);
 
   useEffect(() => {
     const resolvedData = fixTrpcBug(data);
     // TODO: There has got to be a better pattern than this!
     if (!isLoading) {
       setDeck(Deck.of(resolvedData));
+      setDeckIsBuilt(true);
     }
   }, [data, isLoading]);
 
@@ -44,8 +41,8 @@ const DeckPage = () => {
     return <div>Loading</div>;
   }
 
-  if (!deckIsReady) {
-    return <div>Building deck</div>
+  if (!deckIsBuilt) {
+    return <div>Building deck</div>;
   }
 
   if (!data) {
