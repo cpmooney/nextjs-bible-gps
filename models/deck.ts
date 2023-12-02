@@ -4,6 +4,12 @@ import {Card} from "./card";
 import {Citation} from "./citation";
 import { drawCard, usingCardArrays } from "@/utilities/card-arrays";
 
+export interface DeckContext {
+  cardList: Card[];
+  nextCard: () => Card;
+  createDeck: (citations: Citation[]) => void;
+}
+
 export class Deck {
   public static of(citations: Citation[]): Deck {
     return new Deck(citations);
