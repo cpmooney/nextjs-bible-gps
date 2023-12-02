@@ -1,53 +1,34 @@
-import { Card } from "@/models/card";
 import { Citation } from "@/models/citation";
-import { Deck } from "@/models/deck";
-import { trpc } from "@/utilities/trpc";
-import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
-import { useEffect, useState } from "react";
-
-type OrderedCitations = {
-  book: string;
-  card: Card[];
-}[];
+import { buildFullCitation } from "@/utilities/additional-citation-methods";
+import { useDeckContext } from "app/deck-context";
 
 const DeckListView = () => {
-  // TODO: Is this the ideal pattern?  Should data be in a store?
-  const { data, isLoading } = trpc.loadAllProcedure.useQuery({});
-  const [deck, setDeck] = useState<Deck>(Deck.of([]));
-  const orderedCards = deck.orderedCards();
-  
-  useEffect(() => {
-    const resolvedData = fixTrpcBug(data);
-    setDeck(Deck.of(resolvedData));
-  }, [data]);
-  
-  if (isLoading) {
-    return <div></div>;
-  }
-  
-  if (!data) {
-    return <div>User has no data</div>;
-  }
-  
+  const deckContext = useDeckContext();
+  const orderedCards = deckContext.obtainCardsByBook();
+
   return (
     <div>
-    <h1>Deck List View</h1>
-    <ul>
-    {orderedCards.map((cardsByBook) => (
-      <li key={cardsByBook.book}>
-      <h2>{cardsByBook.book}</h2>
+      <h1>Deck List View</h1>
       <ul>
-      {cardsByBook.cards.map((card) => (
-        <li key={card.id}>
-        <h3>{card.fullCitation}</h3>
-        </li>
+        {orderedCards.map((cardsByBook) => (
+          <li key={cardsByBook.book}>
+            <h2>{cardsByBook.book}</h2>
+            <ul>
+              {cardsByBook.cards.map((card) => <SingleCardView key={card.id} card={card} />)}
+            </ul>
+          </li>
         ))}
-        </ul>
-        </li>
-        ))}
-        </ul>
-        </div>
-        )
-      }
-      
-      export default trpc.withTRPC(DeckListView);
+      </ul>
+    </div>
+  );
+};
+
+const SingleCardView = (props: { card: Citation }) => {
+  const { card } = props;
+  const fullCitation = buildFullCitation(card);
+
+  return (
+    <li key={card.id}>
+      <h3>{fullCitation}</h3>
+    </li>);
+}

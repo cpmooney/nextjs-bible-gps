@@ -1,13 +1,11 @@
 import {ChevronDoubleRightIcon} from "@heroicons/react/24/outline";
+import { useDeckContext } from "./deck-context";
 
-interface TotalStatComponentProps {
-  initialScore: number;
-  scoreIncrease: number;
-  syncScoresToDb: () => Promise<void>;
-}
+export default function ScoreComponent() {
+  const {syncScoresToDb, obtainBankedScore, obtainUnbankedScore} = useDeckContext();
 
-export default function ScoreComponent(props: TotalStatComponentProps) {
-  const {syncScoresToDb, initialScore, scoreIncrease} = props;
+  const scoreIncrease = obtainUnbankedScore();
+  const initialScore = obtainBankedScore();
 
   const getChangeColorClass = () => {
     if (scoreIncrease < 0) {

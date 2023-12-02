@@ -2,15 +2,9 @@ import { ChartBarIcon, InformationCircleIcon, LightBulbIcon, PencilIcon, PlusCir
 import { showModal } from "./modal";
 import { PartialCitationModal } from "./partial-citations";
 import { CitationInfo } from "./citation-info";
-import { Card } from '@/models/card'
 import { CardEditModal } from "./card-edit-modal";
 
-interface AdditionalActionProps {
-    // TODO: Need to move this kind of thing to context
-    card: Card;
-}
-
-export const AdditionalActionComponents = (props: AdditionalActionProps) => {
+export const AdditionalActionComponents = () => {
   const showFullCitation = () => showModal("full_citation");
   const editCitation = () => showModal("edit_citation");
   const createPartialCitation = () => showModal("create_partial_citation");
@@ -53,7 +47,7 @@ export const AdditionalActionComponents = (props: AdditionalActionProps) => {
       </div>
       <div>
         <PartialCitationModal />
-        <CitationInfo card={props.card}/>
+        <CitationInfo />
         <CardEditModal />
       </div>
     </>

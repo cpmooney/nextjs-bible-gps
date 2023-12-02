@@ -1,36 +1,39 @@
-import { Card } from "@/models/card";
+import { Citation } from "@/models/citation";
 
-export const usingCardArrays = (cards: Card[]): void => {
-  allCards = cards;
+export const usingCitationArrays = (cards: Citation[]): void => {
+  allCitations = cards;
   buildArraysFromNonZeroScores();
   replenishIntroArray();
 }
 
-export const drawCard = (): Card => {
+export const drawCitation = (): Citation => {
   guaranteeDrawDeck();
   const randomIndex = randomInRange(0, drawDeck.length - 1);
   const chosenId = drawDeck.splice(randomIndex, 1)[0];
-  const chosenCard = allCards.find((card) => card.id === chosenId);
-  if (!chosenCard) {
-    throw new Error(`drawCard: Could not find card with id ${chosenId}`);
+  const chosenCitation = allCitations.find((card) => card.id === chosenId);
+  if (!chosenCitation) {
+    throw new Error(`drawCitation: Could not find card with id ${chosenId}`);
   }
-  return chosenCard;
+  return chosenCitation;
 }
 
-export const recomputeCard = (card: Card): void => {
-  const { guaranteedId, score } = card;
+export const recomputeCitation = (card: Citation): void => {
+  const { id, score } = card;
+  if (!id) {
+    throw new Error(`recomputeCitation: Card has no id`);
+  }
   if (score <= 6) {
-    moveCard(guaranteedId, 'intro');
+    moveCitation(id, 'intro');
   } else if (score <= 20) {
-    moveCard(guaranteedId, 'intermediate');
+    moveCitation(id, 'intermediate');
   } else {
-    moveCard(guaranteedId, 'advanced');
+    moveCitation(id, 'advanced');
   }
   replenishIntroArray();
 }
 
-export const dumpCardArrays = (): Record<ArrayType, Card[]> => {
-  const result: Record<ArrayType, Card[]> = {
+export const dumpCitationArrays = (): Record<ArrayType, Citation[]> => {
+  const result: Record<ArrayType, Citation[]> = {
     intro: [],
     intermediate: [],
     advanced: [],
@@ -38,9 +41,9 @@ export const dumpCardArrays = (): Record<ArrayType, Card[]> => {
   };
   arrayTypeList.forEach((arrayType) => {
     idArray(arrayType).forEach((id) => {
-      const card = allCards.find((card) => card.id === id);
+      const card = allCitations.find((card) => card.id === id);
       if (!card) {
-        throw new Error(`dumpCardArrays: Could not find card with id ${id}`);
+        throw new Error(`dumpCitationArrays: Could not find card with id ${id}`);
       }
       result[arrayType].push(card);
     });
@@ -48,9 +51,9 @@ export const dumpCardArrays = (): Record<ArrayType, Card[]> => {
   return result;
 }
 
-export const dumpDrawDeck = (): Card[] => {
+export const dumpDrawDeck = (): Citation[] => {
   return drawDeck.map((id) => {
-    const card = allCards.find((card) => card.id === id);
+    const card = allCitations.find((card) => card.id === id);
     if (!card) {
       throw new Error(`dumpDrawDeck: Could not find card with id ${id}`);
     }
@@ -68,27 +71,34 @@ const cardArrays: Record<ArrayType, Record<number, boolean>> = {
   active: {}
 };
 
-let allCards: Card[];
+let allCitations: Citation[];
 
 const replenishIntroArray = () => {
-  let numberOfIntroCards = numberOfCards('intro');
-  if (numberOfIntroCards < 3) {
-    allCards.some((card) => {
-      if (card.score === 0) {
-        cardArrays.intro[card.guaranteedId] = true;
-        numberOfIntroCards++;
+  let numberOfIntroCitations = numberOfCitations('intro');
+  if (numberOfIntroCitations < 3) {
+    allCitations.some((card) => {
+      const { id, score } = card;
+      if (!id) {
+        throw new Error(`replenishIntroArray: Card has no id`);
       }
-      return numberOfIntroCards >= 3;
+      if (score === 0) {
+        cardArrays.intro[id] = true;
+        numberOfIntroCitations++;
+      }
+      return numberOfIntroCitations >= 3;
     });
   }
 }
 
 const buildArraysFromNonZeroScores = (): void => {
-  allCards.forEach((card) => {
-    const { guaranteedId, score } = card;
+  allCitations.forEach((card) => {
+    const { id, score } = card;
+    if (!id) {
+      throw new Error(`buildArraysFromNonZeroScores: Card has no id`);
+    }
     if (score > 0) {
-      cardArrays.active[guaranteedId] = true;
-      recomputeCard(card);
+      cardArrays.active[id] = true;
+      recomputeCitation(card);
     }
   });
 }
@@ -110,18 +120,21 @@ const guaranteeDrawDeck = (): void => {
       drawDeck.push(randomAdvancedId);
     }
   }
+  if (drawDeck.length == 0) {
+    throw new Error(`guaranteeDrawDeck: drawDeck is empty even after replinishment`);
+  }
 }
 
 const drawDeck: number[] = [];
 
-const numberOfCards = (arrayType: ArrayType) =>
+const numberOfCitations = (arrayType: ArrayType) =>
   Object.entries(cardArrays[arrayType]).length;
 
 const idArray = (arrayType: ArrayType): number[]  => {
     return Object.keys(cardArrays[arrayType]).map((id) => parseInt(id));
   }
 
-const moveCard = (id: number, to: ArrayType): void => {
+const moveCitation = (id: number, to: ArrayType): void => {
   arrayTypeList.forEach((arrayType) => {
     if (arrayType != to) {
       delete cardArrays[arrayType][id];
