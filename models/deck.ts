@@ -35,7 +35,14 @@ export class Deck {
     this.initialScore = this.totalScore;
   }
 
+  public get isEmpty(): boolean {
+    return this.allCards.length === 0;
+  }
+
   public get currentCard(): Card {
+    if (this.isEmpty) {
+      return Card.empty;
+    }
     if (!this._currentCard) {
       this._currentCard = drawCard();
     }

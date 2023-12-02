@@ -6,6 +6,7 @@ import ScoreComponent from "./score";
 import { SaveChangedScoresRequest } from "server/db-save-changed";
 import { trpc } from "@/utilities/trpc";
 import { AdditionalActionComponents } from "./additional-actions";
+import { Card } from "@/models/card";
 
 interface DeckComponentProps {
   deck: Deck;
@@ -13,8 +14,9 @@ interface DeckComponentProps {
 
 export const DeckComponent = (props: DeckComponentProps) => {
   const {deck} = props;
-  const [currentCard, setCurrentCard] = useState(deck.currentCard);
   const [showingAnswer, setShowingAnswer] = useState(false);
+  const [userHasNoData, setUserHasNoData] = useState(false);
+  const [currentCard, setCurrentCard] = useState<Card>(deck.currentCard);
 
   useEffect(() => {
     setCurrentCard(deck.currentCard);

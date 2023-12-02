@@ -45,10 +45,6 @@ const DeckPage = () => {
     return <div>Building deck</div>;
   }
 
-  if (!data || data.length === 0) {
-    return <div>User has no data</div>;
-  }
-
   return (
     <div className="ml-5 mt-5">
       <ClerkProvider>

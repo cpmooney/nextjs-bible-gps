@@ -25,7 +25,7 @@ export class Card implements Citation {
   }
 
   public static get empty() {
-    return new Card(undefined, "", "", 0, 0, "", [], "", false, 0);
+    return new Card(undefined, "", "Genesis", 0, 0, "", [], "", false, 0);
   }
 
   public get guaranteedId(): number {
