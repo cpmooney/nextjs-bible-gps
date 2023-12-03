@@ -30,6 +30,8 @@ export const CardArrayProvider = ({ citations, children }: DeckStateProviderProp
     advanced: {},
     active: {},
   });
+  const zeroSupply = useRef<number[]>([]);
+  const cutoffs = useRef<ArrayScoreCutoffs>(computeScoreCutoffs(citations));
   const drawDeck = useRef<number[]>([]);
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
 
@@ -46,7 +48,7 @@ export const CardArrayProvider = ({ citations, children }: DeckStateProviderProp
       throw new Error(`moveToActive: Card has no id`);
     }
     cardArrays.current.active[id] = true;
-    recomputeCitation(card);
+    insertIntoAppropriateArray(card);
   }
 
   const drawCitation = (): Citation => {
@@ -63,19 +65,24 @@ export const CardArrayProvider = ({ citations, children }: DeckStateProviderProp
     return chosenCitation;
   };
 
-  const recomputeCitation = (card: Citation): void => {
+  const insertIntoAppropriateArray = (card: Citation): void => {
     const { id, score } = card;
     if (!id) {
       throw new Error(`recomputeCitation: Card has no id`);
     }
-    if (score <= 6) {
+    if (score === 0) {
+      zeroSupply.current.push(id);
+    } else if (score <= cutoffs.current.intro) {
       moveCitation(id, "intro");
-    } else if (score <= 20) {
+    } else if (score <= cutoffs.current.intermediate) {
       moveCitation(id, "intermediate");
     } else {
       moveCitation(id, "advanced");
     }
-    replenishIntroArray();
+    const nextZeroCard = zeroSupply.current.pop();
+    if (nextZeroCard) {
+      moveCitation(nextZeroCard, "intro");
+    }
   };
 
   const dumpCitationArrays = (): Record<ArrayType, Citation[]> => {
@@ -109,54 +116,40 @@ export const CardArrayProvider = ({ citations, children }: DeckStateProviderProp
     });
   };
 
-  const replenishIntroArray = () => {
-    let numberOfIntroCitations = numberOfCitations("intro");
-    if (numberOfIntroCitations < 3) {
-      citations.some((card) => {
-        const { id, score } = card;
-        if (!id) {
-          throw new Error(`replenishIntroArray: Card has no id`);
-        }
-        if (score === 0) {
-          cardArrays.current.intro[id] = true;
-          numberOfIntroCitations++;
-        }
-        return numberOfIntroCitations >= 3;
-      });
-    }
-  };
-
   const guaranteeDrawDeck = (): void => {
     if (drawDeck.current.length == 0) {
-      idArray("intro").forEach((id) => {
+      selectionAtRandom("intro", 10).forEach((id) => {
         drawDeck.current.push(id);
         drawDeck.current.push(id);
         drawDeck.current.push(id);
       });
-      idArray("intermediate").forEach((id) => {
+      selectionAtRandom("intermediate", 10).forEach((id) => {
         drawDeck.current.push(id);
       });
-      const advancedLength = Math.max(Math.floor(drawDeck.current.length / 10), 10);
-      for (let i = 0; i < advancedLength; i++) {
-        // TODO: Take 'last reviewed' into account here
-        const randomAdvancedId =
-          idArray("advanced")[randomInRange(0, idArray("advanced").length - 1)];
-        drawDeck.current.push(randomAdvancedId);
-      }
+      selectionAtRandom("advanced", 5).forEach((id) => {
+        drawDeck.current.push(id);
+      });
     }
     if (drawDeck.current.length == 0) {
       throw new Error(
-        `guaranteeDrawDeck: drawDeck is empty even after replinishment`
+        `guaranteeDrawDeck: drawDeck is empty even after replenishment`
       );
     }
   };
 
-  const numberOfCitations = (arrayType: ArrayType) =>
-    Object.entries(cardArrays.current[arrayType]).length;
-
   const idArray = (arrayType: ArrayType): number[] => {
     return Object.keys(cardArrays.current[arrayType]).map((id) => parseInt(id));
   };
+
+  const selectionAtRandom = (arrayType: ArrayType, length: number): number[] => {
+    const result: number[] = [];
+    const ids = idArray(arrayType);
+    for (let i = 0; i < length; i++) {
+      const randomIndex = randomInRange(0, ids.length - 1);
+      result.push(ids.splice(randomIndex, 1)[0]);
+    }
+    return result;
+  }
 
   const moveCitation = (id: number, to: ArrayType): void => {
     arrayTypeList.forEach((arrayType) => {
@@ -168,11 +161,10 @@ export const CardArrayProvider = ({ citations, children }: DeckStateProviderProp
   };
 
   citations.forEach((card) => moveToActive(card));
-  replenishIntroArray();
 
   const deckStateContext: DeckStateContext = {
     drawCitation,
-    recomputeCitation,
+    recomputeCitation: insertIntoAppropriateArray,
     dumpCitationArrays,
     dumpDrawDeck,
     obtainCurrentCard: guaranteeCurrentCard,
@@ -195,10 +187,27 @@ type CardArrays = Record<ArrayType, Record<number, boolean>>;
 
 type ArrayType = "intro" | "intermediate" | "advanced" | "active";
 const arrayTypeList: ArrayType[] = ["intro", "intermediate", "advanced"];
+interface ArrayScoreCutoffs {
+  intro: number;
+  intermediate: number;
+  advanced: number;
+}
 
 const DeckStateContext = createContext<DeckStateContext | null>(null);
 
 interface DeckStateProviderProps {
   children: React.ReactNode;
   citations: Citation[];
+}
+
+const computeScoreCutoffs = (citations: Citation[]): ArrayScoreCutoffs => {
+  const scores = citations.map((citation) => citation.score);
+  const sortedScores = scores.sort((a, b) => a - b);
+  const introCutoff = sortedScores[Math.floor(sortedScores.length / 3)];
+  const intermediateCutoff = sortedScores[Math.floor(sortedScores.length * 2 / 3)];
+  return {
+    intro: introCutoff,
+    intermediate: intermediateCutoff,
+    advanced: 0
+  };
 }
