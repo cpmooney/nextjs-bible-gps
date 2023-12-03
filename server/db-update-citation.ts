@@ -32,8 +32,8 @@ const invokeDbUpdateCitationAction = async (
       target: CitationTable.id,
       set: citationWithoutId(citation), 
     })
-    .execute();
-  debugLog("info", "Saved!");
+    .returning({ id: CitationTable.id });
+  debugLog("info", `Saved with id ${response[0].id}`);
 };
 
 const citationWithoutId = (citation: Citation): Citation => {

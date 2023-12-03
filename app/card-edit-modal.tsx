@@ -5,12 +5,13 @@ import { Citation } from "@/models/citation";
 
 export const CardEditModal = () => {
   const updatedCitation = (): Citation => { return {
+    id: 378,
     active: true,
     book: "Romans",
     chapter: 1,
     firstVerse: 1,
     suffix: "-2",
-    fragment: "Blah blah blah",
+    fragment: "Toaster wosters",
     score: 0,
     tags: [],
     entire: "Entire blah blah blah",
