@@ -38,6 +38,7 @@ export const debugLog = (level: LogLevel, message: string) => {
     timestamp,
     actionName,
   };
+  console.log(debugMessage);
   debugMessages.push(debugMessage);
 }
 

@@ -22,10 +22,10 @@ const invokeDbUpdateCitationAction = async (
   usingDatabase({CitationTable});
   usingDebugger("db-save-partial-citation");
   const fullCitation = `${citation.book} ${citation.chapter}:${citation.firstVerse}${citation.suffix}`;
-  debugLog("info", `Saving citation ${fullCitation}`);
+  debugLog("info", `Saving citation ${fullCitation}: ${JSON.stringify(citation)}`);
   const userId = obtainGuaranteedUserId();
 
-  await obtainDatabase()
+  const response = await obtainDatabase()
     .insert(CitationTable)
     .values([{...citation, userId}])
     .onConflictDoUpdate({
@@ -33,6 +33,7 @@ const invokeDbUpdateCitationAction = async (
       set: citationWithoutId(citation), 
     })
     .execute();
+  debugLog("info", "Saved!");
 };
 
 const citationWithoutId = (citation: Citation): Citation => {
