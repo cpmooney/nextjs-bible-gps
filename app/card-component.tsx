@@ -1,4 +1,3 @@
-import { Citation } from "@/models/citation";
 import {
   CheckCircleIcon,
   NoSymbolIcon,
@@ -11,10 +10,11 @@ import { useDeckStateContext } from "./providers/deck-state-provider";
 export default function CardComponent() {
   const deckStateContext = useDeckStateContext();
   const [showingAnswer, setShowingAnswer] = useState(false);
-  const [currentCard, setCurrentCard] = useState<Citation>(deckStateContext.obtainCurrentCard());
+
+  const currentCard = deckStateContext.obtainCurrentCard();
 
   const advanceToNextCard = () => {
-    setCurrentCard(deckStateContext.drawCitation());
+    deckStateContext.drawCitation();
   };
   
   const toggleShowAnswer = () => {
@@ -32,10 +32,6 @@ export default function CardComponent() {
     deckStateContext.resetCurrentCardScore();
     advanceToNextCard();
   };
-
-  if (!currentCard) {
-    throw new Error("currentCard is null");
-  }
 
   const fullCitation = buildFullCitation(currentCard);
 

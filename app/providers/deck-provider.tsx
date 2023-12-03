@@ -71,7 +71,7 @@ export const DeckProvider = ({ children }: DeckProviderProps) => {
       recordScoreChange(
         card,
         ScoreChange.Reset,
-        setBankedScore
+        setUnbankedScore
       ),
     obtainCardsByBook: (): OrderedCardsByBook =>
       buildCardsByBook(guaranteeAllCards()),

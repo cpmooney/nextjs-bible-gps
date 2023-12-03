@@ -1,5 +1,5 @@
 import { Citation } from "@/models/citation";
-import { createContext, useContext, useRef } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { useDeckContext } from "./deck-provider";
 
 export interface DeckStateContext {
@@ -31,16 +31,13 @@ export const CardArrayProvider = ({ citations, children }: DeckStateProviderProp
     active: {},
   });
   const drawDeck = useRef<number[]>([]);
-  const currentCard = useRef<Citation | null>(null);
+  const [currentCard, setCurrentCard] = useState<Citation | null>(null);
 
   const guaranteeCurrentCard = (): Citation => {
-    if (!currentCard.current) {
-      currentCard.current = drawCitation();
+    if (!currentCard) {
+      return drawCitation();
     }
-    if (!currentCard.current) {
-      throw new Error("currentCard is null");
-    }
-    return currentCard.current;
+    return currentCard!;
   };
 
   const moveToActive = (card: Citation): void => {
@@ -62,6 +59,7 @@ export const CardArrayProvider = ({ citations, children }: DeckStateProviderProp
     if (!chosenCitation) {
       throw new Error(`drawCitation: Could not find card with id ${chosenId}`);
     }
+    setCurrentCard(chosenCitation);
     return chosenCitation;
   };
 
