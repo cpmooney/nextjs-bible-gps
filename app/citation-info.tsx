@@ -24,6 +24,9 @@ export const CitationInfo = () => {
           <p className="text-lg">{entire}</p>
         </div>
         <div className="modal-action">
+        <div className="btn btn-btnPrimary mr-2 mt-2 mb-2 justify-start">
+          id {currentCard.id}
+        </div>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2"
             onClick={showInExternalApp}

@@ -32,8 +32,8 @@ export const DeckProvider = ({ children }: DeckProviderProps) => {
   const saveScoreProcedure = trpc.saveChangedScoresProcedure.useMutation();
 
   const allCards = useRef<Citation[] | null>(null);
-  const bankedScore = useRef<number>(0);
-  const unbankedScore = useRef<number>(0);
+  const [unbankedScore, setUnbankedScore] = useState<number>(0);
+  const [bankedScore, setBankedScore] = useState<number>(0);
 
   const [isReady, setIsReady] = useState<boolean>(false);
 
@@ -47,30 +47,31 @@ export const DeckProvider = ({ children }: DeckProviderProps) => {
   useEffect(() => {
     if (!isLoading) {
       allCards.current = fixTrpcBug(data);
+      setBankedScore(computeTotalScore(guaranteeAllCards()));
       setIsReady(true);
     }
   }, [isLoading, data]);
 
   const deckContext: DeckContext = {
-    obtainUnbankedScore: (): number => unbankedScore.current,
-    obtainBankedScore: (): number => bankedScore.current,
+    obtainUnbankedScore: (): number => unbankedScore,
+    obtainBankedScore: (): number => bankedScore,
     userHadNoData: (): boolean => guaranteeAllCards().length === 0,
     syncScoresToDb: async (): Promise<void> => {
       await saveScoreProcedure.mutateAsync(obtainChangedScoreRequest());
-      bankedScore.current += unbankedScore.current;
-      unbankedScore.current = 0;
+      setBankedScore(bankedScore + unbankedScore);
+      setUnbankedScore(0);
     },
     incrementCardScore: (card: Citation): void =>
       recordScoreChange(
         card,
         ScoreChange.Increment,
-        unbankedScore
+        setUnbankedScore
       ),
     resetCardScore: (card: Citation): void =>
       recordScoreChange(
         card,
         ScoreChange.Reset,
-        unbankedScore
+        setBankedScore
       ),
     obtainCardsByBook: (): OrderedCardsByBook =>
       buildCardsByBook(guaranteeAllCards()),
@@ -103,4 +104,8 @@ const DeckContext = createContext<DeckContext | null>(null);
 
 interface DeckProviderProps {
   children: React.ReactNode;
+}
+
+const computeTotalScore = (cards: Citation[]): number => {
+  return cards.reduce((total, card) => total + card.score, 0);
 }

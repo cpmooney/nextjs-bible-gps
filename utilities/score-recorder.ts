@@ -1,13 +1,13 @@
 import { Citation } from "@/models/citation";
-import { MutableRefObject } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { SaveChangedScoresRequest } from "server/db-save-changed";
 
-export const recordScoreChange = (card: Citation, scoreChange: ScoreChange, unbankedScore: MutableRefObject<number>): void => {
+export const recordScoreChange = (card: Citation, scoreChange: ScoreChange, setUnbankedScore: Dispatch<SetStateAction<number>>): void => {
     if (scoreChange === ScoreChange.Increment) {
-        unbankedScore.current++;
+        setUnbankedScore(unbankedScore => unbankedScore + 1);
         card.score++;
     } else if (scoreChange === ScoreChange.Reset) {
-        unbankedScore.current -= card.score;
+        setUnbankedScore(unbankedScore => unbankedScore - card.score);
         card.score = 0;
     }
     card.lastReviewed = new Date();
