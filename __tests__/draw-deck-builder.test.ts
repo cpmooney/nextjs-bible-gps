@@ -24,12 +24,24 @@ describe("createDrawDeck", () => {
   const cards = Array.from({ length: 100 }, (_, i) => ({ score: i }));
   const drawDeck = createDrawDeck(cards);
 
-  it("returns a draw deck with 45 cards", () => {
-    expect(drawDeck.length).toEqual(45);
+  it("returns a draw deck with 50 cards", () => {
+    expect(drawDeck.length).toEqual(50);
+  });
+
+  describe("zero score cards", () => {
+    const zeroCards = drawDeck.filter(({ score }) => score === 0);
+
+    it("contains 5 cards", () => {
+      expect(zeroCards.length).toEqual(5);
+    });
+
+    it("contains 1 unique card", () => {
+      expect(new Set(zeroCards).size).toEqual(1);
+    });
   });
 
   describe("intro cards", () => {
-    const introCards = drawDeck.filter(({ score }) => score <= 10);
+    const introCards = drawDeck.filter(({ score }) => score > 0 && score <= 10);
 
     it("contains 30 cards", () => {
       expect(introCards.length).toEqual(30);
@@ -64,3 +76,4 @@ describe("createDrawDeck", () => {
     });
   });
 });
+

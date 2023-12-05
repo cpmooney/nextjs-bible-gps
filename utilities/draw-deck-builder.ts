@@ -1,3 +1,4 @@
+import { on } from "events";
 import { randomInRange } from "./misc";
 
 interface Card {
@@ -36,6 +37,13 @@ export const createDrawDeck = (citations: Card[]): Card[] => {
 
   const buildDrawDeck = (): Card[] => {
     const drawDeck: Card[] = [];
+    if (oneZeroCard) {
+      drawDeck.push(oneZeroCard);
+      drawDeck.push(oneZeroCard);
+      drawDeck.push(oneZeroCard);
+      drawDeck.push(oneZeroCard);
+      drawDeck.push(oneZeroCard);
+    }
     selectionAtRandom(cardArrays.intro, 10).forEach((card) => {
       drawDeck.push(card);
       drawDeck.push(card);
