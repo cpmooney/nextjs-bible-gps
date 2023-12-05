@@ -1,53 +1,54 @@
-import { ChartBarIcon, InformationCircleIcon, LightBulbIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { ChartBarIcon, InformationCircleIcon, LightBulbIcon, PencilIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { showModal } from "./modal";
 import { PartialCitationModal } from "./partial-citations";
 import { CitationInfo } from "./citation-info";
-import { Card } from '@/models/card'
 import { CardEditModal } from "./card-edit-modal";
 
-interface AdditionalActionProps {
-    // TODO: Need to move this kind of thing to context
-    card: Card;
-}
-
-export const AdditionalActionComponents = (props: AdditionalActionProps) => {
+export const AdditionalActionComponents = () => {
   const showFullCitation = () => showModal("full_citation");
   const editCitation = () => showModal("edit_citation");
   const createPartialCitation = () => showModal("create_partial_citation");
+  const addNewCitation = () => showModal("edit_citation");
 
   return (
     <>
       <div className="card w-96 bg-base-100 shadow-xl mt-4">
         <div className="card-actions">
           <button
-            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 flex-1"
+            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2"
             onClick={showFullCitation}
           >
-            <InformationCircleIcon className="h-8 w-8" />
+            <InformationCircleIcon className="w-6" />
           </button>
           <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
+            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
             onClick={editCitation}
           >
-            <PencilIcon className="h-8 w-8" />
+            <PencilIcon className="w-6" />
           </button>
           <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
+            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
+            onClick={addNewCitation}
           >
-            <ChartBarIcon className="h-8 w-8" />
+            <PlusCircleIcon className="w-6" />
           </button>
           <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2 flex-1"
+            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
             onClick={createPartialCitation}
           >
-            <LightBulbIcon className="h-8 w-8" />
+            <LightBulbIcon className="w-6" />
+          </button>
+          <button
+            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
+          >
+            <ChartBarIcon className="w-6" />
           </button>
         </div>
       </div>
       <div>
         <PartialCitationModal />
-        <CitationInfo card={props.card}/>
-        <CardEditModal card={props.card}/>
+        <CitationInfo />
+        <CardEditModal />
       </div>
     </>
   );

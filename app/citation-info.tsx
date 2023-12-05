@@ -1,16 +1,18 @@
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { Modal } from "./modal";
-import { Card } from "@/models/card";
+import { buildExternalUrl, buildFullCitation } from "@/utilities/additional-citation-methods";
+import { useDeckStateContext } from "./providers/deck-state-provider";
 
-interface CitationInfoProps {
-  card: Card;
-}
+export const CitationInfo = () => {
+  const { obtainCurrentCard } = useDeckStateContext();
 
-export const CitationInfo = (props: CitationInfoProps) => {
-  const { entire, fullCitation, bibleGatewayUrl } = props.card;
+  const currentCard = obtainCurrentCard();
+  const entire = currentCard.entire;
+  const fullCitation = buildFullCitation(currentCard);
+  const externalUrl = buildExternalUrl(currentCard);
 
-  const showInBibleApp = () => {
-    window.open(bibleGatewayUrl, "_blank");
+  const showInExternalApp = () => {
+    window.open(externalUrl, "_blank");
   };
 
   return Modal({
@@ -22,9 +24,12 @@ export const CitationInfo = (props: CitationInfoProps) => {
           <p className="text-lg">{entire}</p>
         </div>
         <div className="modal-action">
+        <div className="btn btn-btnPrimary mr-2 mt-2 mb-2 justify-start">
+          id {currentCard.id}
+        </div>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2"
-            onClick={showInBibleApp}
+            onClick={showInExternalApp}
           >
             <BookOpenIcon className="h-8 w-8" />
           </button>

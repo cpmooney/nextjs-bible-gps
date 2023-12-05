@@ -1,4 +1,4 @@
-import {Card} from "../../models/card";
+import { Citation } from "@/models/citation";
 
 interface ScoreChangeRequestComponentProps {
   changedScoreRequest: Record<number, number>;
@@ -23,7 +23,7 @@ const ScoreChangeRequestComponent = (props: ScoreChangeRequestComponentProps) =>
 };
 
 interface CardContentComponentProps {
-  card: Card,
+  card: Citation,
   totalNumber: number,
   changedNumber: number,
   changedScoreRequest: Record<number, number>,

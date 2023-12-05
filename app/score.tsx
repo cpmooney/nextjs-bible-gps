@@ -1,25 +1,23 @@
 import {ChevronDoubleRightIcon} from "@heroicons/react/24/outline";
+import { useDeckContext } from "./providers/deck-provider";
 
-interface TotalStatComponentProps {
-  initialScore: number;
-  scoreIncrease: number;
-  syncScoresToDb: () => Promise<void>;
-}
+export default function ScoreComponent() {
+  const {syncScoresToDb, obtainBankedScore, obtainUnbankedScore} = useDeckContext();
 
-export default function ScoreComponent(props: TotalStatComponentProps) {
-  const {syncScoresToDb, initialScore, scoreIncrease} = props;
+  const unbankedScore = obtainUnbankedScore();
+  const bankedScore = obtainBankedScore();
 
   const getChangeColorClass = () => {
-    if (scoreIncrease < 0) {
+    if (unbankedScore < 0) {
       return "text-red-600";
     }
-    if (scoreIncrease === 0) {
+    if (unbankedScore === 0) {
       return "text-gray-600";
     }
-    if (scoreIncrease < 10) {
+    if (unbankedScore < 10) {
       return "text-green-600";
     }
-    if (scoreIncrease < 30) {
+    if (unbankedScore < 30) {
       return "text-lime-600";
     }
     return "text-yellow-600";
@@ -34,7 +32,7 @@ export default function ScoreComponent(props: TotalStatComponentProps) {
       <div className="card bg-base-100 shadow-xl mr-4 mt-4 flex-1">
         <div className="card-body">
           <div className={`justify-center text-5xl ${getChangeColorClass()}`}>
-            {scoreIncrease}
+            {unbankedScore}
           </div>
         </div>
       </div>
@@ -48,7 +46,7 @@ export default function ScoreComponent(props: TotalStatComponentProps) {
           <div
             className={`justify-center text-4xl ${getTotalScoreColorClass()}`}
           >
-            {initialScore}
+            {bankedScore}
           </div>
         </div>
       </div>
