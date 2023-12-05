@@ -2,6 +2,7 @@ import { Citation } from "@/models/citation";
 import { createContext, useContext, useRef, useState } from "react";
 import { useDeckContext } from "./deck-provider";
 import { createDrawDeck } from "@/utilities/draw-deck-builder";
+import { randomInRange } from "@/utilities/misc";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
@@ -20,9 +21,12 @@ export const useDeckStateContext = () => {
   return context;
 };
 
-export const CardArrayProvider = ({ citations, children }: DeckStateProviderProps) => {
+export const CardArrayProvider = ({
+  citations,
+  children,
+}: DeckStateProviderProps) => {
   const { incrementCardScore, resetCardScore } = useDeckContext();
-  const drawDeck = useRef<number[]>([]);
+  const drawDeck = useRef<Citation[]>([]);
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
 
   const guaranteeCurrentCard = (): Citation => {
@@ -35,20 +39,14 @@ export const CardArrayProvider = ({ citations, children }: DeckStateProviderProp
   const drawCitation = (): Citation => {
     guaranteeDrawDeck();
     const randomIndex = randomInRange(0, drawDeck.current.length - 1);
-    const chosenId = drawDeck.current.splice(randomIndex, 1)[0];
-    const chosenCitation = citations.find(
-      (card) => card.id === chosenId
-    );
-    if (!chosenCitation) {
-      throw new Error(`drawCitation: Could not find card with id ${chosenId}`);
-    }
-    setCurrentCard(chosenCitation);
-    return chosenCitation;
+    const chosenCard = drawDeck.current.splice(randomIndex, 1)[0];
+    setCurrentCard(chosenCard);
+    return chosenCard;
   };
 
   const guaranteeDrawDeck = () => {
     if (drawDeck.current.length === 0) {
-      drawDeck.current = createDrawDeck(citations);
+      drawDeck.current = createDrawDeck(citations) as Citation[];
     }
   };
 

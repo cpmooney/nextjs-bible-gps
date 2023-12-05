@@ -1,82 +1,81 @@
-import { Citation } from "@/models/citation";
+import { randomInRange } from "./misc";
 
-export const createDrawDeck = (citations: Citation[]): number[] => {
-    const cardArrays: CardArrays = {
-        intro: [],
-        intermediate: [],
-        advanced: [],
-        active: [],
-    };
-    let oneZeroCard: number | undefined;
-    
-    const cutoffs = computeScoreCutoffs(citations);
+interface Card {
+  score: number;
+  lastReviewed?: Date;
+}
 
-  const buildCardArrays = (citations: Citation[]): void => {
+export const createDrawDeck = (citations: Card[]): Card[] => {
+  const cardArrays: CardArrays = {
+    intro: [],
+    intermediate: [],
+    advanced: [],
+    active: [],
+  };
+  let oneZeroCard: Card | undefined;
+
+  const scores = citations.map((card) => card.score);
+  const cutoffs = computeScoreCutoffs(scores);
+
+  const buildCardArrays = (citations: Card[]): void => {
     citations.forEach((card) => organizeByScore(card));
-  }
+  };
 
-  const organizeByScore = (card: Citation): void => {
-    const { id, score } = card;
-    if (!id) {
-      throw new Error(`recomputeCitation: Card has no id`);
-    }
+  const organizeByScore = (card: Card): void => {
+    const { score } = card;
     if (score === 0) {
-        oneZeroCard = id;
+      oneZeroCard = card;
     } else if (score <= cutoffs.intro) {
-      cardArrays.intro.push(id);
+      cardArrays.intro.push(card);
     } else if (score <= cutoffs.intermediate) {
-      cardArrays.intermediate.push(id);
+      cardArrays.intermediate.push(card);
     } else {
-      cardArrays.advanced.push(id);
+      cardArrays.advanced.push(card);
     }
   };
 
-const buildDrawDeck = (): number[] => {
-    const drawDeck: number[] = [];
-      selectionAtRandom(cardArrays.intro, 10).forEach((id) => {
-        drawDeck.push(id);
-        drawDeck.push(id);
-        drawDeck.push(id);
-      });
-      selectionAtRandom(cardArrays.intermediate, 10).forEach((id) => {
-        drawDeck.push(id);
-      });
-      selectionAtRandom(cardArrays.advanced, 5).forEach((id) => {
-        drawDeck.push(id);
-      });
-      return drawDeck;
-    }
+  const buildDrawDeck = (): Card[] => {
+    const drawDeck: Card[] = [];
+    selectionAtRandom(cardArrays.intro, 10).forEach((card) => {
+      drawDeck.push(card);
+      drawDeck.push(card);
+      drawDeck.push(card);
+    });
+    selectionAtRandom(cardArrays.intermediate, 10).forEach((card) => {
+      drawDeck.push(card);
+    });
+    selectionAtRandom(cardArrays.advanced, 5).forEach((card) => {
+      drawDeck.push(card);
+    });
+    return drawDeck;
+  };
 
-    buildCardArrays(citations);
-    return buildDrawDeck();
-}
+  buildCardArrays(citations);
+  return buildDrawDeck();
+};
 
-  const selectionAtRandom = (cardArray: number[], length: number): number[] => {
-    const result: number[] = [];
-    for (let i = 0; i < length; i++) {
-      const randomIndex = randomInRange(0, cardArray.length - 1);
-      result.push(cardArray.splice(randomIndex, 1)[0]);
-    }
-    return result;
+const selectionAtRandom = (cardArray: Card[], length: number): Card[] => {
+  const result: Card[] = [];
+  for (let i = 0; i < length; i++) {
+    const randomIndex = randomInRange(0, cardArray.length - 1);
+    result.push(cardArray.splice(randomIndex, 1)[0]);
   }
+  return result;
+};
 
-const computeScoreCutoffs = (citations: Citation[]): ArrayScoreCutoffs => {
-  const scores = citations.map((citation) => citation.score);
+export const computeScoreCutoffs = (scores: number[]): ArrayScoreCutoffs => {
   const sortedScores = scores.sort((a, b) => a - b);
-  const introCutoff = sortedScores[Math.floor(sortedScores.length / 3)];
-  const intermediateCutoff = sortedScores[Math.floor(sortedScores.length * 2 / 3)];
+  const introCutoff = sortedScores[Math.floor(sortedScores.length / 10)];
+  const intermediateCutoff =
+    sortedScores[Math.floor(sortedScores.length  / 2)];
   return {
     intro: introCutoff,
     intermediate: intermediateCutoff,
-    advanced: 0
+    advanced: 0,
   };
-}
-
-const randomInRange = (min: number, max: number): number => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-type CardArrays = Record<ArrayType, number[]>;
+type CardArrays = Record<ArrayType, Card[]>;
 
 type ArrayType = "intro" | "intermediate" | "advanced" | "active";
 const arrayTypeList: ArrayType[] = ["intro", "intermediate", "advanced"];
