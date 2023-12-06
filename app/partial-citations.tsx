@@ -1,6 +1,6 @@
 import { trpc } from "@/utilities/trpc";
 import { Modal, closeModal } from "./modal";
-import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
 export const PartialCitationModal = () => {
   const createPartialCitationProcedure =
