@@ -1,8 +1,13 @@
-import { ChartBarIcon, InformationCircleIcon, LightBulbIcon, PencilIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import { showModal } from "./modal";
-import { PartialCitationModal } from "./partial-citations";
-import { CitationInfo } from "./citation-info";
-import { CardEditModal } from "../../pages/edit";
+import {
+  ChartBarIcon,
+  InformationCircleIcon,
+  LightBulbIcon,
+  PencilIcon,
+  PlusCircleIcon,
+} from "@heroicons/react/24/outline";
+import {CitationInfo} from "./citation-info";
+import {showModal} from "./modal";
+import {PartialCitationModal} from "./partial-citations";
 
 export const AdditionalActionComponents = () => {
   const showFullCitation = () => showModal("full_citation");
@@ -38,9 +43,7 @@ export const AdditionalActionComponents = () => {
           >
             <LightBulbIcon className="w-6" />
           </button>
-          <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
-          >
+          <button className="btn btn-btnPrimary mr-2 mt-2 mb-2">
             <ChartBarIcon className="w-6" />
           </button>
         </div>
@@ -48,10 +51,7 @@ export const AdditionalActionComponents = () => {
       <div>
         <PartialCitationModal />
         <CitationInfo />
-        <CardEditModal />
       </div>
     </>
   );
 };
-
-

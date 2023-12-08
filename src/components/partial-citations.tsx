@@ -1,10 +1,7 @@
-import { trpc } from "src/utilities/trpc";
-import { Modal, closeModal } from "./modal";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import {CheckCircleIcon} from "@heroicons/react/24/outline";
+import {Modal, closeModal} from "./modal";
 
 export const PartialCitationModal = () => {
-  const createPartialCitationProcedure =
-    trpc.savePartialCitationProcedure.useMutation();
   const closeMe = () => closeModal("create_partial_citation");
   const saveAndClose = async () => {
     const fragment = getInputValue("create_partial_citation_fragment_input");
