@@ -1,4 +1,4 @@
-import {DebugMessage, LogLevel} from "@/utilities/debugger";
+import {DebugMessage, LogLevel} from "src/utilities/debugger";
 import {useState} from "react";
 
 export const useDebugMessages = () => {

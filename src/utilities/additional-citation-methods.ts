@@ -1,4 +1,4 @@
-import { Citation } from "@/models/citation";
+import { Citation } from "src/models/citation";
 
 export const buildFullCitation = (citation: Citation): string => 
     `${citation.book} ${citation.chapter}:${citation.firstVerse}${citation.suffix}`;

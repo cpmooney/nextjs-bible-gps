@@ -1,7 +1,7 @@
 import {
   computeScoreCutoffs,
   createDrawDeck,
-} from "@/utilities/draw-deck-builder";
+} from "src/utilities/draw-deck-builder";
 
 interface Card {
   score: number;

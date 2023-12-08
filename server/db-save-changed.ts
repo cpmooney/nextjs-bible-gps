@@ -2,15 +2,15 @@ import {CitationTable} from "db/schema/citation-table";
 import {and, eq} from "drizzle-orm";
 import {isAuthed, procedure} from "server/trpc";
 import {z} from "zod";
-import {obtainDatabase, usingDatabase} from "../utilities/database";
+import {obtainDatabase, usingDatabase} from "../src/utilities/database";
 import {
   DebugMessage,
   ZodDebugMessage,
   debugLog,
   obtainDebugMessages,
   usingDebugger,
-} from "../utilities/debugger";
-import { obtainGuaranteedUserId } from "@/utilities/current-auth";
+} from "../src/utilities/debugger";
+import { obtainGuaranteedUserId } from "src/utilities/current-auth";
 
 const ZodSaveChangedRequest = z.array(
   z.object({

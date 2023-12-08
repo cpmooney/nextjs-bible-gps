@@ -1,11 +1,11 @@
-import {Citation, ZodCitation} from "@/models/citation";
+import {Citation, ZodCitation} from "src/models/citation";
 import {CitationTable} from "db/schema/citation-table";
 import {asc} from "drizzle-orm";
 import {isAuthed, procedure} from "server/trpc";
 import {z} from "zod";
-import {obtainDatabase, usingDatabase} from "../utilities/database";
-import {debugLog, usingDebugger} from "../utilities/debugger";
-import { obtainGuaranteedUserId } from "@/utilities/current-auth";
+import {obtainDatabase, usingDatabase} from "../src/utilities/database";
+import {debugLog, usingDebugger} from "../src/utilities/debugger";
+import { obtainGuaranteedUserId } from "src/utilities/current-auth";
 
 export const usingDbLoadAllProcedure = () =>
   procedure

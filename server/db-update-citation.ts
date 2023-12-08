@@ -1,12 +1,12 @@
 import {isAuthed, procedure} from "server/trpc";
-import {obtainDatabase, usingDatabase} from "../utilities/database";
+import {obtainDatabase, usingDatabase} from "../src/utilities/database";
 import {
   debugLog,
   usingDebugger,
-} from "../utilities/debugger";
-import { obtainGuaranteedUserId } from "@/utilities/current-auth";
+} from "../src/utilities/debugger";
+import { obtainGuaranteedUserId } from "src/utilities/current-auth";
 import { CitationTable } from "db/schema/citation-table";
-import { Citation, ZodCitation } from "@/models/citation";
+import { Citation, ZodCitation } from "src/models/citation";
 
 export const usingDbUpdateCitationProcedure = () =>
   procedure

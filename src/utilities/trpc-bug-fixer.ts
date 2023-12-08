@@ -1,4 +1,4 @@
-import { Citation } from "@/models/citation";
+import { Citation } from "src/models/citation";
 
 export const fixTrpcBug = (data: any[] | undefined): Citation[] => 
     data?.map((citation) => {

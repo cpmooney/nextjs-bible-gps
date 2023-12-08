@@ -21,10 +21,10 @@
     "baseUrl": ".",
     "paths": {
       "@/utilities/*": [
-        "utilities/*"
+        "src/utilities/*"
       ],
       "@/models/*": [
-        "models/*"
+        "src/models/*"
       ],
     }
   },

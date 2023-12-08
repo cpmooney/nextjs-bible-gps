@@ -1,6 +1,6 @@
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { Modal } from "./modal";
-import { buildExternalUrl, buildFullCitation } from "@/utilities/additional-citation-methods";
+import { buildExternalUrl, buildFullCitation } from "src/utilities/additional-citation-methods";
 import { useDeckStateContext } from "./providers/deck-state-provider";
 
 export const CitationInfo = () => {

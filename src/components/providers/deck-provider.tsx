@@ -1,15 +1,15 @@
-import { Citation } from "@/models/citation";
+import { Citation } from "src/models/citation";
 import {
   OrderedCardsByBook,
   buildCardsByBook,
-} from "@/utilities/card-by-book-builder";
+} from "src/utilities/card-by-book-builder";
 import {
   ScoreChange,
   obtainChangedScoreRequest,
   recordScoreChange,
-} from "@/utilities/score-recorder";
-import { trpc } from "@/utilities/trpc";
-import { fixTrpcBug } from "@/utilities/trpc-bug-fixer";
+} from "src/utilities/score-recorder";
+import { trpc } from "src/utilities/trpc";
+import { fixTrpcBug } from "src/utilities/trpc-bug-fixer";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Loader } from "../loader-component";
 import { CardArrayProvider } from "./deck-state-provider";

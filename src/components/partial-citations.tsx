@@ -1,4 +1,4 @@
-import { trpc } from "@/utilities/trpc";
+import { trpc } from "src/utilities/trpc";
 import { Modal, closeModal } from "./modal";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 

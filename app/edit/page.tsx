@@ -1,14 +1,13 @@
-import { Modal, closeModal } from "../app/modal";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import { trpc } from "@/utilities/trpc";
 import { Citation } from "@/models/citation";
-import { BibleSelection } from "../app/edit/bible-selection";
+import { buildFullCitation } from "src/utilities/additional-citation-methods";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { buildFullCitation } from "@/utilities/additional-citation-methods";
-import { NumberSelection } from "../app/edit/number-selection";
-import { TextArea } from "../app/edit/text-area";
-import { SuffixEntry } from "../app/edit/suffix-entry";
-import { FragmentEntry } from "../app/edit/fragment-entry";
+import { BibleSelection } from "src/components/edit/bible-selection";
+import { FragmentEntry } from "src/components/edit/fragment-entry";
+import { NumberSelection } from "src/components/edit/number-selection";
+import { SuffixEntry } from "src/components/edit/suffix-entry";
+import { TextArea } from "src/components/edit/text-area";
+import { closeModal } from "src/components/modal";
 
 export const CardEditModal = () => {
   const [citation, setCitation] = useState<Citation | null>(null);
@@ -36,7 +35,7 @@ export const CardEditModal = () => {
     setFullCitation(buildFullCitation(newCitation));
   }, [book, chapter, firstVerse, suffix, fragment, entire]);
 
-  const updateCitationProcedure = trpc.updateCitationRequest.useMutation();
+//  const updateCitationProcedure = trpc.updateCitationRequest.useMutation();
 
   const closeMe = () => closeModal("edit_citation");
   const saveAndClose = async () => {
@@ -44,10 +43,7 @@ export const CardEditModal = () => {
     closeMe();
   };
 
-  return Modal({
-    name: "edit_citation",
-    contents: (
-      <div className="card w-96 bg-base-100 shadow-xl">
+  return (<div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
           <div className="w-full">
             <label className="label font-bold">Citation</label>
@@ -70,6 +66,5 @@ export const CardEditModal = () => {
           </button>
         </div>
       </div>
-    ),
-  });
+    );
 };

@@ -1,4 +1,4 @@
-import { Citation } from "@/models/citation";
+import { Citation } from "src/models/citation";
 
 interface ScoreChangeRequestComponentProps {
   changedScoreRequest: Record<number, number>;

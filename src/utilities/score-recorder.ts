@@ -1,4 +1,4 @@
-import { Citation } from "@/models/citation";
+import { Citation } from "src/models/citation";
 import { Dispatch, SetStateAction } from "react";
 import { SaveChangedScoresRequest } from "server/db-save-changed";
 

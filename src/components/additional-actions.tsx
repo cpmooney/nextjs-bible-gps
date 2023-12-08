@@ -2,7 +2,7 @@ import { ChartBarIcon, InformationCircleIcon, LightBulbIcon, PencilIcon, PlusCir
 import { showModal } from "./modal";
 import { PartialCitationModal } from "./partial-citations";
 import { CitationInfo } from "./citation-info";
-import { CardEditModal } from "../pages/edit";
+import { CardEditModal } from "../../pages/edit";
 
 export const AdditionalActionComponents = () => {
   const showFullCitation = () => showModal("full_citation");

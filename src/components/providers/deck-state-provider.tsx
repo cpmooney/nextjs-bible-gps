@@ -1,8 +1,8 @@
-import { Citation } from "@/models/citation";
+import { Citation } from "src/models/citation";
 import { createContext, useContext, useRef, useState } from "react";
 import { useDeckContext } from "./deck-provider";
-import { createDrawDeck } from "@/utilities/draw-deck-builder";
-import { randomInRange } from "@/utilities/misc";
+import { createDrawDeck } from "src/utilities/draw-deck-builder";
+import { randomInRange } from "src/utilities/misc";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;

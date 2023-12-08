@@ -1,5 +1,5 @@
-import { bibleBooks } from "@/models/books";
-import { Citation } from "@/models/citation";
+import { bibleBooks } from "src/models/books";
+import { Citation } from "src/models/citation";
 
 export type OrderedCardsByBook = { book: string, cards: Citation[] }[];
 

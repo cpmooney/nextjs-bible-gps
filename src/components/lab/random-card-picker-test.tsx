@@ -1,6 +1,6 @@
-import { useDeckStateContext } from 'app/providers/deck-state-provider';
+import { useDeckStateContext } from 'src/components/providers/deck-state-provider';
 import { BarGraph } from './bar-graph';
-import { Citation } from '@/models/citation';
+import { Citation } from 'src/models/citation';
 
 export const RandomCardPickerTest = () => {
   const { drawCitation } = useDeckStateContext();

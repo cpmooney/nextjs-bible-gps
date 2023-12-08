@@ -1,12 +1,12 @@
 import {isAuthed, procedure} from "server/trpc";
 import {z} from "zod";
-import {obtainDatabase, usingDatabase} from "../utilities/database";
+import {obtainDatabase, usingDatabase} from "../src/utilities/database";
 import {
   debugLog,
   usingDebugger,
-} from "../utilities/debugger";
+} from "../src/utilities/debugger";
 import { PartialCitationTable } from "db/schema/partial-citation-table";
-import { obtainGuaranteedUserId } from "@/utilities/current-auth";
+import { obtainGuaranteedUserId } from "src/utilities/current-auth";
 
 const ZodSavePartialCitationRequest = 
 z.object({

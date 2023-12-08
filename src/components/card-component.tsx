@@ -4,7 +4,7 @@ import {
   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { buildFullCitation } from "@/utilities/additional-citation-methods";
+import { buildFullCitation } from "src/utilities/additional-citation-methods";
 import { useDeckStateContext } from "./providers/deck-state-provider";
 
 export default function CardComponent() {

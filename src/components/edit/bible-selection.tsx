@@ -1,4 +1,4 @@
-import { bibleBooks } from "@/models/books";
+import { bibleBooks } from "src/models/books";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
 interface BibleSelectionProps {
