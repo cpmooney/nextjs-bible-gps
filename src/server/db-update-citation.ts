@@ -1,10 +1,10 @@
 import {CitationTable} from "db/schema/citation-table";
 import {Citation} from "src/models/citation";
-import {obtainGuaranteedUserId} from "src/utilities/current-auth";
 import {obtainDatabase, usingDatabase} from "../utilities/database";
 import {debugLog, usingDebugger} from "../utilities/debugger";
 
 export const invokeDbUpdateCitationAction = async (
+  userId: string,
   citation: Citation
 ): Promise<void> => {
   usingDatabase({CitationTable});
@@ -14,7 +14,6 @@ export const invokeDbUpdateCitationAction = async (
     "info",
     `Saving citation ${fullCitation}: ${JSON.stringify(citation)}`
   );
-  const userId = obtainGuaranteedUserId();
 
   const response = await obtainDatabase()
     .insert(CitationTable)

@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { obtainUserId } from "./current-auth";
 
 const ZodLogLevel = z.enum(["info", "warn", "error"]);
 
@@ -30,7 +29,7 @@ export const debugLog = (level: LogLevel, message: string) => {
     throw new Error("Debugger not initialized");
   }
   const timestamp = now();
-  const userId = obtainUserId();
+  const userId = 'TODO: Obtain user id';
   const debugMessage: DebugMessage = {
     userId,
     message,

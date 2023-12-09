@@ -5,12 +5,9 @@ import {
 } from "src/utilities/card-by-book-builder";
 import {
   ScoreChange,
-  obtainChangedScoreRequest,
   recordScoreChange,
 } from "src/utilities/score-recorder";
-import { trpc } from "src/utilities/trpc";
-import { fixTrpcBug } from "src/utilities/trpc-bug-fixer";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useRef, useState } from "react";
 import { Loader } from "../loader-component";
 import { CardArrayProvider } from "./deck-state-provider";
 
@@ -23,6 +20,7 @@ export const useDeckContext = () => {
 };
 
 export const DeckProvider = ({ children }: DeckProviderProps) => {
+  /*
   const { data, isLoading } = trpc.loadAllProcedure.useQuery(
     {},
     {
@@ -30,6 +28,7 @@ export const DeckProvider = ({ children }: DeckProviderProps) => {
     }
   );
   const saveScoreProcedure = trpc.saveChangedScoresProcedure.useMutation();
+  */
 
   const allCards = useRef<Citation[] | null>(null);
   const [unbankedScore, setUnbankedScore] = useState<number>(0);
@@ -44,6 +43,7 @@ export const DeckProvider = ({ children }: DeckProviderProps) => {
     return allCards.current;
   };
 
+  /*
   useEffect(() => {
     if (!isLoading) {
       allCards.current = fixTrpcBug(data);
@@ -51,13 +51,14 @@ export const DeckProvider = ({ children }: DeckProviderProps) => {
       setIsReady(true);
     }
   }, [isLoading, data]);
+  */
 
   const deckContext: DeckContext = {
     obtainUnbankedScore: (): number => unbankedScore,
     obtainBankedScore: (): number => bankedScore,
     userHadNoData: (): boolean => guaranteeAllCards().length === 0,
     syncScoresToDb: async (): Promise<void> => {
-      await saveScoreProcedure.mutateAsync(obtainChangedScoreRequest());
+//      await saveScoreProcedure.mutateAsync(obtainChangedScoreRequest());
       setBankedScore(bankedScore + unbankedScore);
       setUnbankedScore(0);
     },

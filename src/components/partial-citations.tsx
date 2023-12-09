@@ -6,9 +6,11 @@ export const PartialCitationModal = () => {
   const saveAndClose = async () => {
     const fragment = getInputValue("create_partial_citation_fragment_input");
     if (fragment) {
+      /*
       await createPartialCitationProcedure.mutateAsync({
         fragment: getInputValue("create_partial_citation_fragment_input"),
       });
+      */
     }
     closeMe();
   };
