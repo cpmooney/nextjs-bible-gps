@@ -1,5 +1,4 @@
-"use client";
-import {DeckComponent} from "src/components/deck-component";
+import {DeckComponent} from "./components/deck-component";
 
 export default function DeckPage() {
   return <DeckComponent />;

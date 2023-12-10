@@ -1,8 +1,7 @@
-"use client";
 import {ClerkProvider, UserButton} from "@clerk/nextjs";
 import {ReactNode} from "react";
-import {ImageBackground} from "src/components/image-background";
-import {DeckProvider} from "src/components/providers/deck-provider";
+import {ImageBackground} from "./components/image-background";
+import {DeckProvider} from "./components/providers/deck-provider";
 
 const DeckPageWithBackground = () => {
   return (

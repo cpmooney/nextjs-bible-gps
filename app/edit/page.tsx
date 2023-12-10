@@ -2,12 +2,12 @@
 import {Citation} from "@/models/citation";
 import {CheckCircleIcon} from "@heroicons/react/24/outline";
 import {useEffect, useState} from "react";
-import {BibleSelection} from "src/components/edit/bible-selection";
-import {FragmentEntry} from "src/components/edit/fragment-entry";
-import {NumberSelection} from "src/components/edit/number-selection";
-import {SuffixEntry} from "src/components/edit/suffix-entry";
-import {TextArea} from "src/components/edit/text-area";
-import {closeModal} from "src/components/modal";
+import {BibleSelection} from "../components/edit/bible-selection";
+import {FragmentEntry} from "../components/edit/fragment-entry";
+import {NumberSelection} from "../components/edit/number-selection";
+import {SuffixEntry} from "../components/edit/suffix-entry";
+import {TextArea} from "../components/edit/text-area";
+import {closeModal} from "../components/modal";
 import {buildFullCitation} from "src/utilities/additional-citation-methods";
 
 export default function CardEditPage() {
