@@ -1,8 +1,9 @@
+"use client"
 import {ChevronDoubleRightIcon} from "@heroicons/react/24/outline";
-import { useDeckContext } from "./providers/deck-provider";
+import { useDeckStateContext } from "./providers/deck-state-provider";
 
 export default function ScoreComponent() {
-  const {syncScoresToDb, obtainBankedScore, obtainUnbankedScore} = useDeckContext();
+  const {syncScoresToDb, obtainBankedScore, obtainUnbankedScore} = useDeckStateContext();
 
   const unbankedScore = obtainUnbankedScore();
   const bankedScore = obtainBankedScore();

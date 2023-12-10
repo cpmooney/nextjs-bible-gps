@@ -1,7 +1,7 @@
 import {ClerkProvider, UserButton} from "@clerk/nextjs";
 import {ReactNode} from "react";
 import {ImageBackground} from "./components/image-background";
-import {DeckProvider} from "./components/providers/deck-provider";
+import DeckProvider from "./components/providers/deck-provider";
 
 const DeckPageWithBackground = () => {
   return (
@@ -15,7 +15,7 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-export const Layout = ({children}: LayoutProps) => {
+const Layout = ({children}: LayoutProps) => {
   return (
     <>
       <DeckPageWithBackground />
@@ -32,3 +32,5 @@ export const Layout = ({children}: LayoutProps) => {
     </>
   );
 };
+
+export default Layout;

@@ -14,6 +14,8 @@ export interface DeckStateContext {
   syncScoresToDb: () => Promise<void>;
   obtainCardsByBook: () => OrderedCardsByBook;
   obtainAllCitations: () => Citation[];
+  obtainUnbankedScore: () => number;
+  obtainBankedScore: () => number;
 }
 
 export const useDeckStateContext = () => {
@@ -84,7 +86,9 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     resetCurrentCardScore,
     syncScoresToDb,
     obtainCardsByBook,
-    obtainAllCitations
+    obtainAllCitations,
+    obtainUnbankedScore: () => unbankedScore,
+    obtainBankedScore: () => bankedScore,
   }}>
       {props.children}
     </DeckStateContext.Provider>

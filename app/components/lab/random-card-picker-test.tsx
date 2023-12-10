@@ -1,4 +1,4 @@
-import { useDeckStateContext } from 'src/components/providers/deck-state-provider';
+import { useDeckStateContext } from '../providers/deck-state-provider';
 import { BarGraph } from './bar-graph';
 import { Citation } from 'src/models/citation';
 

@@ -7,7 +7,7 @@ import { CardArrayProvider} from "./deck-state-provider";
 import { guaranteeUserId } from "app/actions";
 import { invokeDbLoadAllAction } from "src/server/db-load-all-rows";
 
-export const DeckProvider = async ({ children }: DeckProviderProps) => {
+const DeckProvider = async ({ children }: DeckProviderProps) => {
   const allCards = await loadAllCards();
 
   return (
@@ -38,3 +38,5 @@ const loadAllCards = async () => {
   const userId = guaranteeUserId();
   return await invokeDbLoadAllAction(userId);
 };
+
+export default DeckProvider;
