@@ -1,7 +1,7 @@
-import {ClerkProvider, UserButton} from "@clerk/nextjs";
 import {ReactNode} from "react";
 import {ImageBackground} from "./components/image-background";
 import DeckProvider from "./components/providers/deck-provider";
+import { ClerkProvider, UserButton } from "@clerk/nextjs";
 
 const DeckPageWithBackground = () => {
   return (

@@ -1,8 +1,4 @@
 import { Citation } from "src/models/citation";
-import {
-  OrderedCardsByBook,
-  buildCardsByBook,
-} from "src/utilities/card-by-book-builder";
 import { CardArrayProvider} from "./deck-state-provider";
 import { guaranteeUserId } from "app/actions";
 import { invokeDbLoadAllAction } from "src/server/db-load-all-rows";
@@ -14,12 +10,8 @@ const DeckProvider = async ({ children }: DeckProviderProps) => {
     <CardArrayProvider
       citations={allCards}
       initialBankedScore={computeTotalScore(allCards)}
-      deckContext={{
-        userHadNoData: allCards.length === 0,
-        obtainCardsByBook: (): OrderedCardsByBook =>
-          buildCardsByBook(allCards),
-        obtainAllCitations: (): Citation[] => allCards,
-      }}
+      userHadNoData={allCards.length === 0}
+      allCards={allCards}
     >
       {children}
     </CardArrayProvider>

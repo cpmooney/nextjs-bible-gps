@@ -1,3 +1,4 @@
+"use client";
 import CardComponent from "./card-component";
 import "./globals.css";
 import ScoreComponent from "./score";

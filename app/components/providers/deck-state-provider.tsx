@@ -4,7 +4,7 @@ import { createContext, useContext, useRef, useState } from "react";
 import { createDrawDeck } from "src/utilities/draw-deck-builder";
 import { randomInRange } from "src/utilities/misc";
 import { ScoreChange, recordScoreChange } from "@/utilities/score-recorder";
-import { OrderedCardsByBook } from "@/utilities/card-by-book-builder";
+import { OrderedCardsByBook, buildCardsByBook } from "@/utilities/card-by-book-builder";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
@@ -16,6 +16,14 @@ export interface DeckStateContext {
   obtainAllCitations: () => Citation[];
   obtainUnbankedScore: () => number;
   obtainBankedScore: () => number;
+}
+
+interface DeckStateProviderProps {
+  children: React.ReactNode;
+  citations: Citation[];
+  initialBankedScore: number;
+  userHadNoData: boolean;
+  allCards: Citation[];
 }
 
 export const useDeckStateContext = () => {
@@ -75,8 +83,8 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       setUnbankedScore
     );
 
-    const obtainCardsByBook = props.deckContext.obtainCardsByBook;
-    const obtainAllCitations = props.deckContext.obtainAllCitations;
+  const obtainCardsByBook = () => buildCardsByBook(props.allCards);
+  const obtainAllCitations = () => props.allCards;
 
   return (
     <DeckStateContext.Provider value={{
@@ -96,16 +104,3 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
 };
 
 const DeckStateContext = createContext<DeckStateContext | null>(null);
-
-interface DeckStateProviderProps {
-  children: React.ReactNode;
-  citations: Citation[];
-  initialBankedScore: number;
-  deckContext: DeckContext 
-}
-
-export interface DeckContext {
-  userHadNoData: boolean;
-  obtainCardsByBook: () => OrderedCardsByBook;
-  obtainAllCitations: () => Citation[];
-}

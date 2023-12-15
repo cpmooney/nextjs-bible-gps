@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {ChevronDoubleRightIcon} from "@heroicons/react/24/outline";
 import { useDeckStateContext } from "./providers/deck-state-provider";
 
