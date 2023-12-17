@@ -3,8 +3,8 @@ import Image from 'next/image';
 const backgroundTheme = {
     light: {
         backgroundUrl: '/images/light-gray-concrete-wall.jpg',
-        attributionUrl: '',
-        attributionAnchor: ''
+        attributionUrl: 'https://www.freepik.com/free-photo/old-cement-wall-texture_920589.htm#query=light%20gray%20concrete%20wall&position=1&from_view=keyword&track=ais&uuid=9b54fee3-6488-4795-ace4-2e69e0dd26bc',
+        attributionAnchor: 'Image by asierromero'
     },
     dark: {
         backgroundUrl: '/images/grunge-wall-texture.jpg',
