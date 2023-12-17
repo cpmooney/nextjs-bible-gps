@@ -27,7 +27,7 @@ const computeTotalScore = (cards: Citation[]): number => {
 };
 
 const loadAllCards = async () => {
-  const userId = guaranteeUserId();
+  const userId = await guaranteeUserId();
   return await invokeDbLoadAllAction(userId);
 };
 

@@ -1,6 +1,6 @@
 "use server";
 
-import {auth} from "@clerk/nextjs";
+import {auth, currentUser} from "@clerk/nextjs";
 import {
   SaveChangedScoresRequest,
   invokeDbSaveChangedAction,
@@ -11,19 +11,19 @@ import {
 } from "src/server/db-save-partial-citation";
 
 export const savePartialCards = async (request: SavePartialCitationRequest) => {
-  const userId = guaranteeUserId();
+  const userId = await guaranteeUserId();
   return await invokeDbSavePartialCitationAction(userId, request);
 };
 
 export const saveChangedCards = async (request: SaveChangedScoresRequest) => {
-  const userId = guaranteeUserId();
+  const userId = await guaranteeUserId();
   return await invokeDbSaveChangedAction(userId, request);
 };
 
-export const guaranteeUserId = () => {
-  const {userId} = auth();
-  if (!userId) {
-    throw new Error("User not found");
+export const guaranteeUserId = async (): Promise<string> => {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("User is not logged in.");
   }
-  return userId;
+  return user.id;
 };
