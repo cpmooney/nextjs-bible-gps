@@ -38,7 +38,7 @@ export const useDeckStateContext = () => {
 
 export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const [unbankedScore, setUnbankedScore] = useState<number>(0);
-  const [bankedScore, setBankedScore] = useState<number>(0);
+  const [bankedScore, setBankedScore] = useState<number>(props.initialBankedScore);
 
   const drawDeck = useRef<Citation[]>([]);
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
