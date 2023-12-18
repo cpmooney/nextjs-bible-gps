@@ -1,4 +1,4 @@
-import { z } from "zod";
+import {z} from "zod";
 
 const ZodLogLevel = z.enum(["info", "warn", "error"]);
 
@@ -15,21 +15,22 @@ export type LogLevel = z.infer<typeof ZodLogLevel>;
 
 const debugMessages: DebugMessage[] = [];
 let actionName: string;
+let userId: string | undefined;
 
-export const usingDebugger = (newActionName: string) => {
+export const usingDebugger = (newActionName: string, newUserId: string) => {
   actionName = newActionName;
-}
+  userId = newUserId;
+};
 
 export const obtainDebugMessages = (): DebugMessage[] => {
   return debugMessages;
-}
+};
 
 export const debugLog = (level: LogLevel, message: string) => {
   if (!actionName) {
     throw new Error("Debugger not initialized");
   }
   const timestamp = now();
-  const userId = 'TODO: Obtain user id';
   const debugMessage: DebugMessage = {
     userId,
     message,
@@ -39,8 +40,8 @@ export const debugLog = (level: LogLevel, message: string) => {
   };
   console.log(debugMessage);
   debugMessages.push(debugMessage);
-}
+};
 
 const now = (): number => {
   return new Date().getTime();
-}
+};

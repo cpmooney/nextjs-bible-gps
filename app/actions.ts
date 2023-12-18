@@ -1,6 +1,6 @@
 "use server";
 
-import {auth, currentUser} from "@clerk/nextjs";
+import {currentUser} from "@clerk/nextjs";
 import {
   SaveChangedScoresRequest,
   invokeDbSaveChangedAction,

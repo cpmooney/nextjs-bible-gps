@@ -11,7 +11,7 @@ export const invokeDbSavePartialCitationAction = async (
   request: SavePartialCitationRequest
 ): Promise<void> => {
   usingDatabase({PartialCitationTable});
-  usingDebugger("db-save-partial-citation");
+  usingDebugger("db-save-partial-citation", userId);
   const {fragment} = request;
   debugLog("info", `Saving partial citation ${fragment}.`);
   await updateRecord(userId, fragment);

@@ -6,7 +6,7 @@ import {debugLog, usingDebugger} from "../utilities/debugger";
 
 export const invokeDbLoadAllAction = async (userId: string) => {
   usingDatabase({CitationTable});
-  usingDebugger("db-load-all");
+  usingDebugger("db-load-all", userId);
 
   const records = await obtainDatabase().query.CitationTable.findMany({
     where: (citation, {eq}) => {

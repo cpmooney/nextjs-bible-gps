@@ -19,7 +19,7 @@ export const invokeDbSaveChangedAction = async (
   changedRequest: SaveChangedScoresRequest
 ): Promise<DebugMessage[]> => {
   usingDatabase({CitationTable});
-  usingDebugger("db-save-changed");
+  usingDebugger("db-save-changed", userId);
   debugLog(
     "info",
     `Saving changed citations: ${JSON.stringify(changedRequest)}`
