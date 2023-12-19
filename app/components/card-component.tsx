@@ -2,11 +2,11 @@
 import {
   CheckCircleIcon,
   NoSymbolIcon,
-  QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { buildFullCitation } from "src/utilities/additional-citation-methods";
 import { useDeckStateContext } from "./providers/deck-state-provider";
+import dynamic from "next/dynamic";
 
 export default function CardComponent() {
   const deckStateContext = useDeckStateContext();
@@ -35,6 +35,8 @@ export default function CardComponent() {
   };
 
   const fullCitation = buildFullCitation(currentCard);
+
+  const CardContentComponent = dynamic(() => import('./card-content-component'), { ssr: false });
 
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
@@ -73,11 +75,3 @@ export default function CardComponent() {
     </div>
   );
 }
-
-const CardContentComponent = (props: { answer: string, showingAnswer: boolean}) => {
-  if (props.showingAnswer) {
-    return props.answer;
-  }
-
-  return <QuestionMarkCircleIcon className="h-16 w-16 mr-2" />;
-};
