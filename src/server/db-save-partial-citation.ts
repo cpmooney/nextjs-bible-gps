@@ -1,3 +1,4 @@
+import {guaranteeUserId} from "app/actions";
 import {PartialCitationTable} from "db/schema/partial-citation-table";
 import {obtainDatabase, usingDatabase} from "../utilities/database";
 import {debugLog, usingDebugger} from "../utilities/debugger";
@@ -5,6 +6,11 @@ import {debugLog, usingDebugger} from "../utilities/debugger";
 export interface SavePartialCitationRequest {
   fragment: string;
 }
+
+export const savePartialCards = async (request: SavePartialCitationRequest) => {
+  const userId = await guaranteeUserId();
+  return await invokeDbSavePartialCitationAction(userId, request);
+};
 
 export const invokeDbSavePartialCitationAction = async (
   userId: string,

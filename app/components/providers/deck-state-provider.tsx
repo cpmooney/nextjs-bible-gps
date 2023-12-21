@@ -1,10 +1,18 @@
 "use client";
-import { Citation } from "src/models/citation";
-import { createContext, useContext, useRef, useState } from "react";
-import { createDrawDeck } from "src/utilities/draw-deck-builder";
-import { randomInRange } from "src/utilities/misc";
-import { ScoreChange, recordScoreChange } from "@/utilities/score-recorder";
-import { OrderedCardsByBook, buildCardsByBook } from "@/utilities/card-by-book-builder";
+import {
+  OrderedCardsByBook,
+  buildCardsByBook,
+} from "@/utilities/card-by-book-builder";
+import {
+  ScoreChange,
+  obtainChangedScoreRequest,
+  recordScoreChange,
+} from "@/utilities/score-recorder";
+import {saveChangedCards} from "app/actions";
+import {createContext, useContext, useRef, useState} from "react";
+import {Citation} from "src/models/citation";
+import {createDrawDeck} from "src/utilities/draw-deck-builder";
+import {randomInRange} from "src/utilities/misc";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
@@ -38,7 +46,9 @@ export const useDeckStateContext = () => {
 
 export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const [unbankedScore, setUnbankedScore] = useState<number>(0);
-  const [bankedScore, setBankedScore] = useState<number>(props.initialBankedScore);
+  const [bankedScore, setBankedScore] = useState<number>(
+    props.initialBankedScore
+  );
 
   const drawDeck = useRef<Citation[]>([]);
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
@@ -67,6 +77,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const syncScoresToDb = async (): Promise<void> => {
     setBankedScore(bankedScore + unbankedScore);
     setUnbankedScore(0);
+    saveChangedCards(obtainChangedScoreRequest());
   };
 
   const incrementCurrentCardScore = (): void =>
@@ -87,17 +98,19 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const obtainAllCitations = () => props.allCards;
 
   return (
-    <DeckStateContext.Provider value={{
-    drawCitation,
-    obtainCurrentCard: guaranteeCurrentCard,
-    incrementCurrentCardScore,
-    resetCurrentCardScore,
-    syncScoresToDb,
-    obtainCardsByBook,
-    obtainAllCitations,
-    obtainUnbankedScore: () => unbankedScore,
-    obtainBankedScore: () => bankedScore,
-  }}>
+    <DeckStateContext.Provider
+      value={{
+        drawCitation,
+        obtainCurrentCard: guaranteeCurrentCard,
+        incrementCurrentCardScore,
+        resetCurrentCardScore,
+        syncScoresToDb,
+        obtainCardsByBook,
+        obtainAllCitations,
+        obtainUnbankedScore: () => unbankedScore,
+        obtainBankedScore: () => bankedScore,
+      }}
+    >
       {props.children}
     </DeckStateContext.Provider>
   );
