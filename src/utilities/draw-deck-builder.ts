@@ -8,7 +8,7 @@ const numberOfTimesForScoreCutoffs: { cutoff: number, numberOfTimes: number}[] =
 ];
 
 const numberOfSelections: Record<ArrayType, number> = {
-  intro: 10,
+  intro: 15,
   intermediate: 10,
   advanced: 5,
   active: NaN
@@ -84,7 +84,11 @@ const selectionAtRandom = (cardArray: Card[], length: number): Card[] => {
   const result: Card[] = [];
   for (let i = 0; i < length; i++) {
     const randomIndex = randomInRange(0, cardArray.length - 1);
-    result.push(cardArray.splice(randomIndex, 1)[0]);
+    const nextCard = cardArray.splice(randomIndex, 1)[0];
+    result.push(nextCard);
+    if (cardArray.length === 0) {
+      break;
+    }
   }
   return result;
 };
