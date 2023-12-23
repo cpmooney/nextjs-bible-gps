@@ -1,5 +1,18 @@
-import { on } from "events";
 import { randomInRange } from "./misc";
+
+const numberOfTimesForScoreCutoffs: { cutoff: number, numberOfTimes: number}[] = [
+  {cutoff: 0, numberOfTimes: 5},
+  {cutoff: 10, numberOfTimes: 4},
+  {cutoff: 20, numberOfTimes: 3},
+  {cutoff: 30, numberOfTimes: 2}
+];
+
+const numberOfSelections: Record<ArrayType, number> = {
+  intro: 10,
+  intermediate: 10,
+  advanced: 5,
+  active: NaN
+};
 
 interface Card {
   score: number;
@@ -38,22 +51,16 @@ export const createDrawDeck = (citations: Card[]): Card[] => {
   const buildDrawDeck = (): Card[] => {
     const drawDeck: Card[] = [];
     if (oneZeroCard) {
-      drawDeck.push(oneZeroCard);
-      drawDeck.push(oneZeroCard);
-      drawDeck.push(oneZeroCard);
-      drawDeck.push(oneZeroCard);
-      drawDeck.push(oneZeroCard);
+      pushToDrawDeck(drawDeck, oneZeroCard);
     }
-    selectionAtRandom(cardArrays.intro, 10).forEach((card) => {
-      drawDeck.push(card);
-      drawDeck.push(card);
-      drawDeck.push(card);
+    selectionAtRandom(cardArrays.intro, numberOfSelections.intro).forEach((card) => {
+      pushToDrawDeck(drawDeck, card);
     });
-    selectionAtRandom(cardArrays.intermediate, 10).forEach((card) => {
-      drawDeck.push(card);
+    selectionAtRandom(cardArrays.intermediate, numberOfSelections.intermediate).forEach((card) => {
+      pushToDrawDeck(drawDeck, card);
     });
-    selectionAtRandom(cardArrays.advanced, 5).forEach((card) => {
-      drawDeck.push(card);
+    selectionAtRandom(cardArrays.advanced, numberOfSelections.advanced).forEach((card) => {
+      pushToDrawDeck(drawDeck, card);
     });
     return drawDeck;
   };
@@ -61,6 +68,17 @@ export const createDrawDeck = (citations: Card[]): Card[] => {
   buildCardArrays(citations);
   return buildDrawDeck();
 };
+
+export const numberOfTimesForScore = (score: number): number => {
+  return numberOfTimesForScoreCutoffs.find(({cutoff}) => score <= cutoff)?.numberOfTimes || 1;
+}
+
+const pushToDrawDeck = (drawDeck: Card[], card: Card): void => {
+  const numberOfTimes = numberOfTimesForScore(card.score);
+  for (let i = 0; i < numberOfTimes; i++) {
+    drawDeck.push(card);
+  }
+}
 
 const selectionAtRandom = (cardArray: Card[], length: number): Card[] => {
   const result: Card[] = [];
