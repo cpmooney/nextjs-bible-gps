@@ -1,10 +1,9 @@
 import { randomInRange } from "./misc";
 
 const numberOfTimesForScoreCutoffs: { cutoff: number, numberOfTimes: number}[] = [
-  {cutoff: 0, numberOfTimes: 5},
-  {cutoff: 10, numberOfTimes: 4},
-  {cutoff: 20, numberOfTimes: 3},
-  {cutoff: 30, numberOfTimes: 2}
+  {cutoff: 30, numberOfTimes: 3},
+//  {cutoff: 50, numberOfTimes: 1},
+//  {cutoff: 30, numberOfTimes: 1}
 ];
 
 const numberOfSelections: Record<ArrayType, number> = {
