@@ -30,7 +30,7 @@ export default function CardComponent() {
   
   const wrong = () => {
     setShowingAnswer(false);
-    deckStateContext.resetCurrentCardScore();
+    deckStateContext.decrementCurrentCardScore();
     advanceToNextCard();
   };
 

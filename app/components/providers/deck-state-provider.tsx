@@ -18,7 +18,7 @@ export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
   drawCitation: () => Citation;
   incrementCurrentCardScore: () => void;
-  resetCurrentCardScore: () => void;
+  decrementCurrentCardScore: () => void;
   syncScoresToDb: () => Promise<void>;
   obtainCardsByBook: () => OrderedCardsByBook;
   obtainAllCitations: () => Citation[];
@@ -87,7 +87,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       setUnbankedScore
     );
 
-  const resetCurrentCardScore = (): void =>
+  const decrementCurrentCardScore = (): void =>
     recordScoreChange(
       guaranteeCurrentCard(),
       ScoreChange.Reset,
@@ -103,7 +103,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         drawCitation,
         obtainCurrentCard: guaranteeCurrentCard,
         incrementCurrentCardScore,
-        resetCurrentCardScore,
+        decrementCurrentCardScore: decrementCurrentCardScore,
         syncScoresToDb,
         obtainCardsByBook,
         obtainAllCitations,
