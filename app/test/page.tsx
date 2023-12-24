@@ -17,7 +17,7 @@ interface Card {
 }
 
 const sampleCards: Card[] = Array.from({ length: max }, (_, i) => ({ score: i })); 
-export const sampleDeck = createDrawDeck(sampleCards);
+const sampleDeck = createDrawDeck(sampleCards);
 
 export const scoreCounts = (deck: Card[]) => {
     const counts = Array.from({ length: max }, () => 0);
