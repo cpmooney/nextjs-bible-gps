@@ -19,14 +19,6 @@ interface Card {
 const sampleCards: Card[] = Array.from({ length: max }, (_, i) => ({ score: i })); 
 const sampleDeck = createDrawDeck(sampleCards);
 
-export const scoreCounts = (deck: Card[]) => {
-    const counts = Array.from({ length: max }, () => 0);
-    deck.forEach(({ score }) => {
-        counts[score]++;
-    });
-    return counts;
-}
-
 const coarseCounts = (deck: Card[], granularity: number) => {
   const counts = Array.from({ length: max / granularity }, () => 0);
   deck.forEach(({ score }) => {
