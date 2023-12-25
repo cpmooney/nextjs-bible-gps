@@ -17,16 +17,22 @@ interface WrappedIndices {
   group: number;
 }
 
-// TODO: Take lastreviewed into account
+// TODO: Take lastReviewed into account
 
 export const createDrawDeck = (citations: Card[]): WrappedCard[] => {
+  if (citations.length < 25) {
+    return citations.map(citation => { return { card: citation, group: 0 }});
+  }
   const sortedNonZeroScoreCardArrays = citations
     .filter(citation => citation.score > 0)
     .sort((a, b) => a.score - b.score);
   const oneZeroCard = citations.find(citation => citation.score === 0);
   const nonZeroDrawDeck = drawDeckByIndices(sortedNonZeroScoreCardArrays.length)
     .map(({ group, index }) => { return { card: sortedNonZeroScoreCardArrays[index], group }});
-  return oneZeroCard ? nonZeroDrawDeck.concat({ card: oneZeroCard, group: 0 }) : nonZeroDrawDeck;
+  if (oneZeroCard) {
+    nonZeroDrawDeck.push({ card: oneZeroCard, group: 0 });
+  }
+  return nonZeroDrawDeck;
 };
 
 const drawDeckByIndices = (length: number): WrappedIndices[] => {
@@ -58,8 +64,7 @@ const leastRecentlyReviewed = (cards: Card[] | undefined): Card | undefined => {
 const buildGroup = (group: number, sizeOfGroup: number, length: number): WrappedIndices[] => {
   const result: Set<number> = new Set();
   while (result.size < length) {
-    // TODO: Prevent infinite loop (if not enough cards!)
     result.add(randomInRange(group * sizeOfGroup, (group + 1) * sizeOfGroup - 1));
   }
-  return Array.from(result).map(index => { return { index, group }});
+  return Array.from(result).map(index => { return { index, group: group + 1 }});
 }
