@@ -9,11 +9,23 @@ import {FragmentEntry} from "../components/edit/fragment-entry";
 import {NumberSelection} from "../components/edit/number-selection";
 import {SuffixEntry} from "../components/edit/suffix-entry";
 import {TextArea} from "../components/edit/text-area";
-import {closeModal} from "../components/modal";
+import { saveCitation } from "app/actions";
+import { useRouter } from "next/navigation";
 
 export default function CardEditPage() {
   const {obtainCurrentCard} = useDeckStateContext();
-  const initialCard = obtainCurrentCard();
+//  const initialCard = obtainCurrentCard();
+const initialCard = {
+  active: true,
+  book: "Genesis",
+  chapter: 1,
+  firstVerse: 1,
+  suffix: "",
+  fragment: "",
+  entire: "",
+  score: 0,
+  tags: [],
+}
 
   const [citation, setCitation] = useState<Citation>(initialCard);
   const [book, setBook] = useState<string>(initialCard.book);
@@ -25,6 +37,8 @@ export default function CardEditPage() {
   const [fullCitation, setFullCitation] = useState<string>(
     buildFullCitation(initialCard)
   );
+
+  const router = useRouter();
 
   useEffect(() => {
     const newCitation = {
@@ -42,9 +56,12 @@ export default function CardEditPage() {
     setFullCitation(buildFullCitation(newCitation));
   }, [book, chapter, firstVerse, suffix, fragment, entire]);
 
-  const closeMe = () => closeModal("edit_citation");
+  const closeMe = () =>  {
+    router.push("/");
+  }
+
   const saveAndClose = async () => {
-    alert(JSON.stringify(citation));
+    saveCitation(citation);
     closeMe();
   };
 
