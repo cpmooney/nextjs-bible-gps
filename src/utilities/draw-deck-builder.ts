@@ -31,6 +31,8 @@ export const createDrawDeck = (citations: Card[]): WrappedCard[] => {
     .map(({ group, index }) => { return { card: sortedNonZeroScoreCardArrays[index], group }});
   if (oneZeroCard) {
     nonZeroDrawDeck.push({ card: oneZeroCard, group: 0 });
+    nonZeroDrawDeck.push({ card: oneZeroCard, group: 0 });
+    nonZeroDrawDeck.push({ card: oneZeroCard, group: 0 });
   }
   return nonZeroDrawDeck;
 };

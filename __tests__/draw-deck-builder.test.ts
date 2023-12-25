@@ -69,10 +69,12 @@ describe("createDrawDeck with zeroes", () => {
   sampleDeck.push({ score: 0 });
   sampleDeck.push({ score: 0 });
   sampleDeck.push({ score: 0 });
+  sampleDeck.push({ score: 0 });
+  sampleDeck.push({ score: 0 });
   const drawDeck = createDrawDeck(sampleDeck);
 
-  it("should return a deck of length 16", () => {
-    expect(drawDeck.length).toEqual(16);
+  it("should return a deck of length 18", () => {
+    expect(drawDeck.length).toEqual(18);
   });
 
   describe("group 0", () => {
