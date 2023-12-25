@@ -18,6 +18,7 @@ interface WrappedIndices {
 }
 
 // TODO: Take lastreviewed into account
+// TODO: Only one zero-scored card at a time
 
 export const createDrawDeck = (citations: Card[]): WrappedCard[] => {
   const sortedCardArrays = citations.sort((a, b) => a.score - b.score);
