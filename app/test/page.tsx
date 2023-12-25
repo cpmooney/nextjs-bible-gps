@@ -28,7 +28,8 @@ const coarseCounts = (deck: Card[], granularity: number) => {
 }
 
 const Graph = ({ granularity }: GraphProps) => {
-  const granularCounts = coarseCounts(sampleDeck, granularity);
+  const sampleDeckAsCards = sampleDeck.map((wrappedCard) => wrappedCard.card);
+  const granularCounts = coarseCounts(sampleDeckAsCards, granularity);
   const labels = Array.from({ length: granularCounts.length }, (_, i) => (i * granularity).toString());
   return (
       <div className="card w-auto bg-base-100 shadow-xl mb-3">

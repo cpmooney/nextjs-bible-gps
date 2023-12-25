@@ -13,6 +13,7 @@ export default function CardComponent() {
   const [showingAnswer, setShowingAnswer] = useState(false);
 
   const currentCard = deckStateContext.obtainCurrentCard();
+  const currentCardGroup = deckStateContext.obtainCurrentCardGroup();
 
   const advanceToNextCard = () => {
     deckStateContext.drawCitation();
@@ -53,7 +54,7 @@ export default function CardComponent() {
           />
         </button>
         <div className="absolute right-0 bottom-0 p-2 text-xl">
-          {currentCard.score}
+           {currentCard.score} / {currentCardGroup}
         </div>
         <div className="card-actions">
           <button
