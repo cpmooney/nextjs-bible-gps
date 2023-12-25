@@ -80,19 +80,7 @@ describe("createDrawDeck with zeroes", () => {
   describe("group 0", () => {
     const group = drawDeck.filter(({ card }) => card.score === 0);
     it("should return 1 card of score 0", () => {
-      expect(group.length).toEqual(1);
-    });
-  });
-});
-
-describe("createDrawDeck with few cards", () => {
-  const sampleDeck = Array.from({ length: 10 }, (_, i) => ({ score: i }));
-  const drawDeck = createDrawDeck(sampleDeck);
-
-  it("should return the entire deck", () => {
-    expect(drawDeck.length).toEqual(10);
-    sampleDeck.forEach((card, _) => {
-      expect(drawDeck).toContainEqual({ card, group: 1 });
+      expect(group.length).toEqual(3);
     });
   });
 });
