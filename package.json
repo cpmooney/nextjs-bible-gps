@@ -14,7 +14,8 @@
     "env-pull": "vercel env pull .env.development.local",
     "generate": "drizzle-kit generate:pg --config=drizzle.config.ts",
     "migrate": "drizzle-kit push:pg --config=drizzle.config.ts",
-    "drizzle-studio": "drizzle-kit studio --config=drizzle.config.ts"
+    "drizzle-studio": "drizzle-kit studio --config=drizzle.config.ts",
+    "test": "jest"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.26.2",

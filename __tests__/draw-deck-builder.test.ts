@@ -1,54 +1,32 @@
 import {
-  computeScoreCutoffs,
-  numberOfTimesForScore
+  createDrawDeck
 } from "../src/utilities/draw-deck-builder";
 
-describe("numberOfTimesForScore", () => {
-  it("returns 5 for a score of 0", () => {
-    expect(numberOfTimesForScore(0)).toEqual(5);
+describe("createDrawDeck", () => {
+  const sampleDeck = Array.from({ length: 100 }, (_, i) => ({ score: i }));
+  const drawDeck = createDrawDeck(sampleDeck);
+
+  it("should return a deck of length 15", () => {
+    expect(drawDeck.length).toEqual(15);
   });
 
-  it("returns 4 for a score of 1", () => {
-    expect(numberOfTimesForScore(1)).toEqual(4);
-  });
+  it("should return 5 cards between 0 and 19", () => {
+    expect(drawDeck.filter(card => card.score < 20).length).toEqual(5);
+  })
 
-  it("returns 4 for a score of 10", () => {
-    expect(numberOfTimesForScore(10)).toEqual(4);
-  });
+  it("should return 4 cards between 20 and 39", () => {
+    expect(drawDeck.filter(card => card.score >= 20 && card.score < 40).length).toEqual(4);
+  })
 
-  it("returns 3 for a score of 11", () => {
-    expect(numberOfTimesForScore(11)).toEqual(3);
-  });
+  it("should return 3 cards between 40 and 59", () => {
+    expect(drawDeck.filter(card => card.score >= 40 && card.score < 60).length).toEqual(3);
+  })
 
-  it("returns 3 for a score of 20", () => {
-    expect(numberOfTimesForScore(20)).toEqual(3);
-  });
+  it("should return 2 cards between 60 and 79", () => {
+    expect(drawDeck.filter(card => card.score >= 60 && card.score < 80).length).toEqual(2);
+  })
 
-  it("returns 2 for a score of 21", () => {
-    expect(numberOfTimesForScore(21)).toEqual(2);
-  });
-
-  it("returns 2 for a score of 30", () => {
-    expect(numberOfTimesForScore(30)).toEqual(2);
-  });
-
-  it("returns 1 for a score of 31", () => {
-    expect(numberOfTimesForScore(31)).toEqual(1);
-  });
-
-  it("returns 1 for a score of 99", () => {
-    expect(numberOfTimesForScore(99)).toEqual(1);
-  });
-});
-
-describe("computeScoreCutoffs", () => {
-  const scores = [27, 33, 4, 14, 18, 10, 23, 0, 7, 37, 2, 17, 0];
-
-  it("returns intro as the 10th percentile", () => {
-    expect(computeScoreCutoffs(scores).intro).toEqual(0);
-  });
-
-  it("returns intermediate as the 50th percentile", () => {
-    expect(computeScoreCutoffs(scores).intermediate).toEqual(14);
-  });
+  it("should return 1 card between 80 and 100", () => {
+    expect(drawDeck.filter(card => card.score >= 80).length).toEqual(1);
+  })
 });
