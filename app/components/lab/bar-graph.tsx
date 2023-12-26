@@ -1,3 +1,4 @@
+"use client"
 import { Chart, ChartOptions, ChartData, registerables } from "chart.js";
 import React from "react";
 import { Bar } from "react-chartjs-2";

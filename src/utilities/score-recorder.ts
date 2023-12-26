@@ -7,13 +7,9 @@ export const recordScoreChange = (
   scoreChange: ScoreChange,
   setUnbankedScore: Dispatch<SetStateAction<number>>
 ): void => {
-  if (scoreChange === ScoreChange.Increment) {
-    setUnbankedScore((unbankedScore) => unbankedScore + 1);
-    card.score++;
-  } else if (scoreChange === ScoreChange.Reset) {
-    setUnbankedScore((unbankedScore) => unbankedScore - card.score);
-    card.score = 0;
-  }
+  const scoreDelta = computeScoreDelta(scoreChange, card.score);
+  setUnbankedScore((unbankedScore) => unbankedScore + scoreDelta);
+  card.score += scoreDelta;
   card.lastReviewed = new Date();
   if (!card.id) {
     throw new Error("Card has no id");
@@ -34,6 +30,15 @@ export const obtainChangedScoreRequest = (): SaveChangedScoresRequest => {
     };
   });
 };
+
+const computeScoreDelta = (scoreChange: ScoreChange, score: number): number => {
+  if (scoreChange === ScoreChange.Increment) {
+    return 1;
+  } else if (scoreChange === ScoreChange.Reset) {
+    return -Math.min(score, 10);
+  }
+  throw new Error(`Invalid score change: ${scoreChange}`);
+}
 
 export enum ScoreChange {
   Increment,

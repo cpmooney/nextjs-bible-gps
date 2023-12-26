@@ -9,12 +9,18 @@ import {
 import {CitationInfo} from "./citation-info";
 import {showModal} from "./modal";
 import {PartialCitationModal} from "./partial-citations";
+import { useRouter } from "next/navigation";
 
 export const AdditionalActionComponents = () => {
+  const router = useRouter();
+  const goToEdit = () => {
+    router.push('/edit');
+  }
+
   const showFullCitation = () => showModal("full_citation");
-  const editCitation = () => showModal("edit_citation");
   const createPartialCitation = () => showModal("create_partial_citation");
-  const addNewCitation = () => showModal("edit_citation");
+  const editCitation = () => goToEdit();
+  const addNewCitation = () => goToEdit(); 
 
   return (
     <>

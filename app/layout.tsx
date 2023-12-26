@@ -3,6 +3,7 @@ import { ImageBackground } from "./components/image-background";
 import DeckProvider from "./components/providers/deck-provider";
 import { ClerkProvider, SignedIn } from "@clerk/nextjs";
 import UserHeaderComponent from "./components/user-header-component";
+import '../styles/globals.css';
 
 const DeckPageWithBackground = () => {
   return (

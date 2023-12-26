@@ -11,19 +11,20 @@ import {
 import {saveChangedCards} from "app/actions";
 import {createContext, useContext, useRef, useState} from "react";
 import {Citation} from "src/models/citation";
-import {createDrawDeck} from "src/utilities/draw-deck-builder";
+import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
 import {randomInRange} from "src/utilities/misc";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
   drawCitation: () => Citation;
   incrementCurrentCardScore: () => void;
-  resetCurrentCardScore: () => void;
+  decrementCurrentCardScore: () => void;
   syncScoresToDb: () => Promise<void>;
   obtainCardsByBook: () => OrderedCardsByBook;
   obtainAllCitations: () => Citation[];
   obtainUnbankedScore: () => number;
   obtainBankedScore: () => number;
+  obtainCurrentCardGroup: () => number;
 }
 
 interface DeckStateProviderProps {
@@ -50,8 +51,9 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     props.initialBankedScore
   );
 
-  const drawDeck = useRef<Citation[]>([]);
+  const drawDeck = useRef<WrappedCard[]>([]);
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
+  const [currentCardGroup, setCurrentCardGroup] = useState<number | null>(null);
 
   const guaranteeCurrentCard = (): Citation => {
     if (!currentCard) {
@@ -60,17 +62,23 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     return currentCard!;
   };
 
+  const guaranteeCurrentCardGroup = (): number => {
+    return currentCardGroup ?? -1;
+  }
+
   const drawCitation = (): Citation => {
     guaranteeDrawDeck();
     const randomIndex = randomInRange(0, drawDeck.current.length - 1);
-    const chosenCard = drawDeck.current.splice(randomIndex, 1)[0];
-    setCurrentCard(chosenCard);
-    return chosenCard;
+    const chosenWrappedCard = drawDeck.current.splice(randomIndex, 1)[0];
+    const currentCitation = chosenWrappedCard.card as Citation; 
+    setCurrentCard(currentCitation);
+    setCurrentCardGroup(chosenWrappedCard.group);
+    return currentCitation;
   };
 
   const guaranteeDrawDeck = () => {
     if (drawDeck.current.length === 0) {
-      drawDeck.current = createDrawDeck(props.citations) as Citation[];
+      drawDeck.current = createDrawDeck(props.citations);
     }
   };
 
@@ -87,7 +95,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       setUnbankedScore
     );
 
-  const resetCurrentCardScore = (): void =>
+  const decrementCurrentCardScore = (): void =>
     recordScoreChange(
       guaranteeCurrentCard(),
       ScoreChange.Reset,
@@ -102,8 +110,9 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       value={{
         drawCitation,
         obtainCurrentCard: guaranteeCurrentCard,
+        obtainCurrentCardGroup: guaranteeCurrentCardGroup,
         incrementCurrentCardScore,
-        resetCurrentCardScore,
+        decrementCurrentCardScore: decrementCurrentCardScore,
         syncScoresToDb,
         obtainCardsByBook,
         obtainAllCitations,

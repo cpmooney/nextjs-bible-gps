@@ -1,79 +1,86 @@
-import {
-  computeScoreCutoffs,
-  createDrawDeck,
-} from "src/utilities/draw-deck-builder";
+import { createDrawDeck } from "../src/utilities/draw-deck-builder";
 
-interface Card {
-  score: number;
-  lastReviewed?: Date;
-}
+describe("createDrawDeck with no zeroes", () => {
+  const sampleDeck = Array.from({ length: 100 }, (_, i) => ({ score: i + 1 }));
+  const drawDeck = createDrawDeck(sampleDeck);
 
-describe("computeScoreCutoffs", () => {
-  const scores = [27, 33, 4, 14, 18, 10, 23, 0, 7, 37, 2, 17, 0];
-
-  it("returns intro as the 10th percentile", () => {
-    expect(computeScoreCutoffs(scores).intro).toEqual(0);
+  it("should return a deck of length 15", () => {
+    expect(drawDeck.length).toEqual(15);
   });
 
-  it("returns intermediate as the 50th percentile", () => {
-    expect(computeScoreCutoffs(scores).intermediate).toEqual(14);
-  });
-});
-
-describe("createDrawDeck", () => {
-  const cards = Array.from({ length: 100 }, (_, i) => ({ score: i }));
-  const drawDeck = createDrawDeck(cards);
-
-  it("returns a draw deck with 50 cards", () => {
-    expect(drawDeck.length).toEqual(50);
-  });
-
-  describe("zero score cards", () => {
-    const zeroCards = drawDeck.filter(({ score }) => score === 0);
-
-    it("contains 5 cards", () => {
-      expect(zeroCards.length).toEqual(5);
+  describe("group 1", () => {
+    const group = drawDeck.filter(({ card }) => card.score <= 20);
+    it("should return 5 cards between 0 and 19", () => {
+      expect(group.length).toEqual(5);
     });
 
-    it("contains 1 unique card", () => {
-      expect(new Set(zeroCards).size).toEqual(1);
+    it ("should say group 1 for all cards", () => {
+      expect(group.every(({ group }) => group === 1)).toEqual(true);
     });
   });
 
-  describe("intro cards", () => {
-    const introCards = drawDeck.filter(({ score }) => score > 0 && score <= 10);
-
-    it("contains 30 cards", () => {
-      expect(introCards.length).toEqual(30);
+  describe("group 2", () => {
+    const group = drawDeck.filter(({ card }) => card.score > 20 && card.score <= 40);
+    it("should return 4 cards between 20 and 39", () => {
+      expect(group.length).toEqual(4);
     });
 
-    it("contains 10 unique cards", () => {
-      expect(new Set(introCards).size).toEqual(10);
-    });
-  });
-
-  describe("intermediate cards", () => {
-    const intermediateCards = drawDeck.filter(({ score }) => score > 10 && score <= 50);
-
-    it("contains 10 cards", () => {
-      expect(intermediateCards.length).toEqual(10);
-    });
-
-    it("contains 10 unique cards", () => {
-      expect(new Set(intermediateCards).size).toEqual(10);
+    it ("should say group 2 for all cards", () => {
+      expect(group.every(({ group }) => group === 2)).toEqual(true);
     });
   });
 
-  describe("advanced cards", () => {
-    const advancedCards = drawDeck.filter(({ score }) => score > 50);
-
-    it("contains 5 cards", () => {
-      expect(advancedCards.length).toEqual(5);
+  describe("group 3", () => {
+    const group = drawDeck.filter(({ card }) => card.score > 40 && card.score <= 60);
+    it("should return 3 cards between 40 and 59", () => {
+      expect(group.length).toEqual(3);
     });
 
-    it("contains 5 unique cards", () => {
-      expect(new Set(advancedCards).size).toEqual(5);
+    it ("should say group 3 for all cards", () => {
+      expect(group.every(({ group }) => group === 3)).toEqual(true);
+    });
+  });
+
+  describe("group 4", () => {
+    const group = drawDeck.filter(({ card }) => card.score > 60 && card.score <= 80);
+    it("should return 2 cards between 60 and 79", () => {
+      expect(group.length).toEqual(2);
+    });
+
+    it ("should say group 4 for all cards", () => {
+      expect(group.every(({ group }) => group === 4)).toEqual(true);
+    });
+  });
+
+  describe("group 5", () => {
+    const group = drawDeck.filter(({ card }) => card.score > 80);
+    it("should return 1 card between 80 and 100", () => {
+      expect(group.length).toEqual(1);
+    });
+
+    it ("should say group 5 for all cards", () => {
+      expect(group.every(({ group }) => group === 5)).toEqual(true);
     });
   });
 });
 
+describe("createDrawDeck with zeroes", () => {
+  const sampleDeck = Array.from({ length: 100 }, (_, i) => ({ score: i }))
+  sampleDeck.push({ score: 0 });
+  sampleDeck.push({ score: 0 });
+  sampleDeck.push({ score: 0 });
+  sampleDeck.push({ score: 0 });
+  sampleDeck.push({ score: 0 });
+  const drawDeck = createDrawDeck(sampleDeck);
+
+  it("should return a deck of length 18", () => {
+    expect(drawDeck.length).toEqual(18);
+  });
+
+  describe("group 0", () => {
+    const group = drawDeck.filter(({ card }) => card.score === 0);
+    it("should return 1 card of score 0", () => {
+      expect(group.length).toEqual(3);
+    });
+  });
+});

@@ -1,94 +1,86 @@
-import { on } from "events";
 import { randomInRange } from "./misc";
+
+const numberOfGroups = 5;
 
 interface Card {
   score: number;
   lastReviewed?: Date;
 }
 
-export const createDrawDeck = (citations: Card[]): Card[] => {
-  const cardArrays: CardArrays = {
-    intro: [],
-    intermediate: [],
-    advanced: [],
-    active: [],
-  };
-  let oneZeroCard: Card | undefined;
+export interface WrappedCard {
+  card: Card;
+  group: number;
+}
 
-  const scores = citations.map((card) => card.score);
-  const cutoffs = computeScoreCutoffs(scores);
+interface WrappedIndices {
+  index: number;
+  group: number;
+}
 
-  const buildCardArrays = (citations: Card[]): void => {
-    citations.forEach((card) => organizeByScore(card));
-  };
+// TODO: Take lastReviewed into account
 
-  const organizeByScore = (card: Card): void => {
-    const { score } = card;
-    if (score === 0) {
-      oneZeroCard = card;
-    } else if (score <= cutoffs.intro) {
-      cardArrays.intro.push(card);
-    } else if (score <= cutoffs.intermediate) {
-      cardArrays.intermediate.push(card);
-    } else {
-      cardArrays.advanced.push(card);
-    }
-  };
-
-  const buildDrawDeck = (): Card[] => {
-    const drawDeck: Card[] = [];
-    if (oneZeroCard) {
-      drawDeck.push(oneZeroCard);
-      drawDeck.push(oneZeroCard);
-      drawDeck.push(oneZeroCard);
-      drawDeck.push(oneZeroCard);
-      drawDeck.push(oneZeroCard);
-    }
-    selectionAtRandom(cardArrays.intro, 10).forEach((card) => {
-      drawDeck.push(card);
-      drawDeck.push(card);
-      drawDeck.push(card);
-    });
-    selectionAtRandom(cardArrays.intermediate, 10).forEach((card) => {
-      drawDeck.push(card);
-    });
-    selectionAtRandom(cardArrays.advanced, 5).forEach((card) => {
-      drawDeck.push(card);
-    });
-    return drawDeck;
-  };
-
-  buildCardArrays(citations);
-  return buildDrawDeck();
+export const createDrawDeck = (citations: Card[]): WrappedCard[] => {
+  if (citations.length < 25) {
+    return citations.map(citation => { return { card: citation, group: 0 }});
+  }
+  const sortedNonZeroScoreCardArrays = sortNonZeroScoreCards(citations);
+  const oneZeroCard = citations.find(citation => citation.score === 0);
+  const nonZeroDrawDeck = drawDeckByIndices(sortedNonZeroScoreCardArrays.length)
+    .map(({ group, index }) => { return { card: sortedNonZeroScoreCardArrays[index], group }});
+  if (oneZeroCard) {
+    nonZeroDrawDeck.push({ card: oneZeroCard, group: 0 });
+    nonZeroDrawDeck.push({ card: oneZeroCard, group: 0 });
+    nonZeroDrawDeck.push({ card: oneZeroCard, group: 0 });
+  }
+  return nonZeroDrawDeck;
 };
 
-const selectionAtRandom = (cardArray: Card[], length: number): Card[] => {
-  const result: Card[] = [];
-  for (let i = 0; i < length; i++) {
-    const randomIndex = randomInRange(0, cardArray.length - 1);
-    result.push(cardArray.splice(randomIndex, 1)[0]);
+const sortNonZeroScoreCards = (citations: Card[]): Card[] => 
+  citations
+    .filter(citation => citation.score > 0)
+    .sort((a, b) => a.score - b.score);
+
+export const scoreCutoffs = (citations: Card[]): number[] => {
+  const sortedNonZeroScoreCardArrays = sortNonZeroScoreCards(citations);
+  const sizeOfEachGroup = Math.floor(length / numberOfGroups);
+  const result: number[] = [];
+  for (let i = 0; i < numberOfGroups; i++) {
+    const nextIndex = (i + 1) * sizeOfEachGroup;
+    result.push(sortedNonZeroScoreCardArrays[nextIndex].score);
   }
   return result;
-};
+}
 
-export const computeScoreCutoffs = (scores: number[]): ArrayScoreCutoffs => {
-  const sortedScores = scores.sort((a, b) => a - b);
-  const introCutoff = sortedScores[Math.floor(sortedScores.length / 10)];
-  const intermediateCutoff =
-    sortedScores[Math.floor(sortedScores.length  / 2)];
-  return {
-    intro: introCutoff,
-    intermediate: intermediateCutoff,
-    advanced: 0,
-  };
-};
+const drawDeckByIndices = (length: number): WrappedIndices[] => {
+  const sizeOfEachGroup = Math.floor(length / numberOfGroups);
+  const result: WrappedIndices[] = [];
+  for (let i = 0; i < numberOfGroups; i++) {
+    result.push(...buildGroup(i, sizeOfEachGroup, numberOfGroups - i));
+  }
+  return result;
+}
 
-type CardArrays = Record<ArrayType, Card[]>;
+const leastRecentlyReviewed = (cards: Card[] | undefined): Card | undefined => {
+  if (!cards || cards.length === 0) {
+    return undefined;
+  }
+  let leastRecentlyReviewedCard = cards[0];
+  for (let i = 0; i < cards.length; i++) {
+    const lastReviewed = cards[i].lastReviewed;
+    if (!lastReviewed) {
+      return cards[i];
+    }
+    if (lastReviewed < leastRecentlyReviewedCard.lastReviewed!) {
+      leastRecentlyReviewedCard = cards[i];
+    }
+  }
+  return leastRecentlyReviewedCard;
+}
 
-type ArrayType = "intro" | "intermediate" | "advanced" | "active";
-const arrayTypeList: ArrayType[] = ["intro", "intermediate", "advanced"];
-interface ArrayScoreCutoffs {
-  intro: number;
-  intermediate: number;
-  advanced: number;
+const buildGroup = (group: number, sizeOfGroup: number, length: number): WrappedIndices[] => {
+  const result: Set<number> = new Set();
+  while (result.size < length) {
+    result.add(randomInRange(group * sizeOfGroup, (group + 1) * sizeOfGroup - 1));
+  }
+  return Array.from(result).map(index => { return { index, group: group + 1 }});
 }
