@@ -23,9 +23,7 @@ export const createDrawDeck = (citations: Card[]): WrappedCard[] => {
   if (citations.length < 25) {
     return citations.map(citation => { return { card: citation, group: 0 }});
   }
-  const sortedNonZeroScoreCardArrays = citations
-    .filter(citation => citation.score > 0)
-    .sort((a, b) => a.score - b.score);
+  const sortedNonZeroScoreCardArrays = sortNonZeroScoreCards(citations);
   const oneZeroCard = citations.find(citation => citation.score === 0);
   const nonZeroDrawDeck = drawDeckByIndices(sortedNonZeroScoreCardArrays.length)
     .map(({ group, index }) => { return { card: sortedNonZeroScoreCardArrays[index], group }});
@@ -36,6 +34,22 @@ export const createDrawDeck = (citations: Card[]): WrappedCard[] => {
   }
   return nonZeroDrawDeck;
 };
+
+const sortNonZeroScoreCards = (citations: Card[]): Card[] => 
+  citations
+    .filter(citation => citation.score > 0)
+    .sort((a, b) => a.score - b.score);
+
+export const scoreCutoffs = (citations: Card[]): number[] => {
+  const sortedNonZeroScoreCardArrays = sortNonZeroScoreCards(citations);
+  const sizeOfEachGroup = Math.floor(length / numberOfGroups);
+  const result: number[] = [];
+  for (let i = 0; i < numberOfGroups; i++) {
+    const nextIndex = (i + 1) * sizeOfEachGroup;
+    result.push(sortedNonZeroScoreCardArrays[nextIndex].score);
+  }
+  return result;
+}
 
 const drawDeckByIndices = (length: number): WrappedIndices[] => {
   const sizeOfEachGroup = Math.floor(length / numberOfGroups);
