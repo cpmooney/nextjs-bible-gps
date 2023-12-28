@@ -4,7 +4,7 @@ import { buildExternalUrl, buildFullCitation } from "src/utilities/additional-ci
 import { useDeckStateContext } from "./providers/deck-state-provider";
 
 export const CitationInfo = () => {
-  const { obtainCurrentCard } = useDeckStateContext();
+  const { obtainCurrentCardAsync: obtainCurrentCard } = useDeckStateContext();
 
   const currentCard = obtainCurrentCard();
   const entire = currentCard.entire;

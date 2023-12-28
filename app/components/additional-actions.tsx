@@ -10,17 +10,16 @@ import {CitationInfo} from "./citation-info";
 import {showModal} from "./modal";
 import {PartialCitationModal} from "./partial-citations";
 import { useRouter } from "next/navigation";
+import { useDeckStateContext } from "./providers/deck-state-provider";
 
 export const AdditionalActionComponents = () => {
+  const { obtainCurrentCardAsync: obtainCurrentCard } = useDeckStateContext();
   const router = useRouter();
-  const goToEdit = () => {
-    router.push('/edit');
-  }
 
   const showFullCitation = () => showModal("full_citation");
   const createPartialCitation = () => showModal("create_partial_citation");
-  const editCitation = () => goToEdit();
-  const addNewCitation = () => goToEdit(); 
+  const editCitation = () => router.push(editUrl(obtainCurrentCard().id));
+  const addNewCitation = () => router.push(editUrl());
 
   return (
     <>
@@ -62,3 +61,8 @@ export const AdditionalActionComponents = () => {
     </>
   );
 };
+
+const editUrl = (cardId?: number) => {
+  const baseUrl = "/edit";
+  return cardId ? `${baseUrl}?cardId=${cardId}` : baseUrl;
+}

@@ -1,32 +1,21 @@
 "use client";
-import {Citation} from "@/models/citation";
-import {CheckCircleIcon} from "@heroicons/react/24/outline";
-import {useDeckStateContext} from "app/components/providers/deck-state-provider";
-import {useEffect, useState} from "react";
-import {buildFullCitation} from "src/utilities/additional-citation-methods";
-import {BibleSelection} from "../components/edit/bible-selection";
-import {FragmentEntry} from "../components/edit/fragment-entry";
-import {NumberSelection} from "../components/edit/number-selection";
-import {SuffixEntry} from "../components/edit/suffix-entry";
-import {TextArea} from "../components/edit/text-area";
+import { Citation } from "@/models/citation";
+import { CheckCircleIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import { buildFullCitation } from "src/utilities/additional-citation-methods";
+import { BibleSelection } from "./bible-selection";
+import { FragmentEntry } from "./fragment-entry";
+import { NumberSelection } from "./number-selection";
+import { SuffixEntry } from "./suffix-entry";
+import { TextArea } from "./text-area";
 import { saveCitation } from "app/actions";
 import { useRouter } from "next/navigation";
 
-export default function CardEditPage() {
-  const {obtainCurrentCard} = useDeckStateContext();
-//  const initialCard = obtainCurrentCard();
-const initialCard = {
-  active: true,
-  book: "Genesis",
-  chapter: 1,
-  firstVerse: 1,
-  suffix: "",
-  fragment: "",
-  entire: "",
-  score: 0,
-  tags: [],
+interface CardEditFormProps {
+  initialCard: Citation;
 }
 
+export default function CardEditForm({ initialCard }: CardEditFormProps) {
   const [citation, setCitation] = useState<Citation>(initialCard);
   const [book, setBook] = useState<string>(initialCard.book);
   const [chapter, setChapter] = useState<number>(initialCard.chapter);
@@ -56,9 +45,9 @@ const initialCard = {
     setFullCitation(buildFullCitation(newCitation));
   }, [book, chapter, firstVerse, suffix, fragment, entire]);
 
-  const closeMe = () =>  {
+  const closeMe = () => {
     router.push("/");
-  }
+  };
 
   const saveAndClose = async () => {
     saveCitation(citation);
@@ -66,7 +55,7 @@ const initialCard = {
   };
 
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
+    <>
       <div className="card-body">
         <div className="w-full">
           <label className="label font-bold">Citation</label>
@@ -87,7 +76,13 @@ const initialCard = {
         >
           <CheckCircleIcon className="h-8 w-8" />
         </button>
+        <button
+          className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2"
+          onClick={closeMe}
+        >
+          <NoSymbolIcon className="h-8 w-8" />
+        </button>
       </div>
-    </div>
+    </>
   );
 }

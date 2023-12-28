@@ -2,6 +2,7 @@
 
 import { Citation } from "@/models/citation";
 import {currentUser} from "@clerk/nextjs";
+import { invokeDbLoadCitationAction } from "src/server/db-load-citation";
 import {
   SaveChangedScoresRequest,
   invokeDbSaveChangedAction,
@@ -20,6 +21,11 @@ export const savePartialCards = async (request: SavePartialCitationRequest) => {
 export const saveCitation = async (citation: Citation) => {
   const userId = await guaranteeUserId();
   return await invokeDbUpdateCitationAction(userId, citation);
+}
+
+export const loadCitation = async (citationId: number): Promise<Citation> => {
+  const userId = await guaranteeUserId();
+  return await invokeDbLoadCitationAction(userId, citationId);
 }
 
 export const saveChangedCards = async (request: SaveChangedScoresRequest) => {
