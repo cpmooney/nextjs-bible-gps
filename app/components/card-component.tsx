@@ -1,13 +1,13 @@
 "use client";
 import { CheckCircleIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useDeckStateContext } from "./providers/deck-state-provider";
 import Loading from "app/loading";
-import CardAnswerComponent from "./card-answer-component";
 import CardContentComponent from "./card-content-component";
 
 export default function CardComponent() {
   const deckStateContext = useDeckStateContext();
+  const [showingAnswer, setShowingAnswer] = useState(false);
 
   const advanceToNextCard = () => {
     deckStateContext.drawCitation();

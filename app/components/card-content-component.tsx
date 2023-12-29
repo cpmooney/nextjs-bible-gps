@@ -3,23 +3,23 @@ import CardAnswerComponent from "./card-answer-component";
 import { useDeckStateContext } from "./providers/deck-state-provider";
 import { buildFullCitation } from "@/utilities/additional-citation-methods";
 
-export default async function CardContentComponent() {
+interface CardContentComponentProps {
+  showingAnswer: boolean;
+  showAnswer: () => void;
+}
+
+export default async function CardContentComponent({ showingAnswer, showAnswer }: CardContentComponentProps) {
   const deckStateContext = useDeckStateContext();
-  const [showingAnswer, setShowingAnswer] = useState(false);
 
   const currentCard = deckStateContext.obtainCurrentCard();
   const fullCitation = buildFullCitation(currentCard);
-
-  const toggleShowAnswer = () => {
-    setShowingAnswer(!showingAnswer);
-  };
 
   return (
     <>
       <h2 className="text-center text-2xl">{currentCard.fragment}</h2>
       <button
         className="btn btn-btnPrimary text-white bg-blue-600 hover:bg-blue-300 disabled:bg-blue-200 disabled:text-gray-700 h-40 text-xl"
-        onClick={toggleShowAnswer}
+        onClick={showAnswer}
         disabled={showingAnswer}
       >
         <CardAnswerComponent
