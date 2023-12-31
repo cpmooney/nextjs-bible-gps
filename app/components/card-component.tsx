@@ -29,7 +29,10 @@ export default function CardComponent() {
     <div className="card w-96 bg-base-100 shadow-xl">
       <div className="card-body">
           <Suspense fallback={<Loading />}>
-            <CardContentComponent />
+            <CardContentComponent
+              showingAnswer={showingAnswer}
+              showAnswer={() => setShowingAnswer(true)}
+            />
           </Suspense>
         <div className="card-actions">
           <button

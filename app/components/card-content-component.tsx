@@ -1,4 +1,4 @@
-import { useState } from "react";
+"use client";
 import CardAnswerComponent from "./card-answer-component";
 import { useDeckStateContext } from "./providers/deck-state-provider";
 import { buildFullCitation } from "@/utilities/additional-citation-methods";
@@ -8,7 +8,7 @@ interface CardContentComponentProps {
   showAnswer: () => void;
 }
 
-export default async function CardContentComponent({ showingAnswer, showAnswer }: CardContentComponentProps) {
+export default function CardContentComponent({ showingAnswer, showAnswer }: CardContentComponentProps) {
   const deckStateContext = useDeckStateContext();
 
   const currentCard = deckStateContext.obtainCurrentCard();

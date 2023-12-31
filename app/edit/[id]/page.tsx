@@ -1,32 +1,18 @@
-import {Citation} from "@/models/citation";
+"use client";
+import { Citation } from "@/models/citation";
 import CardEditForm from "app/components/edit/card-form";
+import { useDeckStateContext } from "app/components/providers/deck-state-provider";
 
 interface CardEditPageParams {
-  params: { id: string; }
+  params: { id: string };
 }
 
 export default function CardEditPage({ params }: CardEditPageParams) {
-  const id = parseInt(params.id);
+  const { obtainCardById } = useDeckStateContext();
 
-  const obtainInitialCard = (cardId?: number): Citation => {
-    if (cardId) {
-      return obtainCardById(cardId);
-    } else {
-      return {
-        active: true,
-        book: "Genesis",
-        chapter: 1,
-        firstVerse: 1,
-        suffix: "",
-        fragment: "",
-        entire: "",
-        score: 0,
-        tags: [],
-      };
-    }
-  }
-  
-  const initialCard = obtainInitialCard(cardId);
+  // TODO: How do adapt this so that id is undefined when we want to create a new card?
+  const id = parseInt(params.id);
+  const initialCard = id > 0 ? obtainCardById(id) : defaultInitialCard();
 
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
@@ -34,3 +20,19 @@ export default function CardEditPage({ params }: CardEditPageParams) {
     </div>
   );
 }
+
+const defaultInitialCard = (): Citation => {
+  return {
+    active: true,
+    book: "Genesis",
+    chapter: 1,
+    firstVerse: 1,
+    suffix: "",
+    fragment: "",
+    entire: "",
+    score: 0,
+    tags: [],
+  };
+};
+
+

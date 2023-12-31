@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { useDeckStateContext } from "./providers/deck-state-provider";
 
 export const AdditionalActionComponents = () => {
-  const { obtainCurrentCardAsync: obtainCurrentCard } = useDeckStateContext();
+  const { obtainCurrentCard } = useDeckStateContext();
   const router = useRouter();
 
   const showFullCitation = () => showModal("full_citation");
@@ -63,6 +63,6 @@ export const AdditionalActionComponents = () => {
 };
 
 const editUrl = (cardId?: number) => {
-  const baseUrl = "/edit";
-  return cardId ? `${baseUrl}?cardId=${cardId}` : baseUrl;
+  const id: number = cardId ? cardId : 0;
+  return `/edit/${id}`;
 }

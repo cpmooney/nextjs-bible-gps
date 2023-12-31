@@ -1,7 +1,7 @@
 "use client";
 import { Citation } from "@/models/citation";
 import { CheckCircleIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { buildFullCitation } from "src/utilities/additional-citation-methods";
 import { BibleSelection } from "./bible-selection";
 import { FragmentEntry } from "./fragment-entry";
@@ -16,21 +16,18 @@ interface CardEditFormProps {
 }
 
 export default function CardEditForm({ initialCard }: CardEditFormProps) {
-  const [citation, setCitation] = useState<Citation>(initialCard);
   const [book, setBook] = useState<string>(initialCard.book);
   const [chapter, setChapter] = useState<number>(initialCard.chapter);
   const [firstVerse, setFirstVerse] = useState<number>(initialCard.firstVerse);
   const [suffix, setSuffix] = useState<string>(initialCard.suffix);
   const [fragment, setFragment] = useState<string>(initialCard.fragment);
   const [entire, setEntire] = useState<string>(initialCard.entire);
-  const [fullCitation, setFullCitation] = useState<string>(
-    buildFullCitation(initialCard)
-  );
 
   const router = useRouter();
 
-  useEffect(() => {
-    const newCitation = {
+  const citation = useMemo(() => {
+    const id = initialCard.id == 0 ? undefined : initialCard.id;
+    return {
       active: true,
       book,
       chapter,
@@ -40,10 +37,13 @@ export default function CardEditForm({ initialCard }: CardEditFormProps) {
       entire,
       score: 0,
       tags: [],
+      id
     };
-    setCitation(newCitation);
-    setFullCitation(buildFullCitation(newCitation));
   }, [book, chapter, firstVerse, suffix, fragment, entire]);
+
+  const fullCitation = useMemo(() => {
+    return buildFullCitation({ book, chapter, firstVerse, suffix });
+  }, [book, chapter, firstVerse, suffix]);
 
   const closeMe = () => {
     router.push("/");
@@ -61,27 +61,40 @@ export default function CardEditForm({ initialCard }: CardEditFormProps) {
           <label className="label font-bold">Citation</label>
         </div>
         <div className="flex space-x-2">
-          <BibleSelection setBook={setBook} />
-          <NumberSelection setNumber={setChapter} />
-          <NumberSelection setNumber={setFirstVerse} />
-          <SuffixEntry setString={setSuffix} />
+          <BibleSelection setBook={setBook} initialBook={initialCard.book} />
+          <NumberSelection
+            setNumber={setChapter}
+            initialValue={initialCard.chapter}
+          />
+          <NumberSelection
+            setNumber={setFirstVerse}
+            initialValue={initialCard.firstVerse}
+          />
+          <SuffixEntry
+            setString={setSuffix}
+            initialValue={initialCard.suffix}
+          />
         </div>
-        <FragmentEntry setString={setFragment} />
-        <TextArea setString={setEntire} />
-      </div>
-      <div className="modal-action">
-        <button
-          className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2"
-          onClick={saveAndClose}
-        >
-          <CheckCircleIcon className="h-8 w-8" />
-        </button>
-        <button
-          className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2"
-          onClick={closeMe}
-        >
-          <NoSymbolIcon className="h-8 w-8" />
-        </button>
+        <label className="label font-italics">{fullCitation}</label>
+        <FragmentEntry
+          setString={setFragment}
+          initialValue={initialCard.fragment}
+        />
+        <TextArea setString={setEntire} initialValue={initialCard.entire} />
+        <div className="card-actions">
+          <button
+            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-green-400"
+            onClick={saveAndClose}
+          >
+            <CheckCircleIcon className="h-8 w-8" />
+          </button>
+          <button
+            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-red-400"
+            onClick={closeMe}
+          >
+            <NoSymbolIcon className="h-8 w-8" />
+          </button>
+        </div>
       </div>
     </>
   );

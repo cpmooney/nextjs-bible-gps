@@ -7,7 +7,7 @@ interface CardAnswerComponentProps {
     showingAnswer: boolean;
 }
 
-export default async function CardAnswerComponent(props: CardAnswerComponentProps) {
+export default function CardAnswerComponent(props: CardAnswerComponentProps) {
     if (props.showingAnswer) {
         return props.answer;
     }
