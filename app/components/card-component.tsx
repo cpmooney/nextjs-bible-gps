@@ -28,12 +28,10 @@ export default function CardComponent() {
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
       <div className="card-body">
-          <Suspense fallback={<Loading />}>
-            <CardContentComponent
-              showingAnswer={showingAnswer}
-              showAnswer={() => setShowingAnswer(true)}
-            />
-          </Suspense>
+        <CardContentComponent
+          showingAnswer={showingAnswer}
+          showAnswer={() => setShowingAnswer(true)}
+        />
         <div className="card-actions">
           <button
             className="flex-1 btn btn-btnPrimary enabled:bg-green-400 h-20"

@@ -2,9 +2,15 @@ import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { Modal } from "./modal";
 import { buildExternalUrl, buildFullCitation } from "src/utilities/additional-citation-methods";
 import { useDeckStateContext } from "./providers/deck-state-provider";
+import { useEffect, useState } from "react";
 
 export const CitationInfo = () => {
+  const [isClient, setIsClient] = useState(false);
   const { obtainCurrentCard } = useDeckStateContext();
+
+  useEffect(() => {
+    setIsClient(true);
+  });
 
   const currentCard = obtainCurrentCard();
   const entire = currentCard.entire;
@@ -20,12 +26,12 @@ export const CitationInfo = () => {
     contents: (
       <div>
         <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">{fullCitation}</h3>
-          <p className="text-lg">{entire}</p>
+          <h3 className="font-bold text-lg mb-4">{isClient ? fullCitation : ""}</h3>
+          <p className="text-lg">{isClient ? entire : ""}</p>
         </div>
         <div className="modal-action">
         <div className="btn btn-btnPrimary mr-2 mt-2 mb-2 justify-start">
-          id {currentCard.id}
+           id {isClient ? currentCard.id : ""}
         </div>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2"

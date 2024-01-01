@@ -8,7 +8,7 @@ import {
 
 const UserHeaderComponent = () => {
   return (
-    <div className="mb-2">
+    <div className="mb-2 h-8">
       <SignedIn>
         <SignOutButton>
           <button className="rounded border border-gray-400 px-3 py-0.5">
