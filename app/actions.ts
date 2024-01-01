@@ -2,6 +2,7 @@
 
 import { Citation } from "@/models/citation";
 import {currentUser} from "@clerk/nextjs";
+import { invokeDeletePartialCardAction } from "src/server/db-delete-partial-citation";
 import { invokeDbLoadAllPartialCitationAction } from "src/server/db-load-all-partial-citations";
 import { invokeDbLoadCitationAction } from "src/server/db-load-citation";
 import {
@@ -13,6 +14,11 @@ import {
   invokeDbSavePartialCitationAction,
 } from "src/server/db-save-partial-citation";
 import { invokeDbUpdateCitationAction } from "src/server/db-update-citation";
+
+export const deletePartialCard = async (id: number) => {
+  const userId = await guaranteeUserId();
+  return await invokeDeletePartialCardAction(userId, id);
+}
 
 export const loadPartialCitations = async () => {
   const userId = await guaranteeUserId();

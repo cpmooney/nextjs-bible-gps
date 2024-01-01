@@ -1,5 +1,5 @@
 import { loadPartialCitations } from "app/actions";
-import PartialCitationElement from "./components/partial-card";
+import PartialCardList from "./components/partial-card-list";
 
 export default async function PartialCitationList() {
   const partialCitationList = await loadPartialCitations();
@@ -7,10 +7,9 @@ export default async function PartialCitationList() {
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
       <div className="card-body">
-        {partialCitationList.map(({ id, fragment }) => (
-          <PartialCitationElement key={id} id={id} fragment={fragment} />
-        ))}
+        <PartialCardList partialCitationList={partialCitationList} />
       </div>
     </div>
   );
 }
+

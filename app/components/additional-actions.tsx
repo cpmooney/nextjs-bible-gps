@@ -19,7 +19,7 @@ export const AdditionalActionComponents = () => {
   const showFullCitation = () => showModal("full_citation");
   const createPartialCitation = () => showModal("create_partial_citation");
   const editCitation = () => router.push(editUrl(obtainCurrentCard().id));
-  const addNewCitation = () => router.push(editUrl());
+  const addNewCitation = () => router.push("/partial-list");
 
   return (
     <>
