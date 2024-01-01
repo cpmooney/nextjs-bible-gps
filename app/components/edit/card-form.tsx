@@ -13,9 +13,10 @@ import { useRouter } from "next/navigation";
 
 interface CardEditFormProps {
   initialCard: Citation;
+  onSave?: () => void;
 }
 
-export default function CardEditForm({ initialCard }: CardEditFormProps) {
+export default function CardEditForm({ initialCard, onSave }: CardEditFormProps) {
   const [book, setBook] = useState<string>(initialCard.book);
   const [chapter, setChapter] = useState<number>(initialCard.chapter);
   const [firstVerse, setFirstVerse] = useState<number>(initialCard.firstVerse);
@@ -39,7 +40,7 @@ export default function CardEditForm({ initialCard }: CardEditFormProps) {
       tags: [],
       id
     };
-  }, [book, chapter, firstVerse, suffix, fragment, entire]);
+  }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id]);
 
   const fullCitation = useMemo(() => {
     return buildFullCitation({ book, chapter, firstVerse, suffix });
@@ -51,6 +52,9 @@ export default function CardEditForm({ initialCard }: CardEditFormProps) {
 
   const saveAndClose = async () => {
     saveCitation(citation);
+    if (onSave) {
+      onSave();
+    }
     closeMe();
   };
 
