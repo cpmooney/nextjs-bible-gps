@@ -1,8 +1,14 @@
 "use client";
 import { Citation } from "@/models/citation";
-import { CheckCircleIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
+import {
+  CheckCircleIcon,
+  MagnifyingGlassCircleIcon,
+  NoSymbolIcon,
+} from "@heroicons/react/24/outline";
 import { useMemo, useState } from "react";
-import { buildFullCitation } from "src/utilities/additional-citation-methods";
+import {
+  buildFullCitation,
+} from "src/utilities/additional-citation-methods";
 import { BibleSelection } from "./bible-selection";
 import { FragmentEntry } from "./fragment-entry";
 import { NumberSelection } from "./number-selection";
@@ -16,7 +22,10 @@ interface CardEditFormProps {
   onSave?: () => void;
 }
 
-export default function CardEditForm({ initialCard, onSave }: CardEditFormProps) {
+export default function CardEditForm({
+  initialCard,
+  onSave,
+}: CardEditFormProps) {
   const [book, setBook] = useState<string>(initialCard.book);
   const [chapter, setChapter] = useState<number>(initialCard.chapter);
   const [firstVerse, setFirstVerse] = useState<number>(initialCard.firstVerse);
@@ -38,7 +47,7 @@ export default function CardEditForm({ initialCard, onSave }: CardEditFormProps)
       entire,
       score: 0,
       tags: [],
-      id
+      id,
     };
   }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id]);
 
