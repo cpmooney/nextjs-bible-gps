@@ -10,7 +10,7 @@ export const CitationInfo = () => {
 
   useEffect(() => {
     setIsClient(true);
-  });
+  }, []);
 
   const currentCard = obtainCurrentCard();
   const entire = currentCard.entire;

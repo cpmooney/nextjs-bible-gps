@@ -18,7 +18,7 @@ export default function CardContentComponent({ showingAnswer, showAnswer }: Card
 
   useEffect(() => {
     setIsClient(true);
-  });
+  }, []);
 
   return (
     <>
