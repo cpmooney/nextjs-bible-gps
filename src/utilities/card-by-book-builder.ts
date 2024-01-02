@@ -1,5 +1,5 @@
-import { bibleBooks } from "src/models/books";
-import { Citation } from "src/models/citation";
+import { bibleBooks } from "@/models/books";
+import { Citation } from "@/models/citation";
 
 export type OrderedCardsByBook = { book: string, cards: Citation[] }[];
 
@@ -31,7 +31,13 @@ const insertCardInOrder = (cards: Citation[], card: Citation): void => {
     } else {
       cards.splice(index, 0, card);
     }
+    cards.map((c) => console.log(`  ${c.book} ${c.chapter}:${c.firstVerse}`));
   }
 
-const compareCards = (card1: Citation, card2: Citation): number => 
-    card2.chapter - card1.chapter;
+const compareCards = (card1: Citation, card2: Citation): number => {
+  if (card2.chapter !== card1.chapter) {
+    return card2.chapter - card1.chapter;
+  } else {
+    return card2.firstVerse - card1.firstVerse;
+  }
+};
