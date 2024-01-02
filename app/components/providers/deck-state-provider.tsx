@@ -25,6 +25,7 @@ export interface DeckStateContext {
   obtainUnbankedScore: () => number;
   obtainBankedScore: () => number;
   obtainCurrentCardGroup: () => number;
+  obtainCardById: (id: number) => Citation;
 }
 
 interface DeckStateProviderProps {
@@ -104,6 +105,13 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
 
   const obtainCardsByBook = () => buildCardsByBook(props.allCards);
   const obtainAllCitations = () => props.allCards;
+  const obtainCardById = (id: number): Citation => {
+    const card = props.allCards.find((c) => c.id === id)!;
+    if (!card) {
+      throw new Error(`No card found with id ${id}`);
+    }
+    return card;
+  }
 
   return (
     <DeckStateContext.Provider
@@ -118,6 +126,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         obtainAllCitations,
         obtainUnbankedScore: () => unbankedScore,
         obtainBankedScore: () => bankedScore,
+        obtainCardById
       }}
     >
       {props.children}

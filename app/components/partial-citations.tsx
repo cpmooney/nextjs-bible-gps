@@ -2,7 +2,7 @@ import {CheckCircleIcon} from "@heroicons/react/24/outline";
 import {savePartialCards} from "app/actions";
 import {Modal, closeModal} from "./modal";
 
-export const PartialCitationModal = async () => {
+export const PartialCitationModal = () => {
   const closeMe = () => closeModal("create_partial_citation");
   const saveAndClose = async () => {
     const fragment = getInputValue("create_partial_citation_fragment_input");

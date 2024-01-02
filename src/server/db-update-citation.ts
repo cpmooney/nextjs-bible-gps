@@ -8,7 +8,7 @@ export const invokeDbUpdateCitationAction = async (
   citation: Citation
 ): Promise<void> => {
   usingDatabase({CitationTable});
-  usingDebugger("db-save-partial-citation", userId);
+  usingDebugger("db-save-citation", userId);
   const fullCitation = `${citation.book} ${citation.chapter}:${citation.firstVerse}${citation.suffix}`;
   debugLog(
     "info",

@@ -2,6 +2,9 @@
 
 import { Citation } from "@/models/citation";
 import {currentUser} from "@clerk/nextjs";
+import { invokeDeletePartialCardAction } from "src/server/db-delete-partial-citation";
+import { invokeDbLoadAllPartialCitationAction } from "src/server/db-load-all-partial-citations";
+import { invokeDbLoadCitationAction } from "src/server/db-load-citation";
 import {
   SaveChangedScoresRequest,
   invokeDbSaveChangedAction,
@@ -12,6 +15,16 @@ import {
 } from "src/server/db-save-partial-citation";
 import { invokeDbUpdateCitationAction } from "src/server/db-update-citation";
 
+export const deletePartialCard = async (id: number) => {
+  const userId = await guaranteeUserId();
+  return await invokeDeletePartialCardAction(userId, id);
+}
+
+export const loadPartialCitations = async () => {
+  const userId = await guaranteeUserId();
+  return await invokeDbLoadAllPartialCitationAction(userId);
+}
+
 export const savePartialCards = async (request: SavePartialCitationRequest) => {
   const userId = await guaranteeUserId();
   return await invokeDbSavePartialCitationAction(userId, request);
@@ -20,6 +33,11 @@ export const savePartialCards = async (request: SavePartialCitationRequest) => {
 export const saveCitation = async (citation: Citation) => {
   const userId = await guaranteeUserId();
   return await invokeDbUpdateCitationAction(userId, citation);
+}
+
+export const loadCitation = async (citationId: number): Promise<Citation> => {
+  const userId = await guaranteeUserId();
+  return await invokeDbLoadCitationAction(userId, citationId);
 }
 
 export const saveChangedCards = async (request: SaveChangedScoresRequest) => {

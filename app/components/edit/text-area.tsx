@@ -2,9 +2,10 @@ import { ChangeEvent } from "react";
 
 interface Props {
   setString: (value: string) => void;
+  initialValue: string;
 }
 
-export const TextArea = ({ setString }: Props) => {
+export const TextArea = ({ setString, initialValue }: Props) => {
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setString(event.target.value);
   };
@@ -16,6 +17,7 @@ export const TextArea = ({ setString }: Props) => {
       <textarea
         className="input input-bordered w-full h-32"
         onChange={handleChange}
+        defaultValue={initialValue}
       ></textarea>
     </div>
   );
