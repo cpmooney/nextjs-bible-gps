@@ -1,16 +1,14 @@
-import { BookOpenIcon } from "@heroicons/react/24/outline";
-import { Modal } from "./modal";
-import { buildExternalUrl, buildFullCitation } from "src/utilities/additional-citation-methods";
-import { useDeckStateContext } from "./providers/deck-state-provider";
-import { useEffect, useState } from "react";
+import {BookOpenIcon} from "@heroicons/react/24/outline";
+import {
+  buildExternalUrl,
+  buildFullCitation,
+} from "src/utilities/additional-citation-methods";
+import ClientOnly from "./hydration-support/client-only";
+import {Modal} from "./modal";
+import {useDeckStateContext} from "./providers/deck-state-provider";
 
 export const CitationInfo = () => {
-  const [isClient, setIsClient] = useState(false);
-  const { obtainCurrentCard } = useDeckStateContext();
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const {obtainCurrentCard} = useDeckStateContext();
 
   const currentCard = obtainCurrentCard();
   const entire = currentCard.entire;
@@ -26,13 +24,17 @@ export const CitationInfo = () => {
     contents: (
       <div>
         <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">{isClient ? fullCitation : ""}</h3>
-          <p className="text-lg">{isClient ? entire : ""}</p>
+          <h3 className="font-bold text-lg mb-4">
+            <ClientOnly>{fullCitation}</ClientOnly>
+          </h3>
+          <p className="text-lg">
+            <ClientOnly>{entire}</ClientOnly>
+          </p>
         </div>
         <div className="modal-action">
-        <div className="btn btn-btnPrimary mr-2 mt-2 mb-2 justify-start">
-           id {isClient ? currentCard.id : ""}
-        </div>
+          <div className="btn btn-btnPrimary mr-2 mt-2 mb-2 justify-start">
+            id <ClientOnly>{currentCard.id}</ClientOnly>
+          </div>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2"
             onClick={showInExternalApp}
