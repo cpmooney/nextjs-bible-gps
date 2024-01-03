@@ -4,6 +4,7 @@ import {
   ChartBarIcon,
   InformationCircleIcon,
   LightBulbIcon,
+  ListBulletIcon,
   PencilIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
@@ -21,6 +22,7 @@ export const AdditionalActionComponents = () => {
   const createPartialCitation = () => showModal("create_partial_citation");
   const editCitation = () => router.push(editUrl(obtainCurrentCard().id));
   const addNewCitation = () => router.push("/partial-list");
+  const gotoList = () => router.push("/list");
 
   return (
     <>
@@ -50,8 +52,10 @@ export const AdditionalActionComponents = () => {
           >
             <LightBulbIcon className="w-6" />
           </button>
-          <button className="btn btn-btnPrimary mr-2 mt-2 mb-2">
-            <ChartBarIcon className="w-6" />
+          <button className="btn btn-btnPrimary mr-2 mt-2 mb-2"
+          onClick={gotoList}
+          >
+            <ListBulletIcon className="w-6" />
           </button>
         </div>
       </div>
