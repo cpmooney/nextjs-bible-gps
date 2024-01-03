@@ -34,9 +34,9 @@ const insertCardInOrder = (cards: Citation[], card: Citation): void => {
   }
 
 const compareCards = (card1: Citation, card2: Citation): number => {
-  if (card2.chapter !== card1.chapter) {
-    return card1.chapter - card1.chapter;
+  if (card2.chapter === card1.chapter) {
+    return card1.firstVerse - card2.firstVerse;
   } else {
-    return card1.firstVerse - card1.firstVerse;
+    return card1.chapter - card2.chapter;
   }
 };

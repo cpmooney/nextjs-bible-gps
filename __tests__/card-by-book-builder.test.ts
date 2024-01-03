@@ -1,6 +1,18 @@
 import { Citation } from "@/models/citation";
 import { buildCardsByBook } from "@/utilities/card-by-book-builder";
 
+const makeCitation = (book: string, chapter: number, firstVerse: number): Citation => ({
+    book,
+    chapter,
+    firstVerse,
+    fragment: "",
+    active: true,
+    entire: "",
+    score: 0,
+    suffix: "",
+    tags: []
+});
+
 describe("buildCardsByBook", () => {
     describe("organization by book", () => {
         const cardsByBook = buildCardsByBook([
@@ -43,16 +55,4 @@ describe("buildCardsByBook", () => {
         expect(cardsByBook[0].cards[1].firstVerse).toEqual(3);
         expect(cardsByBook[0].cards[2].firstVerse).toEqual(2);
     });
-});
-
-const makeCitation = (book: string, chapter: number, firstVerse: number): Citation => ({
-    book,
-    chapter,
-    firstVerse,
-    fragment: "",
-    active: true,
-    entire: "",
-    score: 0,
-    suffix: "",
-    tags: []
 });
