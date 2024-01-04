@@ -1,5 +1,5 @@
-import { bibleBooks } from "src/models/books";
-import { Citation } from "src/models/citation";
+import { bibleBooks } from "@/models/books";
+import { Citation } from "@/models/citation";
 
 export type OrderedCardsByBook = { book: string, cards: Citation[] }[];
 
@@ -33,5 +33,10 @@ const insertCardInOrder = (cards: Citation[], card: Citation): void => {
     }
   }
 
-const compareCards = (card1: Citation, card2: Citation): number => 
-    card2.chapter - card1.chapter;
+const compareCards = (card1: Citation, card2: Citation): number => {
+  if (card2.chapter === card1.chapter) {
+    return card1.firstVerse - card2.firstVerse;
+  } else {
+    return card1.chapter - card2.chapter;
+  }
+};

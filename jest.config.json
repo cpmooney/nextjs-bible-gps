@@ -5,6 +5,6 @@
         "node_modules"
     ],
     "moduleNameMapper": {
-        "^@/(.*)$": "<rootDir>/$1"
+        "^@/(.*)$": "<rootDir>/src/$1"
     }
 }
