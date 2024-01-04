@@ -1,31 +1,24 @@
 "use client";
-import { Citation } from "@/models/citation";
-import {
-  CheckCircleIcon,
-  MagnifyingGlassCircleIcon,
-  NoSymbolIcon,
-} from "@heroicons/react/24/outline";
-import { useMemo, useState } from "react";
-import {
-  buildFullCitation,
-} from "src/utilities/additional-citation-methods";
-import { BibleSelection } from "./bible-selection";
-import { FragmentEntry } from "./fragment-entry";
-import { NumberSelection } from "./number-selection";
-import { SuffixEntry } from "./suffix-entry";
-import { TextArea } from "./text-area";
-import { saveCitation } from "app/actions";
-import { useRouter } from "next/navigation";
+import {Citation} from "@/models/citation";
+import {CheckCircleIcon, NoSymbolIcon} from "@heroicons/react/24/outline";
+import {saveCitation} from "app/actions";
+import {useRouter} from "next/navigation";
+import {useMemo, useState} from "react";
+import {buildFullCitation} from "src/utilities/additional-citation-methods";
+import {useDeckStateContext} from "../providers/deck-state-provider";
+import {BibleSelection} from "./bible-selection";
+import {FragmentEntry} from "./fragment-entry";
+import {NumberSelection} from "./number-selection";
+import {SuffixEntry} from "./suffix-entry";
+import {TextArea} from "./text-area";
 
 interface CardEditFormProps {
   initialCard: Citation;
   onSave?: () => void;
 }
 
-export default function CardEditForm({
-  initialCard,
-  onSave,
-}: CardEditFormProps) {
+export default function CardEditForm({initialCard, onSave}: CardEditFormProps) {
+  const {updateCitation} = useDeckStateContext();
   const [book, setBook] = useState<string>(initialCard.book);
   const [chapter, setChapter] = useState<number>(initialCard.chapter);
   const [firstVerse, setFirstVerse] = useState<number>(initialCard.firstVerse);
@@ -52,19 +45,20 @@ export default function CardEditForm({
   }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id]);
 
   const fullCitation = useMemo(() => {
-    return buildFullCitation({ book, chapter, firstVerse, suffix });
+    return buildFullCitation({book, chapter, firstVerse, suffix});
   }, [book, chapter, firstVerse, suffix]);
 
-  const closeMe = () => {
-    router.push("/");
+  const cancelMe = () => {
+    router.back();
   };
 
   const saveAndClose = async () => {
-    saveCitation(citation);
+    citation.id = await saveCitation(citation);
+    updateCitation(citation);
     if (onSave) {
       onSave();
     }
-    closeMe();
+    router.push(`/list?id=${citation.id}`);
   };
 
   return (
@@ -103,7 +97,7 @@ export default function CardEditForm({
           </button>
           <button
             className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-red-400"
-            onClick={closeMe}
+            onClick={cancelMe}
           >
             <NoSymbolIcon className="h-8 w-8" />
           </button>

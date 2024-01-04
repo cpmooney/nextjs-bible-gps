@@ -6,7 +6,7 @@ import {debugLog, usingDebugger} from "../utilities/debugger";
 export const invokeDbUpdateCitationAction = async (
   userId: string,
   citation: Citation
-): Promise<void> => {
+): Promise<number> => {
   usingDatabase({CitationTable});
   usingDebugger("db-save-citation", userId);
   const fullCitation = `${citation.book} ${citation.chapter}:${citation.firstVerse}${citation.suffix}`;
@@ -23,7 +23,9 @@ export const invokeDbUpdateCitationAction = async (
       set: citationWithoutId(citation),
     })
     .returning({id: CitationTable.id});
-  debugLog("info", `Saved with id ${response[0].id}`);
+  const id = response[0].id;
+  debugLog("info", `Saved with id ${id}`);
+  return id;
 };
 
 const citationWithoutId = (citation: Citation): Citation => {

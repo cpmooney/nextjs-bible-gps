@@ -26,6 +26,7 @@ export interface DeckStateContext {
   obtainBankedScore: () => number;
   obtainCurrentCardGroup: () => number;
   obtainCardById: (id: number) => Citation;
+  updateCitation: (citation: Citation) => void;
 }
 
 interface DeckStateProviderProps {
@@ -65,13 +66,13 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
 
   const guaranteeCurrentCardGroup = (): number => {
     return currentCardGroup ?? -1;
-  }
+  };
 
   const drawCitation = (): Citation => {
     guaranteeDrawDeck();
     const randomIndex = randomInRange(0, drawDeck.current.length - 1);
     const chosenWrappedCard = drawDeck.current.splice(randomIndex, 1)[0];
-    const currentCitation = chosenWrappedCard.card as Citation; 
+    const currentCitation = chosenWrappedCard.card as Citation;
     setCurrentCard(currentCitation);
     setCurrentCardGroup(chosenWrappedCard.group);
     return currentCitation;
@@ -111,7 +112,16 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       throw new Error(`No card found with id ${id}`);
     }
     return card;
-  }
+  };
+
+  const updateCitation = (updatedCitation: Citation) => {
+    const index = props.allCards.findIndex((c) => c.id === updatedCitation.id);
+    if (index < 0) {
+      props.allCards.push(updatedCitation);
+    } else {
+      props.allCards[index] = updatedCitation;
+    }
+  };
 
   return (
     <DeckStateContext.Provider
@@ -126,7 +136,8 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         obtainAllCitations,
         obtainUnbankedScore: () => unbankedScore,
         obtainBankedScore: () => bankedScore,
-        obtainCardById
+        obtainCardById,
+        updateCitation,
       }}
     >
       {props.children}

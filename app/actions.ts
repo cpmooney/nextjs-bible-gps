@@ -36,7 +36,7 @@ export const savePartialCards = async (request: SavePartialCitationRequest) => {
   return await invokeDbSavePartialCitationAction(userId, request);
 };
 
-export const saveCitation = async (citation: Citation) => {
+export const saveCitation = async (citation: Citation): Promise<number> => {
   const userId = await guaranteeUserId();
   return await invokeDbUpdateCitationAction(userId, citation);
 };

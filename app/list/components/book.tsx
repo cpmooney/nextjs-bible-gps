@@ -6,12 +6,13 @@ import CitationDisplay from "./citation";
 interface Props {
   book: string;
   citations: Citation[];
+  active: boolean;
 }
 
-export const Book = ({book, citations}: Props) => {
+export const Book = ({book, citations, active}: Props) => {
   return (
     <div className="collapse bg-base-200 mb-2">
-      <input type="radio" name="book-accordian" />
+      <input type="radio" name="book-accordian" checked={active} />
       <div className="collapse-title text-xl font-medium">{book}</div>
       <div className="collapse-content">
         {citations.map((citation) => (
