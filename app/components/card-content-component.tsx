@@ -21,7 +21,7 @@ export default function CardContentComponent({
 
   return (
     <>
-      <h2 className="text-center text-2xl">
+      <h2 className="text-center text-2xl h-16 mb-2">
         <ClientOnly>{currentCard.fragment}</ClientOnly>
         <ServerOnly>
           <div className="skeleton h-8 w-20"></div>
