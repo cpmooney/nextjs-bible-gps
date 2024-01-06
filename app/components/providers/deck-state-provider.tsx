@@ -9,6 +9,7 @@ import {
   recordScoreChange,
 } from "@/utilities/score-recorder";
 import {saveChangedCards} from "app/actions";
+import { useSearchParams } from "next/navigation";
 import {createContext, useContext, useRef, useState} from "react";
 import {Citation} from "src/models/citation";
 import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
@@ -48,16 +49,24 @@ export const useDeckStateContext = () => {
 };
 
 export const CardArrayProvider = (props: DeckStateProviderProps) => {
+  const initialIdFromUrl = useSearchParams()?.get("id");
   const [unbankedScore, setUnbankedScore] = useState<number>(0);
   const [bankedScore, setBankedScore] = useState<number>(
     props.initialBankedScore
   );
+  const [initialId, setInitialId] = useState<number | undefined>(initialIdFromUrl ? parseInt(initialIdFromUrl) : undefined);
 
   const drawDeck = useRef<WrappedCard[]>([]);
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
   const [currentCardGroup, setCurrentCardGroup] = useState<number | null>(null);
 
   const guaranteeCurrentCard = (): Citation => {
+    if (initialId) {
+      const card = obtainCardById(initialId);
+      setCurrentCard(card);
+      setInitialId(undefined);
+      return card;
+    }
     if (!currentCard) {
       return drawCitation();
     }

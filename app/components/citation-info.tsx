@@ -3,17 +3,22 @@ import {
   buildExternalUrl,
   buildFullCitation,
 } from "src/utilities/additional-citation-methods";
-import ClientOnly from "./hydration-support/client-only";
 import {Modal} from "./modal";
 import {useDeckStateContext} from "./providers/deck-state-provider";
+import { useEffect, useState } from "react";
+import { Citation } from "@/models/citation";
 
 export const CitationInfo = () => {
   const {obtainCurrentCard} = useDeckStateContext();
+  const [currentCard, setCurrentCard] = useState<Citation | null>(null);
 
-  const currentCard = obtainCurrentCard();
-  const entire = currentCard.entire;
-  const fullCitation = buildFullCitation(currentCard);
-  const externalUrl = buildExternalUrl(currentCard);
+  useEffect(() => {
+    setCurrentCard(obtainCurrentCard());
+  }, []);
+
+  const entire = currentCard?.entire ?? "";
+  const fullCitation = currentCard ? buildFullCitation(currentCard) : "";
+  const externalUrl = currentCard ? buildExternalUrl(currentCard) : "";
 
   const showInExternalApp = () => {
     window.open(externalUrl, "_blank");
@@ -25,15 +30,15 @@ export const CitationInfo = () => {
       <div>
         <div className="modal-box">
           <h3 className="font-bold text-lg mb-4">
-            <ClientOnly>{fullCitation}</ClientOnly>
+            {fullCitation}
           </h3>
           <p className="text-lg">
-            <ClientOnly>{entire}</ClientOnly>
+            {entire}
           </p>
         </div>
         <div className="modal-action">
           <div className="btn btn-btnPrimary mr-2 mt-2 mb-2 justify-start">
-            id <ClientOnly>{currentCard.id}</ClientOnly>
+             id {currentCard?.id ?? ""}
           </div>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2"
