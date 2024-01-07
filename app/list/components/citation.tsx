@@ -4,6 +4,7 @@ import {Citation} from "@/models/citation";
 import {NoSymbolIcon, PencilIcon} from "@heroicons/react/24/outline";
 import {deleteCard} from "app/actions";
 import ClientOnly from "app/components/hydration-support/client-only";
+import { useDeckStateContext } from "app/components/providers/deck-state-provider";
 import {useRouter} from "next/navigation";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function CitationDisplay({citation}: Props) {
+  const { setCurrentCard } = useDeckStateContext();
   const router = useRouter();
   const editCard = () => {
     router.push(`/edit/${citation.id}`);
@@ -23,7 +25,8 @@ export default function CitationDisplay({citation}: Props) {
   };
   const citationForDisplay = `${citation.chapter}:${citation.firstVerse}${citation.suffix}`;
   const gotoVerse = () => {
-    router.push(`/?id=${citation.id}`);
+    setCurrentCard(citation);
+    router.push('/');
   }
 
   return (
@@ -35,7 +38,10 @@ export default function CitationDisplay({citation}: Props) {
         <ClientOnly>{citation.fragment}</ClientOnly>
       </div>
       <div className="h-5 ml-2 mt-2">
-        <ClientOnly>{citation.id}</ClientOnly>
+        id: <ClientOnly>{citation.id}</ClientOnly>
+      </div>
+      <div className="h-5 ml-2 mt-2">
+        score: <ClientOnly>{citation.score}</ClientOnly>
       </div>
       <button
         className="h-8 btn btn-btnPrimary bg-green-400 ml-2 mt-2"

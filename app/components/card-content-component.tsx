@@ -19,7 +19,7 @@ export default function CardContentComponent({
   
   useEffect(() => {
     setCurrentCard(obtainCurrentCard());
-  }, [])
+  }, [obtainCurrentCard])
 
   const fullCitation = currentCard ? buildFullCitation(currentCard) : "";
   const fragment = currentCard?.fragment ?? "/";
