@@ -1,25 +1,35 @@
 "use client";
-import {Citation} from "@/models/citation";
-import {CheckCircleIcon, NoSymbolIcon} from "@heroicons/react/24/outline";
-import {saveCitation} from "app/actions";
-import {useRouter} from "next/navigation";
-import {useMemo, useState} from "react";
-import {buildFullCitation} from "src/utilities/additional-citation-methods";
-import {useDeckStateContext} from "../providers/deck-state-provider";
-import {BibleSelection} from "./bible-selection";
-import {FragmentEntry} from "./fragment-entry";
-import {NumberSelection} from "./number-selection";
-import {SuffixEntry} from "./suffix-entry";
-import {TextArea} from "./text-area";
+import { Citation } from "@/models/citation";
+import {
+  CheckCircleIcon,
+  NoSymbolIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
+import { deleteCard, saveCitation } from "app/actions";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
+import { buildFullCitation } from "src/utilities/additional-citation-methods";
+import { useDeckStateContext } from "../providers/deck-state-provider";
+import { BibleSelection } from "./bible-selection";
+import { FragmentEntry } from "./fragment-entry";
+import { NumberSelection } from "./number-selection";
+import { SuffixEntry } from "./suffix-entry";
+import { TextArea } from "./text-area";
 
 interface CardEditFormProps {
   initialCard: Citation;
   onSave?: () => void;
 }
 
-export default function CardEditForm({initialCard, onSave}: CardEditFormProps) {
-  const {updateCitation} = useDeckStateContext();
-  const [book, setBook] = useState<string>(initialCard.book);
+export default function CardEditForm({
+  initialCard,
+  onSave,
+}: CardEditFormProps) {
+  const searchParams = useSearchParams();
+  const initialBook = searchParams?.get("book") ?? initialCard.book;
+
+  const { updateCitation } = useDeckStateContext();
+  const [book, setBook] = useState<string>(initialBook);
   const [chapter, setChapter] = useState<number>(initialCard.chapter);
   const [firstVerse, setFirstVerse] = useState<number>(initialCard.firstVerse);
   const [suffix, setSuffix] = useState<string>(initialCard.suffix);
@@ -45,11 +55,18 @@ export default function CardEditForm({initialCard, onSave}: CardEditFormProps) {
   }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id]);
 
   const fullCitation = useMemo(() => {
-    return buildFullCitation({book, chapter, firstVerse, suffix});
+    return buildFullCitation({ book, chapter, firstVerse, suffix });
   }, [book, chapter, firstVerse, suffix]);
 
   const cancelMe = () => {
     router.back();
+  };
+
+  const deleteThisCard = () => {
+    if (!citation.id) {
+      throw new Error("Cannot delete a card without an id");
+    }
+    deleteCard(citation.id);
   };
 
   const saveAndClose = async () => {
@@ -68,7 +85,7 @@ export default function CardEditForm({initialCard, onSave}: CardEditFormProps) {
           <label className="label font-bold">Citation</label>
         </div>
         <div className="flex space-x-2">
-          <BibleSelection setBook={setBook} initialBook={initialCard.book} />
+          <BibleSelection setBook={setBook} initialBook={initialBook} />
           <NumberSelection
             setNumber={setChapter}
             initialValue={initialCard.chapter}
@@ -88,6 +105,12 @@ export default function CardEditForm({initialCard, onSave}: CardEditFormProps) {
           initialValue={initialCard.fragment}
         />
         <TextArea setString={setEntire} initialValue={initialCard.entire} />
+        {citation.id && (
+          <div className="flex ml-auto">
+            <div className="w-16 mr-2 mt-2 mb-2">id {citation.id}</div>
+            <div className="w-16 mr-2 mt-2 mb-2">score {citation.score}</div>
+          </div>
+        )}
         <div className="card-actions">
           <button
             className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-green-400"
@@ -101,6 +124,14 @@ export default function CardEditForm({initialCard, onSave}: CardEditFormProps) {
           >
             <NoSymbolIcon className="h-8 w-8" />
           </button>
+          {citation.id && (
+            <button
+              className="h-8 btn btn-btnPrimary bg-orange-400 ml-2 mt-2"
+              onClick={deleteThisCard}
+            >
+              <TrashIcon className="h-8 w-8" />
+            </button>
+          )}
         </div>
       </div>
     </>
