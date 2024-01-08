@@ -1,15 +1,16 @@
-"use client"
+"use client";
 
+import {SignedIn} from "@clerk/nextjs";
 import {
   InformationCircleIcon,
   LightBulbIcon,
   ListBulletIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
+import {useRouter} from "next/navigation";
 import {CitationInfo} from "./citation-info";
 import {showModal} from "./modal";
 import {PartialCitationModal} from "./partial-citations";
-import { useRouter } from "next/navigation";
 
 export const AdditionalActionComponents = () => {
   const router = useRouter();
@@ -29,20 +30,23 @@ export const AdditionalActionComponents = () => {
           >
             <InformationCircleIcon className="w-6" />
           </button>
+          <SignedIn>
+            <button
+              className="btn btn-btnPrimary mr-2 mt-2 mb-2"
+              onClick={addNewCitation}
+            >
+              <PlusCircleIcon className="w-6" />
+            </button>
+            <button
+              className="btn btn-btnPrimary mr-2 mt-2 mb-2"
+              onClick={createPartialCitation}
+            >
+              <LightBulbIcon className="w-6" />
+            </button>
+          </SignedIn>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2"
-            onClick={addNewCitation}
-          >
-            <PlusCircleIcon className="w-6" />
-          </button>
-          <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
-            onClick={createPartialCitation}
-          >
-            <LightBulbIcon className="w-6" />
-          </button>
-          <button className="btn btn-btnPrimary mr-2 mt-2 mb-2"
-          onClick={gotoList}
+            onClick={gotoList}
           >
             <ListBulletIcon className="w-6" />
           </button>

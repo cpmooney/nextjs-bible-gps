@@ -16,6 +16,8 @@ import {
 } from "src/server/db-save-partial-citation";
 import {invokeDbUpdateCitationAction} from "src/server/db-update-citation";
 
+const demoUser = "demo-user";
+
 export const deleteCard = async (id: number) => {
   const userId = await guaranteeUserId();
   return await invokeDeleteCardAction(userId, id);
@@ -53,8 +55,5 @@ export const saveChangedCards = async (request: SaveChangedScoresRequest) => {
 
 export const guaranteeUserId = async (): Promise<string> => {
   const user = await currentUser();
-  if (!user) {
-    throw new Error("User is not logged in.");
-  }
-  return user.id;
+  return user?.id ?? demoUser;
 };

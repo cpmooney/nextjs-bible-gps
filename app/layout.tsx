@@ -1,4 +1,4 @@
-import {ClerkProvider, SignedIn} from "@clerk/nextjs";
+import {ClerkProvider} from "@clerk/nextjs";
 import {ReactNode} from "react";
 import "../styles/globals.css";
 import {ImageBackground} from "./components/image-background";
@@ -24,9 +24,7 @@ const Layout = ({children}: LayoutProps) => {
         <DeckPageWithBackground />
         <div className="ml-5 mt-5">
           <ClerkProvider>
-            <SignedIn>
-              <DeckProvider>{children}</DeckProvider>
-            </SignedIn>
+            <DeckProvider>{children}</DeckProvider>
             <UserHeaderComponent />
           </ClerkProvider>
         </div>
