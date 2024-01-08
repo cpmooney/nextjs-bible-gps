@@ -9,7 +9,7 @@ import {
   recordScoreChange,
 } from "@/utilities/score-recorder";
 import {saveChangedCards} from "app/actions";
-import {createContext, useContext, useRef, useState} from "react";
+import {Dispatch, SetStateAction, createContext, useContext, useRef, useState} from "react";
 import {Citation} from "src/models/citation";
 import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
 import {randomInRange} from "src/utilities/misc";
@@ -26,6 +26,8 @@ export interface DeckStateContext {
   obtainBankedScore: () => number;
   obtainCurrentCardGroup: () => number;
   obtainCardById: (id: number) => Citation;
+  updateCitation: (citation: Citation) => void;
+  setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
 }
 
 interface DeckStateProviderProps {
@@ -58,22 +60,22 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
 
   const guaranteeCurrentCard = (): Citation => {
     if (!currentCard) {
-      return drawCitation();
+      const nextCard =  drawCitation();
     }
     return currentCard!;
   };
 
   const guaranteeCurrentCardGroup = (): number => {
     return currentCardGroup ?? -1;
-  }
+  };
 
   const drawCitation = (): Citation => {
     guaranteeDrawDeck();
     const randomIndex = randomInRange(0, drawDeck.current.length - 1);
     const chosenWrappedCard = drawDeck.current.splice(randomIndex, 1)[0];
-    const currentCitation = chosenWrappedCard.card as Citation; 
+    const currentCitation = chosenWrappedCard.card as Citation;
     setCurrentCard(currentCitation);
-    setCurrentCardGroup(chosenWrappedCard.group);
+    setCurrentCardGroup(chosenWrappedCard.group); // TODO: Groups should no longer be needed
     return currentCitation;
   };
 
@@ -111,7 +113,16 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       throw new Error(`No card found with id ${id}`);
     }
     return card;
-  }
+  };
+
+  const updateCitation = (updatedCitation: Citation) => {
+    const index = props.allCards.findIndex((c) => c.id === updatedCitation.id);
+    if (index < 0) {
+      props.allCards.push(updatedCitation);
+    } else {
+      props.allCards[index] = updatedCitation;
+    }
+  };
 
   return (
     <DeckStateContext.Provider
@@ -126,7 +137,9 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         obtainAllCitations,
         obtainUnbankedScore: () => unbankedScore,
         obtainBankedScore: () => bankedScore,
-        obtainCardById
+        obtainCardById,
+        updateCitation,
+        setCurrentCard,
       }}
     >
       {props.children}

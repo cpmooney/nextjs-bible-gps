@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
-import { ImageBackground } from "./components/image-background";
+import {ClerkProvider, SignedIn} from "@clerk/nextjs";
+import {ReactNode} from "react";
+import "../styles/globals.css";
+import {ImageBackground} from "./components/image-background";
 import DeckProvider from "./components/providers/deck-provider";
-import { ClerkProvider, SignedIn } from "@clerk/nextjs";
 import UserHeaderComponent from "./components/user-header-component";
-import '../styles/globals.css';
 
 const DeckPageWithBackground = () => {
   return (
@@ -17,17 +17,17 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({children}: LayoutProps) => {
   return (
     <html>
       <body>
         <DeckPageWithBackground />
         <div className="ml-5 mt-5">
           <ClerkProvider>
-            <UserHeaderComponent />
             <SignedIn>
               <DeckProvider>{children}</DeckProvider>
             </SignedIn>
+            <UserHeaderComponent />
           </ClerkProvider>
         </div>
       </body>

@@ -1,14 +1,9 @@
 "use client";
-import {
-  SignInButton,
-  SignOutButton,
-  SignedIn,
-  SignedOut,
-} from "@clerk/nextjs";
+import {SignInButton, SignOutButton, SignedIn, SignedOut} from "@clerk/nextjs";
 
 const UserHeaderComponent = () => {
   return (
-    <div className="mb-2 h-8">
+    <div className="mb-2 mt-2 h-8">
       <SignedIn>
         <SignOutButton>
           <button className="rounded border border-gray-400 px-3 py-0.5">

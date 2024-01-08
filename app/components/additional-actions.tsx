@@ -1,26 +1,21 @@
 "use client"
 
 import {
-  ChartBarIcon,
   InformationCircleIcon,
   LightBulbIcon,
   ListBulletIcon,
-  PencilIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import {CitationInfo} from "./citation-info";
 import {showModal} from "./modal";
 import {PartialCitationModal} from "./partial-citations";
 import { useRouter } from "next/navigation";
-import { useDeckStateContext } from "./providers/deck-state-provider";
 
 export const AdditionalActionComponents = () => {
-  const { obtainCurrentCard } = useDeckStateContext();
   const router = useRouter();
 
   const showFullCitation = () => showModal("full_citation");
   const createPartialCitation = () => showModal("create_partial_citation");
-  const editCitation = () => router.push(editUrl(obtainCurrentCard().id));
   const addNewCitation = () => router.push("/partial-list");
   const gotoList = () => router.push("/list");
 
@@ -33,12 +28,6 @@ export const AdditionalActionComponents = () => {
             onClick={showFullCitation}
           >
             <InformationCircleIcon className="w-6" />
-          </button>
-          <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
-            onClick={editCitation}
-          >
-            <PencilIcon className="w-6" />
           </button>
           <button
             className="btn btn-btnPrimary mr-2 mt-2 mb-2"
@@ -66,8 +55,3 @@ export const AdditionalActionComponents = () => {
     </>
   );
 };
-
-const editUrl = (cardId?: number) => {
-  const id: number = cardId ? cardId : 0;
-  return `/edit/${id}`;
-}

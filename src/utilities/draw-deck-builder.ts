@@ -5,6 +5,7 @@ const numberOfGroups = 5;
 interface Card {
   score: number;
   lastReviewed?: Date;
+  id?: number;
 }
 
 export interface WrappedCard {
