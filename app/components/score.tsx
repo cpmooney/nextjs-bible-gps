@@ -1,9 +1,11 @@
 "use client";
 import {ChevronDoubleRightIcon} from "@heroicons/react/24/outline";
 import { useDeckStateContext } from "./providers/deck-state-provider";
+import { useUser } from '@clerk/nextjs';
 
 export default function ScoreComponent() {
   const {syncScoresToDb, obtainBankedScore, obtainUnbankedScore} = useDeckStateContext();
+  const { isSignedIn } = useUser();
 
   const unbankedScore = obtainUnbankedScore();
   const bankedScore = obtainBankedScore();
@@ -28,6 +30,14 @@ export default function ScoreComponent() {
     return "text-green-600";
   };
 
+  const chevronClicked = () => {
+    if (isSignedIn) {
+      syncScoresToDb();
+    } else {
+      alert("Create a user to take advantage of this feature!");
+    }
+  }
+
   return (
     <div className="flex flex-row w-96">
       <div className="card bg-base-100 shadow-xl mr-4 mt-4 flex-1">
@@ -38,7 +48,7 @@ export default function ScoreComponent() {
         </div>
       </div>
       <div className="flex items-center justify-center mr-4">
-        <button className="btn btn-btnPrimary" onClick={syncScoresToDb}>
+        <button className="btn btn-btnPrimary" onClick={chevronClicked}>
           <ChevronDoubleRightIcon className="w-8 h-8 mr-2" />
         </button>
       </div>

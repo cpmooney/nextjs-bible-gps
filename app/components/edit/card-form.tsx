@@ -37,6 +37,7 @@ export default function CardEditForm({
   const [entire, setEntire] = useState<string>(initialCard.entire);
 
   const router = useRouter();
+  const score = initialCard?.score;
 
   const citation = useMemo(() => {
     const id = initialCard.id == 0 ? undefined : initialCard.id;
@@ -108,7 +109,7 @@ export default function CardEditForm({
         {citation.id && (
           <div className="flex ml-auto">
             <div className="w-16 mr-2 mt-2 mb-2">id {citation.id}</div>
-            <div className="w-16 mr-2 mt-2 mb-2">score {citation.score}</div>
+            <div className="w-16 mr-2 mt-2 mb-2">score {score}</div>
           </div>
         )}
         <div className="card-actions">
