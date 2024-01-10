@@ -26,6 +26,9 @@ export const createDrawDeck = (citations: Card[]): WrappedCard[] => {
   }
   const sortedNonZeroScoreCardArrays = sortNonZeroScoreCards(citations);
   const oneZeroCard = citations.find(citation => citation.score === 0);
+  if (sortedNonZeroScoreCardArrays.length < 25) {
+    return fewNonZeroScoreCards(citations);
+  }
   const nonZeroDrawDeck = drawDeckByIndices(sortedNonZeroScoreCardArrays.length)
     .map(({ group, index }) => { return { card: sortedNonZeroScoreCardArrays[index], group }});
   if (oneZeroCard) {
@@ -35,6 +38,11 @@ export const createDrawDeck = (citations: Card[]): WrappedCard[] => {
   }
   return nonZeroDrawDeck;
 };
+
+const fewNonZeroScoreCards = (citations: Card[]): WrappedCard[] => {
+  // TODO: Need to clean this up
+  return citations.slice(0, 5).map(citation => { return { card: citation, group: 0 }});
+}
 
 const sortNonZeroScoreCards = (citations: Card[]): Card[] => 
   citations
