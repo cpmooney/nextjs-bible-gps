@@ -9,14 +9,21 @@ import {
   recordScoreChange,
 } from "@/utilities/score-recorder";
 import {saveChangedCards} from "app/actions";
-import {Dispatch, SetStateAction, createContext, useContext, useRef, useState} from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 import {Citation} from "src/models/citation";
 import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
 import {randomInRange} from "src/utilities/misc";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
-  drawCitation: () => Citation;
+  drawCitation: () => Citation | undefined;
   incrementCurrentCardScore: () => void;
   decrementCurrentCardScore: () => void;
   syncScoresToDb: () => Promise<void>;
@@ -28,13 +35,13 @@ export interface DeckStateContext {
   obtainCardById: (id: number) => Citation;
   updateCitation: (citation: Citation) => void;
   setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
+  userHasNoCards: () => boolean;
 }
 
 interface DeckStateProviderProps {
   children: React.ReactNode;
   citations: Citation[];
   initialBankedScore: number;
-  userHadNoData: boolean;
   allCards: Citation[];
 }
 
@@ -58,9 +65,12 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
   const [currentCardGroup, setCurrentCardGroup] = useState<number | null>(null);
 
+  const userHasNoCards = () => props.allCards.length === 0;
+
   const guaranteeCurrentCard = (): Citation => {
     if (!currentCard) {
-      const nextCard =  drawCitation();
+      // TODO This seems like a bug of some kind!
+      const nextCard = drawCitation();
     }
     return currentCard!;
   };
@@ -69,14 +79,16 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     return currentCardGroup ?? -1;
   };
 
-  const drawCitation = (): Citation => {
+  const drawCitation = (): Citation | undefined => {
     guaranteeDrawDeck();
-    const randomIndex = randomInRange(0, drawDeck.current.length - 1);
-    const chosenWrappedCard = drawDeck.current.splice(randomIndex, 1)[0];
-    const currentCitation = chosenWrappedCard.card as Citation;
-    setCurrentCard(currentCitation);
-    setCurrentCardGroup(chosenWrappedCard.group); // TODO: Groups should no longer be needed
-    return currentCitation;
+    if (!userHasNoCards()) {
+      const randomIndex = randomInRange(0, drawDeck.current.length - 1);
+      const chosenWrappedCard = drawDeck.current.splice(randomIndex, 1)[0];
+      const currentCitation = chosenWrappedCard.card as Citation;
+      setCurrentCard(currentCitation);
+      setCurrentCardGroup(chosenWrappedCard.group); // TODO: Groups should no longer be needed
+      return currentCitation;
+    }
   };
 
   const guaranteeDrawDeck = () => {
@@ -140,6 +152,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         obtainCardById,
         updateCitation,
         setCurrentCard,
+        userHasNoCards,
       }}
     >
       {props.children}

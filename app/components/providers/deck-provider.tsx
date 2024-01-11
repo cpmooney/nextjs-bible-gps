@@ -1,16 +1,15 @@
-import { Citation } from "src/models/citation";
-import { CardArrayProvider} from "./deck-state-provider";
-import { guaranteeUserId } from "app/actions";
-import { invokeDbLoadAllAction } from "src/server/db-load-all-rows";
+import {guaranteeUserId} from "app/actions";
+import {Citation} from "src/models/citation";
+import {invokeDbLoadAllAction} from "src/server/db-load-all-rows";
+import {CardArrayProvider} from "./deck-state-provider";
 
-const DeckProvider = async ({ children }: DeckProviderProps) => {
+const DeckProvider = async ({children}: DeckProviderProps) => {
   const allCards = await loadAllCards();
 
   return (
     <CardArrayProvider
       citations={allCards}
       initialBankedScore={computeTotalScore(allCards)}
-      userHadNoData={allCards.length === 0}
       allCards={allCards}
     >
       {children}
@@ -27,7 +26,7 @@ const computeTotalScore = (cards: Citation[]): number => {
 };
 
 const loadAllCards = async () => {
-  const userId = await guaranteeUserId();
+  const userId = await guaranteeUserId({ useDemo: true });
   return await invokeDbLoadAllAction(userId);
 };
 

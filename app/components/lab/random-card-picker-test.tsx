@@ -1,15 +1,17 @@
-import { useDeckStateContext } from '../providers/deck-state-provider';
-import { BarGraph } from './bar-graph';
-import { Citation } from 'src/models/citation';
+import {useDeckStateContext} from "../providers/deck-state-provider";
+import {BarGraph} from "./bar-graph";
 
 export const RandomCardPickerTest = () => {
-  const { drawCitation } = useDeckStateContext();
+  const {drawCitation} = useDeckStateContext();
   const drawScores: number[] = [];
   drawScores.length = 100;
   drawScores.fill(0);
 
   for (let i = 0; i < 1000; i++) {
-    const card: Citation = drawCitation();
+    const card = drawCitation();
+    if (!card) {
+      throw new Error("No cards");
+    }
     drawScores[card.score]++;
   }
 
@@ -20,5 +22,4 @@ export const RandomCardPickerTest = () => {
       <BarGraph values={drawScores} labels={labels} />
     </div>
   );
-}
-  
+};
