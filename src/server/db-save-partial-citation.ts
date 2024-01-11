@@ -8,7 +8,7 @@ export interface SavePartialCitationRequest {
 }
 
 export const savePartialCards = async (request: SavePartialCitationRequest) => {
-  const userId = await guaranteeUserId();
+  const userId = await guaranteeUserId({});
   return await invokeDbSavePartialCitationAction(userId, request);
 };
 
