@@ -1,7 +1,7 @@
 "use client";
 
 import {ReactNode} from "react";
-import Only from "../utilities/only";
+import Only from "./only";
 
 interface Props {
   children: ReactNode;

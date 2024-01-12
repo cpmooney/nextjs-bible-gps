@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { Book } from "./components/book";
 import { Citation } from "@/models/citation";
 import AdminOnly from "app/components/admin-only";
-import ExportButton from "app/components/export";
+import ExportImportComponent from "app/components/export-import/export-import-component";
 
 export default function CardListPage() {
   const searchParams = useSearchParams();
@@ -21,7 +21,7 @@ export default function CardListPage() {
   return (
     <div>
       <AdminOnly>
-        <ExportButton />
+        <ExportImportComponent />
       </AdminOnly>
       {cardsByBook.map(({ book, cards }) => {
         return (

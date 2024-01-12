@@ -6,6 +6,7 @@ import {User} from "@clerk/nextjs/server";
 import {invokeDeleteCardAction} from "src/server/db-delete-citation";
 import {invokeDeletePartialCardAction} from "src/server/db-delete-partial-citation";
 import {invokeDbLoadAllPartialCitationAction} from "src/server/db-load-all-partial-citations";
+import { invokeDbLoadAllAction } from "src/server/db-load-all-rows";
 import {invokeDbLoadCitationAction} from "src/server/db-load-citation";
 import {
   SaveChangedScoresRequest,
@@ -16,8 +17,15 @@ import {
   invokeDbSavePartialCitationAction,
 } from "src/server/db-save-partial-citation";
 import {invokeDbUpdateCitationAction} from "src/server/db-update-citation";
+import TSV from "tsv";
 
 const demoUser = "demo-user";
+
+export const exportAllCards = async () => {
+  const userId = await guaranteeUserId({ useDemo: true });
+  const allCitations = await invokeDbLoadAllAction(userId);
+  return TSV.stringify(allCitations);
+}
 
 export const deleteCard = async (id: number) => {
   const userId = await guaranteeUserId({});
@@ -61,12 +69,12 @@ export const guaranteeUserId = async ({
 }): Promise<string> => {
   const user = await currentUser();
   if (!user) {
-    return utilizeDemoUserIfNoneAndAllowed(useDemo ?? false);
+    return utilizeDemoUserIfDirected(useDemo ?? false);
   }
   return resolveAdminToDemo(user);
 };
 
-const utilizeDemoUserIfNoneAndAllowed = (useDemo: boolean) => {
+const utilizeDemoUserIfDirected = (useDemo: boolean) => {
   if (useDemo) {
     return demoUser;
   }
@@ -80,3 +88,11 @@ const resolveAdminToDemo = (user: User) => {
   }
   return user.id;
 };
+
+const guranteeAdminOnly = async () => {
+  const user = await currentUser();
+  const isAdmin = user?.privateMetadata?.admin ?? false;
+  if (!isAdmin) {
+    throw new Error("Admin only");
+  }
+}
