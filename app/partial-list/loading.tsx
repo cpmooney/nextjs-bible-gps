@@ -3,7 +3,7 @@ import { Loader } from "app/components/loader-component";
 export default function Loading() {
     return (
       <main className="text-center">  
-        <Loader />;
+        <Loader />
       </main>
     )
   }

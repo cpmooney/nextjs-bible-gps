@@ -1,11 +1,12 @@
 "use server";
 
-import { Citation } from "@/models/citation";
-import { currentUser } from "@clerk/nextjs";
-import { invokeDeleteCardAction } from "src/server/db-delete-citation";
-import { invokeDeletePartialCardAction } from "src/server/db-delete-partial-citation";
-import { invokeDbLoadAllPartialCitationAction } from "src/server/db-load-all-partial-citations";
-import { invokeDbLoadCitationAction } from "src/server/db-load-citation";
+import {Citation} from "@/models/citation";
+import {currentUser} from "@clerk/nextjs";
+import {User} from "@clerk/nextjs/server";
+import {invokeDeleteCardAction} from "src/server/db-delete-citation";
+import {invokeDeletePartialCardAction} from "src/server/db-delete-partial-citation";
+import {invokeDbLoadAllPartialCitationAction} from "src/server/db-load-all-partial-citations";
+import {invokeDbLoadCitationAction} from "src/server/db-load-citation";
 import {
   SaveChangedScoresRequest,
   invokeDbSaveChangedAction,
@@ -14,12 +15,9 @@ import {
   SavePartialCitationRequest,
   invokeDbSavePartialCitationAction,
 } from "src/server/db-save-partial-citation";
-import { invokeDbUpdateCitationAction } from "src/server/db-update-citation";
+import {invokeDbUpdateCitationAction} from "src/server/db-update-citation";
 
 const demoUser = "demo-user";
-const useDemoForAllActions = false;
-
-// TODO: Check security on these
 
 export const deleteCard = async (id: number) => {
   const userId = await guaranteeUserId({});
@@ -63,10 +61,22 @@ export const guaranteeUserId = async ({
 }): Promise<string> => {
   const user = await currentUser();
   if (!user) {
-    if (useDemo || useDemoForAllActions)  {
-      return demoUser;
-    }
-    throw new Error("No user logged in");
+    return utilizeDemoUserIfNoneAndAllowed(useDemo ?? false);
+  }
+  return resolveAdminToDemo(user);
+};
+
+const utilizeDemoUserIfNoneAndAllowed = (useDemo: boolean) => {
+  if (useDemo) {
+    return demoUser;
+  }
+  throw new Error("No user logged in");
+};
+
+const resolveAdminToDemo = (user: User) => {
+  if (user.privateMetadata?.admin) {
+    console.log("!! Admin !!");
+    return demoUser;
   }
   return user.id;
 };
