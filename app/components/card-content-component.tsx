@@ -1,11 +1,11 @@
 "use client";
-import {Citation} from "@/models/citation";
-import {buildFullCitation} from "@/utilities/additional-citation-methods";
-import {PlusCircleIcon} from "@heroicons/react/24/outline";
-import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
+import { Citation } from "@/models/citation";
+import { buildFullCitation } from "@/utilities/additional-citation-methods";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import CardAnswerComponent from "./card-answer-component";
-import {useDeckStateContext} from "./providers/deck-state-provider";
+import { useDeckStateContext } from "./providers/deck-state-provider";
 
 interface CardContentComponentProps {
   showingAnswer: boolean;
@@ -21,12 +21,20 @@ export default function CardContentComponent({
     router.push("/edit/0");
   };
 
-  const {obtainCurrentCard, userHasNoCards} = useDeckStateContext();
+  const { obtainCurrentCard, userHasNoCards } = useDeckStateContext();
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
 
   useEffect(() => {
     setCurrentCard(obtainCurrentCard());
   }, [obtainCurrentCard]);
+
+  const fragmentTextSize = useMemo(() => {
+    const fragmentLength = currentCard?.fragment?.length  ?? 0;
+    if (fragmentLength <= 53) {
+      return "text-2xl";
+    }
+    return "text-xl";
+  }, [currentCard]);
 
   const fullCitation = currentCard ? buildFullCitation(currentCard) : "";
   const fragment = currentCard?.fragment ?? "/";
@@ -41,7 +49,7 @@ export default function CardContentComponent({
 
   return (
     <>
-      <h2 className="text-center text-2xl h-16 mb-2">
+      <h2 className={`text-center ${fragmentTextSize} h-16 mb-2`}>
         {fragmentPieces[0]}
         <br />
         {fragmentPieces[1]}
