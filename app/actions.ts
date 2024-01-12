@@ -5,8 +5,9 @@ import {currentUser} from "@clerk/nextjs";
 import {User} from "@clerk/nextjs/server";
 import {invokeDeleteCardAction} from "src/server/db-delete-citation";
 import {invokeDeletePartialCardAction} from "src/server/db-delete-partial-citation";
+import {invokeDbImportAllAction} from "src/server/db-import-all-rows";
 import {invokeDbLoadAllPartialCitationAction} from "src/server/db-load-all-partial-citations";
-import { invokeDbLoadAllAction } from "src/server/db-load-all-rows";
+import {invokeDbLoadAllAction} from "src/server/db-load-all-rows";
 import {invokeDbLoadCitationAction} from "src/server/db-load-citation";
 import {
   SaveChangedScoresRequest,
@@ -22,10 +23,16 @@ import TSV from "tsv";
 const demoUser = "demo-user";
 
 export const exportAllCards = async () => {
-  const userId = await guaranteeUserId({ useDemo: true });
+  const userId = await guaranteeUserId({useDemo: true});
   const allCitations = await invokeDbLoadAllAction(userId);
   return TSV.stringify(allCitations);
-}
+};
+
+export const importAllCards = async (tsv: string) => {
+  const userId = await guaranteeUserId({useDemo: true});
+  const allCitations = TSV.parse(tsv);
+  await invokeDbImportAllAction(userId, allCitations);
+};
 
 export const deleteCard = async (id: number) => {
   const userId = await guaranteeUserId({});
@@ -95,4 +102,4 @@ const guranteeAdminOnly = async () => {
   if (!isAdmin) {
     throw new Error("Admin only");
   }
-}
+};
