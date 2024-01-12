@@ -18,19 +18,21 @@ export default function CardListPage() {
     : undefined;
 
   const cardsByBook: OrderedCardsByBook = obtainCardsByBook();
-  return cardsByBook.map(({ book, cards }) => {
-    return (
-      <div>
-        <AdminOnly>
-          <ExportButton />
-        </AdminOnly>
-        <Book
-          key={toKebabCase(book)}
-          book={book}
-          citations={cards}
-          active={book == citationToActivate?.book}
-        />
-      </div>
-    );
-  });
+  return (
+    <div>
+      <AdminOnly>
+        <ExportButton />
+      </AdminOnly>
+      {cardsByBook.map(({ book, cards }) => {
+        return (
+          <Book
+            key={toKebabCase(book)}
+            book={book}
+            citations={cards}
+            active={book == citationToActivate?.book}
+          />
+        );
+      })}
+    </div>
+  );
 }
