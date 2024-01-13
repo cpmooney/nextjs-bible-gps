@@ -15,16 +15,14 @@ export default function ExportImportButton() {
   };
 
   return (
-    <div className="card w-96 bg-base-100 shadow-xl mt-4 mb-4">
-      <div className="card-actions">
+    <div>
         <button
           className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2"
           onClick={onExportClick}
         >
           <ArrowsUpDownIcon className="w-6" />
-          Export Import
+          Export
         </button>
-      </div>
       <ExportImportModal content={content} />
     </div>
   );

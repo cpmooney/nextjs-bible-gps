@@ -3,7 +3,6 @@
 import {Citation} from "@/models/citation";
 import {OrderedCardsByBook} from "@/utilities/card-by-book-builder";
 import {toKebabCase} from "@/utilities/misc";
-import ExportImportButton from "app/components/export-import/export-import-button";
 import {useDeckStateContext} from "app/components/providers/deck-state-provider";
 import {useSearchParams} from "next/navigation";
 import {Book} from "./components/book";
@@ -19,7 +18,6 @@ export default function CardListPage() {
   const cardsByBook: OrderedCardsByBook = obtainCardsByBook();
   return (
     <div>
-      <ExportImportButton />
       {cardsByBook.map(({book, cards}) => {
         return (
           <Book
