@@ -1,6 +1,7 @@
 "use server";
 
 import {Citation} from "@/models/citation";
+import { deserialize, serialize } from "@/utilities/serialize";
 import {currentUser} from "@clerk/nextjs";
 import {User} from "@clerk/nextjs/server";
 import {invokeDeleteCardAction} from "src/server/db-delete-citation";
@@ -18,19 +19,18 @@ import {
   invokeDbSavePartialCitationAction,
 } from "src/server/db-save-partial-citation";
 import {invokeDbUpdateCitationAction} from "src/server/db-update-citation";
-import TSV from "tsv";
 
 const demoUser = "demo-user";
 
 export const exportAllCards = async () => {
   const userId = await guaranteeUserId({useDemo: true});
   const allCitations = await invokeDbLoadAllAction(userId);
-  return TSV.stringify(allCitations);
+  return serialize(allCitations);
 };
 
 export const importAllCards = async (tsv: string) => {
   const userId = await guaranteeUserId({useDemo: true});
-  const allCitations = TSV.parse(tsv);
+  const allCitations = deserialize(tsv);
   await invokeDbImportAllAction(userId, allCitations);
 };
 
