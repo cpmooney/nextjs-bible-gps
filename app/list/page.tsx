@@ -1,17 +1,16 @@
 "use client";
 
-import { OrderedCardsByBook } from "@/utilities/card-by-book-builder";
-import { toKebabCase } from "@/utilities/misc";
-import { useDeckStateContext } from "app/components/providers/deck-state-provider";
-import { useSearchParams } from "next/navigation";
-import { Book } from "./components/book";
-import { Citation } from "@/models/citation";
-import AdminOnly from "app/components/admin-only";
-import ExportButton from "app/components/export";
+import {Citation} from "@/models/citation";
+import {OrderedCardsByBook} from "@/utilities/card-by-book-builder";
+import {toKebabCase} from "@/utilities/misc";
+import ExportImportButton from "app/components/export-import/export-import-button";
+import {useDeckStateContext} from "app/components/providers/deck-state-provider";
+import {useSearchParams} from "next/navigation";
+import {Book} from "./components/book";
 
 export default function CardListPage() {
   const searchParams = useSearchParams();
-  const { obtainCardsByBook, obtainCardById } = useDeckStateContext();
+  const {obtainCardsByBook, obtainCardById} = useDeckStateContext();
   const id = searchParams?.get("id");
   const citationToActivate: Citation | undefined = id
     ? obtainCardById(parseInt(id))
@@ -20,10 +19,8 @@ export default function CardListPage() {
   const cardsByBook: OrderedCardsByBook = obtainCardsByBook();
   return (
     <div>
-      <AdminOnly>
-        <ExportButton />
-      </AdminOnly>
-      {cardsByBook.map(({ book, cards }) => {
+      <ExportImportButton />
+      {cardsByBook.map(({book, cards}) => {
         return (
           <Book
             key={toKebabCase(book)}
