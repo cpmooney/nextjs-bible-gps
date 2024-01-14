@@ -49,7 +49,7 @@ export default function CardEditForm({
       suffix,
       fragment,
       entire,
-      score: 0,
+      score,
       tags: [],
       id,
     };
