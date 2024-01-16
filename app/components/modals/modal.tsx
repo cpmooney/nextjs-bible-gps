@@ -1,16 +1,31 @@
+"use client";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { useEffect, useRef } from "react";
 
 interface ModalProps {
   contents: JSX.Element;
   name: string;
+  onShow?: () => void;
 }
 
 export const Modal = (props: ModalProps) => {
-  const { name } = props;
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const { name, onShow } = props;
   const modalId = makeModalId(name);
   const closeMe = () => closeModal(name);
+  useEffect(() => {
+    console.log(dialogRef.current?.id)
+    dialogRef.current?.addEventListener("show", (event) => {
+      console.log('dude')
+      if (event instanceof CustomEvent) {
+          if (onShow) {
+            onShow();
+          }
+      }
+    });
+  }, []);
   return (
-    <dialog id={modalId} className="modal">
+    <dialog id={modalId} className="modal" ref={dialogRef}>
       <div className="modal-box">
         <button
           className="btn btn-sm btn-circle absolute right-2 top-2"

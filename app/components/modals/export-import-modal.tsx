@@ -1,13 +1,18 @@
 "use client";
 
-import {importAllCards} from "app/actions";
-import {Modal, closeModal} from "../modal";
+import { exportAllCards, importAllCards } from "app/actions";
+import { Modal, closeModal, showModal } from "./modal";
+import { useState } from "react";
 
-interface Props {
-  content: string;
-}
+// TODO: Gather modals to one place, import efficiency of referencing
+export default function ExportImportModal() {
+  const [content, setContent] = useState("");
 
-export default function ExportImportModal({content}: Props) {
+  const onExportClick = async () => {
+    setContent(await exportAllCards());
+    showModal("export_import");
+  };
+
   const closeMe = () => closeModal("export_import");
   const saveAndClose = async () => {
     const updatedContent = getInputValue("export_import_content_input");
@@ -34,8 +39,8 @@ export default function ExportImportModal({content}: Props) {
             Import
           </button>
         </div>
-      </div>
-    ),
+      </div>),
+    onShow: onExportClick,
   });
 }
 

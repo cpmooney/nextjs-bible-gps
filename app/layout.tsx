@@ -4,6 +4,7 @@ import "../styles/globals.css";
 import { ImageBackground } from "./components/image-background";
 import DeckProvider from "./components/providers/deck-provider";
 import { SideNav } from "./components/side-nav/side-nav";
+import { ModalCollection } from "./components/modals/modals";
 
 const DeckPageWithBackground = () => {
   return (
@@ -26,6 +27,7 @@ const Layout = ({ children }: LayoutProps) => {
           <ClerkProvider>
             <SideNav />
             <DeckProvider>{children}</DeckProvider>
+            <ModalCollection />
           </ClerkProvider>
         </div>
       </body>
