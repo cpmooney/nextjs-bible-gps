@@ -23,7 +23,7 @@ export const Modal = (props: ModalProps) => {
           }
       }
     });
-  }, []);
+  }, [onShow]);
   return (
     <dialog id={modalId} className="modal" ref={dialogRef}>
       <div className="modal-box">

@@ -53,7 +53,7 @@ export default function CardEditForm({
       tags: [],
       id,
     };
-  }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id]);
+  }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id, score]);
 
   const fullCitation = useMemo(() => {
     return buildFullCitation({ book, chapter, firstVerse, suffix });

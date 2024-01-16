@@ -1,15 +1,21 @@
 "use client";
 import Link from "next/link";
 import { showModal } from "../modals/modal";
+import { FunctionComponent } from "react";
+
+interface IconProps {
+  // TODO: Why does string | null not work here?
+  className?: any;
+}
 
 interface Props {
-  children: React.ReactNode;
   title: string;
   url?: string;
   modal?: string;
+  Icon: FunctionComponent<IconProps>;
 }
 
-export function Entry({ children, title, url, modal}: Props) {
+export function Entry({ title, url, modal, Icon }: Props) {
   const onClick = () => {
     // TODO: There must be a more react-y way to accomplish this
     const drawerInput = document.getElementById(
@@ -26,7 +32,7 @@ export function Entry({ children, title, url, modal}: Props) {
   return (
     <li onClick={onClick}>
       <LinkElement url={url}>
-        {children}
+        <Icon className="w-6" />
         {title}
       </LinkElement>
     </li>
@@ -42,5 +48,5 @@ const LinkElement = ({ children, url }: LinkElementProps) => {
   if (url) {
     return <Link href={url}>{children}</Link>;
   }
-  return <>{children}</>;
+  return <div>{children}</div>;
 };

@@ -26,8 +26,10 @@ const Layout = ({ children }: LayoutProps) => {
         <div className="ml-5 mt-5">
           <ClerkProvider>
             <SideNav />
-            <DeckProvider>{children}</DeckProvider>
-            <ModalCollection />
+            <DeckProvider>
+              {children}
+              <ModalCollection />
+            </DeckProvider>
           </ClerkProvider>
         </div>
       </body>

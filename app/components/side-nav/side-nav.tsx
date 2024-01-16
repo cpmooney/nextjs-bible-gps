@@ -1,3 +1,4 @@
+"use client";
 import {
   ArrowsUpDownIcon,
   Bars3Icon,
@@ -9,17 +10,17 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Entry } from "./entry";
-import { SignInButton, SignOutButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import ExportImportModal from "../modals/export-import-modal";
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 export function SideNav() {
   return (
     <div className="drawer z-50">
-      <input
-        id="my-drawer"
-        type="checkbox"
-        className="drawer-toggle"
-      />
+      <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
         <label
           htmlFor="my-drawer"
@@ -35,39 +36,41 @@ export function SideNav() {
           className="drawer-overlay"
         ></label>
         <ul className="menu bg-base-200 w-56">
-          <Entry title="Home" url="/">
-            <HomeIcon className="w-6" />
-          </Entry>
-          <Entry title="Info" modal="full_citation">
-            <InformationCircleIcon className="w-6" />
-          </Entry>
-          <SignedIn>
-          <Entry title="List" url="/list">
-            <ListBulletIcon className="w-6" />
-          </Entry>
-          <Entry title="Add New" url="/partial-list">
-            <PlusCircleIcon className="w-6" />
-          </Entry>
-          <Entry title="Export" modal="export_import">
-            <ArrowsUpDownIcon className="w-6" />
-          </Entry>
-          <Entry title="Quick Fragment" modal="create_partial_citation">
-            <LightBulbIcon className="w-6" />
-          </Entry>
-            <UserButton />
-            <SignOutButton>
-              <Entry title="Sign Out">
-                <FaceSmileIcon className="w-6" />
-              </Entry>
-            </SignOutButton>
-          </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <Entry title="Sign In">
-                <FaceSmileIcon className="w-6" />
-              </Entry>
+              <li>
+                <div>
+                  <FaceSmileIcon className="w-8" />
+                  Sign In
+                </div>
+              </li>
             </SignInButton>
           </SignedOut>
+          <SignedIn>
+            <li>
+              <UserButton />
+            </li>
+          </SignedIn>
+          <Entry title="Home" url="/" Icon={HomeIcon} />
+          <Entry
+            title="Info"
+            modal="full_citation"
+            Icon={InformationCircleIcon}
+          />
+          <SignedIn>
+            <Entry title="List" url="/list" Icon={ListBulletIcon} />
+            <Entry title="Add New" url="/partial-list" Icon={PlusCircleIcon} />
+            <Entry
+              title="Export"
+              modal="export_import"
+              Icon={ArrowsUpDownIcon}
+            />
+            <Entry
+              title="Quick Fragment"
+              modal="create_partial_citation"
+              Icon={LightBulbIcon}
+            />
+          </SignedIn>
         </ul>
       </div>
     </div>
