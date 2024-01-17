@@ -5,25 +5,14 @@ import { useEffect, useRef } from "react";
 interface ModalProps {
   contents: JSX.Element;
   name: string;
-  onShow?: () => void;
 }
 
 export const Modal = (props: ModalProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const { name, onShow } = props;
+  const { name } = props;
   const modalId = makeModalId(name);
   const closeMe = () => closeModal(name);
-  useEffect(() => {
-    console.log(dialogRef.current?.id)
-    dialogRef.current?.addEventListener("show", (event) => {
-      console.log('dude')
-      if (event instanceof CustomEvent) {
-          if (onShow) {
-            onShow();
-          }
-      }
-    });
-  }, [onShow]);
+
   return (
     <dialog id={modalId} className="modal" ref={dialogRef}>
       <div className="modal-box">

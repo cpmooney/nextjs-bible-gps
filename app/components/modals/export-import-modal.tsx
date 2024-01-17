@@ -1,17 +1,13 @@
 "use client";
 
-import { exportAllCards, importAllCards } from "app/actions";
-import { Modal, closeModal, showModal } from "./modal";
-import { useState } from "react";
+import { importAllCards } from "app/actions";
+import { useDeckStateContext } from "../providers/deck-state-provider";
+import { Modal, closeModal } from "./modal";
+import { serialize } from "@/utilities/serialize";
 
 // TODO: Gather modals to one place, import efficiency of referencing
 export default function ExportImportModal() {
-  const [content, setContent] = useState("");
-
-  const onExportClick = async () => {
-    setContent(await exportAllCards());
-    showModal("export_import");
-  };
+  const { obtainAllCitations } = useDeckStateContext();
 
   const closeMe = () => closeModal("export_import");
   const saveAndClose = async () => {
@@ -28,7 +24,7 @@ export default function ExportImportModal() {
           <textarea
             id="export_import_content_input"
             className="textarea h-32 textarea-bordered w-full max-w-xs"
-            defaultValue={content}
+            defaultValue={serialize(obtainAllCitations())}
           ></textarea>
         </div>
         <div className="modal-action">
@@ -39,8 +35,8 @@ export default function ExportImportModal() {
             Import
           </button>
         </div>
-      </div>),
-    onShow: onExportClick,
+      </div>
+    ),
   });
 }
 

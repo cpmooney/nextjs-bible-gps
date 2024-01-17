@@ -25,6 +25,7 @@ export function Entry({ title, url, modal, Icon }: Props) {
     }
     drawerInput.checked = false;
     if (modal) {
+      window.postMessage({ name: modal, action: "show" }, "*");
       showModal(modal);
     }
   };
