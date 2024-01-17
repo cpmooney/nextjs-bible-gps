@@ -1,14 +1,13 @@
 "use server";
 
 import {Citation} from "@/models/citation";
-import { deserialize, serialize } from "@/utilities/serialize";
+import { deserialize } from "@/utilities/serialize";
 import {currentUser} from "@clerk/nextjs";
 import {User} from "@clerk/nextjs/server";
 import {invokeDeleteCardAction} from "src/server/db-delete-citation";
 import {invokeDeletePartialCardAction} from "src/server/db-delete-partial-citation";
 import {invokeDbImportAllAction} from "src/server/db-import-all-rows";
 import {invokeDbLoadAllPartialCitationAction} from "src/server/db-load-all-partial-citations";
-import {invokeDbLoadAllAction} from "src/server/db-load-all-rows";
 import {invokeDbLoadCitationAction} from "src/server/db-load-citation";
 import {
   SaveChangedScoresRequest,
@@ -21,12 +20,6 @@ import {
 import {invokeDbUpdateCitationAction} from "src/server/db-update-citation";
 
 const demoUser = "demo-user";
-
-export const exportAllCards = async () => {
-  const userId = await guaranteeUserId({useDemo: true});
-  const allCitations = await invokeDbLoadAllAction(userId);
-  return serialize(allCitations);
-};
 
 export const importAllCards = async (tsv: string) => {
   const userId = await guaranteeUserId({useDemo: true});

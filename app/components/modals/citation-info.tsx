@@ -1,3 +1,4 @@
+"use client";
 import {
   BookOpenIcon,
   PencilIcon,
@@ -7,7 +8,7 @@ import {
   buildFullCitation,
 } from "src/utilities/additional-citation-methods";
 import { Modal } from "./modal";
-import { useDeckStateContext } from "./providers/deck-state-provider";
+import { useDeckStateContext } from "../providers/deck-state-provider";
 import { useEffect, useState } from "react";
 import { Citation } from "@/models/citation";
 import { useRouter } from "next/navigation";

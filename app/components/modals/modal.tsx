@@ -1,4 +1,6 @@
+"use client";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { useEffect, useRef } from "react";
 
 interface ModalProps {
   contents: JSX.Element;
@@ -6,11 +8,13 @@ interface ModalProps {
 }
 
 export const Modal = (props: ModalProps) => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const { name } = props;
   const modalId = makeModalId(name);
   const closeMe = () => closeModal(name);
+
   return (
-    <dialog id={modalId} className="modal">
+    <dialog id={modalId} className="modal" ref={dialogRef}>
       <div className="modal-box">
         <button
           className="btn btn-sm btn-circle absolute right-2 top-2"

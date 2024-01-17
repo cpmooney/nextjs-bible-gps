@@ -1,3 +1,4 @@
+"use client";
 import {CheckCircleIcon} from "@heroicons/react/24/outline";
 import {savePartialCards} from "app/actions";
 import {Modal, closeModal} from "./modal";
