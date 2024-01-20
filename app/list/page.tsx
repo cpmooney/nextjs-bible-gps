@@ -20,7 +20,7 @@ export default function CardListPage() {
 
   useEffect(() => {
     setNumberOfCards(obtainAllCitations().length);
-  }, [obtainAllCitations()]);
+  }, [obtainAllCitations]);
 
   const cardsByBook: OrderedCardsByBook = obtainCardsByBook();
   return (

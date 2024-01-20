@@ -1,6 +1,7 @@
 import LetsGo from "./components/lets-go";
 
 export default function GettingStarted() {
+  // TODO: Find a better way to manage content so we don't need to worry about escaping, rendering
   return (
     <div className="card bg-base-100 shadow-xl">
       <div className="card-body">
@@ -9,14 +10,14 @@ export default function GettingStarted() {
           We are PUMPED that you are choosing us to partner with you on your
           journey of finding out who you are as a son or daughter of the Living
           God (Rom 8:14) and the mighty works He has given for you to do in the
-          earth (Eph 2:10). Brother or sister, all creation is <b>groaning</b>,
-          waiting for YOU to understand who YOU really are, according to God's
+          earth (Eph 2:10). Brother or sister, all creation is GROANING,
+          waiting for YOU to understand who YOU really are, according to God&apos;s
           awesome word (Rom 8:19) and how much God loves you (Eph 3:16-19).
         </p>
         <p className="mb-8">
-          <b className="pr-2">Let's Go!</b>
+          <b className="pr-2">Let&apos;s Go!</b>
           You will start off with a collection of common verses. From there
-          you're on your own -- feel free to delete verses, modify the fragments
+          you&apos;re on your own -- feel free to delete verses, modify the fragments
           and make them more personal for you and definitely DEFINITELY plan to
           start adding new verses in the next few days.
         </p>
@@ -36,16 +37,16 @@ export default function GettingStarted() {
             </li>
           </ol>
           When you see a fragment you have never seen before, of course you
-          won't know the citation. That's great! Just reveal the actual citation
+          won&apos;t know the citation. That&apos;s great! Just reveal the actual citation
           and leave it up for a few moments, meditating on it and trying to
-          memorize it. When you're done click the Red button (yeah, you got it
+          memorize it. When you&apos;re done click the Red button (yeah, you got it
           wrong).
         </p>
         <p className="mb-8">
           <b className="pr-2">Be Honest!</b>
           Someday we will have better tools incorporated into the app to help
           you memorize and potentially validate your answers, but for now
-          everything is self reported. If you get a citation wrong, don't cry,
+          everything is self reported. If you get a citation wrong, don&apos;t cry,
           just take a few moments to reflect and correct your memory and then
           click the Red button. Every correct answer will bump the score for
           that card up 1 point and every incorrect answer will drop 10 points
@@ -54,13 +55,13 @@ export default function GettingStarted() {
           the app into making the score go up without knowing the actual answer,
           you are only cheating yourself in the long run. The app is
           intentionally gamified and seeing your score go up is supposed to be
-          fun and get you excited but it's only as meaningful as you make it.
+          fun and get you excited but it&apos;s only as meaningful as you make it.
         </p>
         <p className="mb-8">
           <b className="pr-2">Heads Up!</b>
-          Because our algorithm is designed to show you verses you don't know
+          Because our algorithm is designed to show you verses you don&apos;t know
           well more frequently, you will initially see the same verses multiple
-          times in a row. That's how it's supposed to work! Once you get the
+          times in a row. That&apos;s how it&apos;s supposed to work! Once you get the
           first few down, it will add new cards to the deck and you will start
           seeing more interesting decks.  Even later you may still see the same
           card show up multiple times in a row.  Under the hood the decks are
