@@ -22,7 +22,11 @@ export const invokeDbLoadAllAction = async (userId: string) => {
     };
   }) as Citation[];
 
-  debugLog("info", `First record: ${JSON.stringify(citations[0])}`);
+  if (citations.length > 0) {
+    debugLog("info", `First record: ${JSON.stringify(citations[0])}`);
+  } else {
+    debugLog("info", "No records")
+  }
 
   return citations;
 };
