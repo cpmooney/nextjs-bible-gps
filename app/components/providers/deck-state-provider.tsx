@@ -3,6 +3,7 @@ import {
   OrderedCardsByBook,
   buildCardsByBook,
 } from "@/utilities/card-by-book-builder";
+import { filtered } from "@/utilities/filtering";
 import {
   ScoreChange,
   obtainChangedScoreRequest,
@@ -93,7 +94,9 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
 
   const guaranteeDrawDeck = () => {
     if (drawDeck.current.length === 0) {
-      drawDeck.current = createDrawDeck(props.citations);
+      drawDeck.current = createDrawDeck(filtered(props.citations, {
+        book: "Hebrews"
+      }));
     }
   };
 

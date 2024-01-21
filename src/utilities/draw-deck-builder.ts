@@ -17,7 +17,7 @@ interface WrappedIndices {
 }
 
 // TODO: Take lastReviewed into account
-export const createDrawDeck = (citations: Card[]): WrappedCard[] => 
+export const createDrawDeck = (citations: Card[]): WrappedCard[] =>
   multiplyCardsByScore(chooseDrawDeck(citations));
 
 export const chooseDrawDeck = (citations: Card[]): WrappedCard[] => {
