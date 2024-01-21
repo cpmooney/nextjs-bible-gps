@@ -15,6 +15,9 @@ export default function ExportImportModal() {
     importAllCards(updatedContent);
     closeMe();
   };
+  const notYetImplemented = () => {
+    alert("That feature is not yet implemented!");
+  }
   return Modal({
     name: "export_import",
     contents: (
@@ -30,7 +33,7 @@ export default function ExportImportModal() {
         <div className="modal-action">
           <button
             className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2"
-            onClick={saveAndClose}
+            onClick={notYetImplemented}
           >
             Import
           </button>

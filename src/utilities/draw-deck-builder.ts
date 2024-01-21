@@ -1,4 +1,4 @@
-import {randomInRange} from "./misc";
+import { randomInRange } from "./misc";
 
 interface Card {
   score: number;
@@ -17,21 +17,41 @@ interface WrappedIndices {
 }
 
 // TODO: Take lastReviewed into account
+export const createDrawDeck = (citations: Card[]): WrappedCard[] => 
+  multiplyCardsByScore(chooseDrawDeck(citations));
 
-export const createDrawDeck = (citations: Card[]): WrappedCard[] => {
+export const chooseDrawDeck = (citations: Card[]): WrappedCard[] => {
   const sortedNonZeroScoreCardArrays = sortNonZeroScoreCards(citations);
   const oneZeroCard = citations.find((citation) => citation.score === 0);
   const nonZeroDrawDeck = drawDeckByIndices(
     sortedNonZeroScoreCardArrays.length
-  ).map(({group, index}) => {
-    return {card: sortedNonZeroScoreCardArrays[index], group};
+  ).map(({ group, index }) => {
+    return { card: sortedNonZeroScoreCardArrays[index], group };
   });
   if (oneZeroCard) {
-    nonZeroDrawDeck.push({card: oneZeroCard, group: 0});
-    nonZeroDrawDeck.push({card: oneZeroCard, group: 0});
-    nonZeroDrawDeck.push({card: oneZeroCard, group: 0});
+    nonZeroDrawDeck.push({ card: oneZeroCard, group: 0 });
   }
   return nonZeroDrawDeck;
+};
+
+export const multiplyCardsByScore = (cards: WrappedCard[]): WrappedCard[] => {
+  const multipliedCards: WrappedCard[] = [];
+
+  for (const card of cards) {
+    let copies = 1; // default number of copies
+
+    if (card.card.score === 0) {
+      copies = 5;
+    } else if (card.card.score < 10) {
+      copies = 3;
+    }
+
+    for (let i = 0; i < copies; i++) {
+      multipliedCards.push(card);
+    }
+  }
+
+  return multipliedCards;
 };
 
 const sortNonZeroScoreCards = (citations: Card[]): Card[] =>
@@ -55,7 +75,7 @@ const drawDeckByIndices = (length: number): WrappedIndices[] => {
   const numberOfGroups = computeNumberOfGroups(length);
   if (numberOfGroups === 1) {
     return arrayOfLength(length).map((index) => {
-      return {index, group: 1};
+      return { index, group: 1 };
     });
   }
   const sizeOfLargestGroup = Math.floor(length / numberOfGroups);
@@ -106,7 +126,7 @@ const buildGroup = (
     );
   }
   return Array.from(result).map((index) => {
-    return {index, group: group + 1};
+    return { index, group: group + 1 };
   });
 };
 

@@ -2,6 +2,7 @@
 import {
   ArrowsUpDownIcon,
   Bars3Icon,
+  BookmarkSquareIcon,
   FaceSmileIcon,
   HomeIcon,
   InformationCircleIcon,
@@ -69,6 +70,16 @@ export function SideNav() {
               title="Quick Fragment"
               modal="create_partial_citation"
               Icon={LightBulbIcon}
+            />
+            <Entry
+              title="Getting Started"
+              url="/getting-started"
+              Icon={BookmarkSquareIcon}
+            />
+            <Entry
+              title="About"
+              url="/about"
+              Icon={BookmarkSquareIcon}
             />
           </SignedIn>
         </ul>

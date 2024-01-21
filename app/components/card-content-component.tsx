@@ -17,8 +17,8 @@ export default function CardContentComponent({
   showAnswer,
 }: CardContentComponentProps) {
   const router = useRouter();
-  const editCard = () => {
-    router.push("/edit/0");
+  const getStarted = () => {
+    router.push("/getting-started");
   };
 
   const { obtainCurrentCard, userHasNoCards } = useDeckStateContext();
@@ -42,10 +42,10 @@ export default function CardContentComponent({
 
   let fragmentPieces = fragment.split("/");
   if (userHasNoCards()) {
-    fragmentPieces = ["Click to start", "adding verses!"];
+    fragmentPieces = ["Click to start", "your journey!"];
   }
 
-  const bigButtonClickHandler = userHasNoCards() ? editCard : showAnswer;
+  const bigButtonClickHandler = userHasNoCards() ? getStarted : showAnswer;
 
   return (
     <>
