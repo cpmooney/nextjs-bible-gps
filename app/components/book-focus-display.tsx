@@ -1,20 +1,19 @@
 "use client";
 
+import {Filter} from "@/utilities/filtering";
 import {useEffect, useState} from "react";
 import {useDeckStateContext} from "./providers/deck-state-provider";
 
 export default function BookFocusDisplay() {
   const {obtainFilter} = useDeckStateContext();
-  const [bookFocus, setBookFocus] = useState<string | undefined>(undefined);
+  const [bookFocus, setBookFocus] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(`obtainFilter(): ${JSON.stringify(obtainFilter())}`);
-    if (obtainFilter()?.kind === "book") {
-      if (obtainFilter()?.value === "none") {
-        setBookFocus(undefined);
-      } else {
-        setBookFocus(obtainFilter()?.value);
-      }
+    const filter: Filter = obtainFilter();
+    if (filter.kind === "book" && filter.value !== "none") {
+      setBookFocus(filter.value);
+    } else {
+      setBookFocus(null);
     }
   }, [obtainFilter]);
 

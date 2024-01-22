@@ -3,7 +3,7 @@ import {
   OrderedCardsByBook,
   buildCardsByBook,
 } from "@/utilities/card-by-book-builder";
-import {Filter, filtered} from "@/utilities/filtering";
+import {Filter, emptyFilter, filtered} from "@/utilities/filtering";
 import {
   ScoreChange,
   obtainChangedScoreRequest,
@@ -39,7 +39,7 @@ export interface DeckStateContext {
   updateCitation: (citation: Citation) => void;
   userHasNoCards: () => boolean;
   setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
-  obtainFilter: () => Filter | undefined;
+  obtainFilter: () => Filter;
   resetDeck: (filter: Filter) => void;
 }
 
@@ -69,7 +69,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const drawDeck = useRef<WrappedCard[]>([]);
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
   const [currentCardGroup, setCurrentCardGroup] = useState<number | null>(null);
-  const [filter, setFilter] = useState<Filter | undefined>(undefined);
+  const [filter, setFilter] = useState<Filter>(emptyFilter());
   const [triggerDrawDeck, setTriggerDrawDeck] = useState<boolean>(false);
 
   const userHasNoCards = useCallback(
