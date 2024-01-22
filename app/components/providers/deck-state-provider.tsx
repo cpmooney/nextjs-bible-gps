@@ -3,7 +3,7 @@ import {
   OrderedCardsByBook,
   buildCardsByBook,
 } from "@/utilities/card-by-book-builder";
-import { Filter, filtered } from "@/utilities/filtering";
+import {Filter, filtered} from "@/utilities/filtering";
 import {
   ScoreChange,
   obtainChangedScoreRequest,
@@ -14,6 +14,7 @@ import {
   Dispatch,
   SetStateAction,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -71,14 +72,10 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const [filter, setFilter] = useState<Filter | undefined>(undefined);
   const [triggerDrawDeck, setTriggerDrawDeck] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (triggerDrawDeck) {
-      drawCitation();
-      setTriggerDrawDeck(false);
-    }
-  }, [triggerDrawDeck]);
-
-  const userHasNoCards = () => props.allCards.length === 0;
+  const userHasNoCards = useCallback(
+    () => props.allCards.length === 0,
+    [props.allCards]
+  );
 
   const guaranteeCurrentCard = (): Citation => {
     if (!currentCard) {
@@ -92,7 +89,14 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     return currentCardGroup ?? -1;
   };
 
-  const drawCitation = (): Citation | undefined => {
+  const guaranteeDrawDeck = useCallback(() => {
+    if (drawDeck.current.length === 0) {
+      const filteredCards = filtered(props.citations, filter);
+      drawDeck.current = createDrawDeck(filteredCards);
+    }
+  }, [props.citations, filter]);
+
+  const drawCitation = useCallback((): Citation | undefined => {
     guaranteeDrawDeck();
     if (!userHasNoCards()) {
       const randomIndex = randomInRange(0, drawDeck.current.length - 1);
@@ -102,13 +106,14 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       setCurrentCardGroup(chosenWrappedCard.group); // TODO: Groups should no longer be needed
       return currentCitation;
     }
-  };
+  }, [userHasNoCards, guaranteeDrawDeck]);
 
-  const guaranteeDrawDeck = () => {
-    if (drawDeck.current.length === 0) {
-      drawDeck.current = createDrawDeck(filtered(props.citations, filter));
+  useEffect(() => {
+    if (triggerDrawDeck) {
+      drawCitation();
+      setTriggerDrawDeck(false);
     }
-  };
+  }, [triggerDrawDeck, drawCitation]);
 
   const syncScoresToDb = async (): Promise<void> => {
     setBankedScore(bankedScore + unbankedScore);
@@ -120,7 +125,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     setFilter(newFilter);
     drawDeck.current = [];
     setTriggerDrawDeck(true);
-  }
+  };
 
   const incrementCurrentCardScore = (): void =>
     recordScoreChange(
@@ -173,7 +178,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         setCurrentCard,
         userHasNoCards,
         obtainFilter: () => filter,
-        resetDeck
+        resetDeck,
       }}
     >
       {props.children}

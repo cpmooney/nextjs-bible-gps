@@ -8,8 +8,13 @@ export default function BookFocusDisplay() {
   const [bookFocus, setBookFocus] = useState<string | undefined>(undefined);
 
   useEffect(() => {
+    console.log(`obtainFilter(): ${JSON.stringify(obtainFilter())}`);
     if (obtainFilter()?.kind === "book") {
-      setBookFocus(obtainFilter()?.value);
+      if (obtainFilter()?.value === "none") {
+        setBookFocus(undefined);
+      } else {
+        setBookFocus(obtainFilter()?.value);
+      }
     }
   }, [obtainFilter]);
 
