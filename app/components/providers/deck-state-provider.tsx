@@ -3,7 +3,7 @@ import {
   OrderedCardsByBook,
   buildCardsByBook,
 } from "@/utilities/card-by-book-builder";
-import { filtered } from "@/utilities/filtering";
+import { Filter, filtered } from "@/utilities/filtering";
 import {
   ScoreChange,
   obtainChangedScoreRequest,
@@ -15,6 +15,7 @@ import {
   SetStateAction,
   createContext,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -35,8 +36,10 @@ export interface DeckStateContext {
   obtainCurrentCardGroup: () => number;
   obtainCardById: (id: number) => Citation;
   updateCitation: (citation: Citation) => void;
-  setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
   userHasNoCards: () => boolean;
+  setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
+  obtainFilter: () => Filter | undefined;
+  resetDeck: (filter: Filter) => void;
 }
 
 interface DeckStateProviderProps {
@@ -65,6 +68,15 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const drawDeck = useRef<WrappedCard[]>([]);
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
   const [currentCardGroup, setCurrentCardGroup] = useState<number | null>(null);
+  const [filter, setFilter] = useState<Filter | undefined>(undefined);
+  const [triggerDrawDeck, setTriggerDrawDeck] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (triggerDrawDeck) {
+      drawCitation();
+      setTriggerDrawDeck(false);
+    }
+  }, [triggerDrawDeck]);
 
   const userHasNoCards = () => props.allCards.length === 0;
 
@@ -94,9 +106,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
 
   const guaranteeDrawDeck = () => {
     if (drawDeck.current.length === 0) {
-      drawDeck.current = createDrawDeck(filtered(props.citations, {
-        book: "Hebrews"
-      }));
+      drawDeck.current = createDrawDeck(filtered(props.citations, filter));
     }
   };
 
@@ -105,6 +115,12 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     setUnbankedScore(0);
     saveChangedCards(obtainChangedScoreRequest());
   };
+
+  const resetDeck = (newFilter: Filter) => {
+    setFilter(newFilter);
+    drawDeck.current = [];
+    setTriggerDrawDeck(true);
+  }
 
   const incrementCurrentCardScore = (): void =>
     recordScoreChange(
@@ -156,6 +172,8 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         updateCitation,
         setCurrentCard,
         userHasNoCards,
+        obtainFilter: () => filter,
+        resetDeck
       }}
     >
       {props.children}

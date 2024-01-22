@@ -1,17 +1,16 @@
 import { Citation } from "@/models/citation";
 
-export interface Filter {
-    book?: string;
-    tag?: string;
-}
+export type Filter = {
+    kind: 'book' | 'tag',
+    value: string,
+};
 
 export const filtered = (citations: Citation[], filter?: Filter): Citation[] => {
-    const { book, tag } = filter || {};
-    if (book) {
-        return citations.filter((citation) => citation.book === book);
+    if (filter?.kind === 'book') {
+        return citations.filter((citation) => citation.book === filter.value);
     }
-    if (tag) {
-        return citations.filter((citation) => citation.tags.includes(tag));
+    if (filter?.kind === 'tag') {
+        return citations.filter((citation) => citation.tags.includes(filter.value));
     }
     return citations;
 }
