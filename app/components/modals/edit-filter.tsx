@@ -19,7 +19,7 @@ export const EditFilter = () => {
     contents: (
       <div>
         <div className="modal-box">
-          Sometimes when a book has a lot of citations in it it's best to focus
+          Sometimes when a book has a lot of citations in it, it is best to focus
           on memorizing just within that book.  Below are the books with the most
           cards.  Choose one to focus on that particular book.
           <br />
