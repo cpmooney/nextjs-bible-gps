@@ -35,6 +35,7 @@ export const EditFilter = () => {
           mostLoadedBooks(cardsByBook).map((loadedBook: LoadedBook) => {
             return (
               <button
+              key={loadedBook.book}
                 className="btn btn-btnPrimary mr-2 mt-2 mb-2"
                 onClick={declareFilterAndClose(loadedBook.book)}
               >
