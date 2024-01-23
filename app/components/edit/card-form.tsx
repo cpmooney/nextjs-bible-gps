@@ -15,6 +15,7 @@ import { FragmentEntry } from "./fragment-entry";
 import { NumberSelection } from "./number-selection";
 import { SuffixEntry } from "./suffix-entry";
 import { TextArea } from "./text-area";
+import { TagSelection } from "./tag-selection";
 
 interface CardEditFormProps {
   initialCard: Citation;
@@ -35,6 +36,7 @@ export default function CardEditForm({
   const [suffix, setSuffix] = useState<string>(initialCard.suffix);
   const [fragment, setFragment] = useState<string>(initialCard.fragment);
   const [entire, setEntire] = useState<string>(initialCard.entire);
+  const [tags, setTags] = useState<string[]>(initialCard.tags);
 
   const router = useRouter();
   const score = initialCard?.score;
@@ -112,6 +114,7 @@ export default function CardEditForm({
             <div className="w-16 mr-2 mt-2 mb-2">score {score}</div>
           </div>
         )}
+        <TagSelection initialTags={initialCard.tags} setTags={setTags} />
         <div className="card-actions">
           <button
             className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-green-400"
