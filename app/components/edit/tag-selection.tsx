@@ -1,27 +1,24 @@
-import { Dispatch, SetStateAction } from "react";
-import { useDeckStateContext } from "../providers/deck-state-provider";
-import Select, { InputActionMeta, MultiValue } from "react-select";
+import {ChangeEvent, Dispatch, SetStateAction} from "react";
+import {MultiSelect} from "react-multi-select-component";
+import {useDeckStateContext} from "../providers/deck-state-provider";
 
 interface Props {
   setTags: Dispatch<SetStateAction<string[]>>;
   initialTags: string[];
 }
 
-export const TagSelection = ({
-  setTags,
-  initialTags
-}: Props) => {
-  const { obtainTagList } = useDeckStateContext();
-  const onInputChange = (newValue: string[], actionMeta: InputActionMeta) => {
-    if (actionMeta.action === "input-change") {
-      setTags(newValue);
-    }
-  }
-  const options: string[] = obtainTagList().sort();
-  return (
-    <Select
-      options={options}
-      isMulti={true}
-      onChange={onInputChange}/>
-  );
+export const TagSelection = ({setTags, initialTags}: Props) => {
+  const {obtainTagList} = useDeckStateContext();
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const selectedTags = Array.from(event.target.selectedOptions, (option) => {
+      return option.value;
+    });
+    setTags(selectedTags);
+  };
+  const options = obtainTagList()
+    .sort()
+    .map((tag) => {
+      return {label: tag, value: tag};
+    });
+  return <MultiSelect options={options} value={initialTags} />;
 };
