@@ -8,15 +8,11 @@ import {
   InformationCircleIcon,
   LightBulbIcon,
   ListBulletIcon,
+  MagnifyingGlassCircleIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Entry } from "./entry";
-import {
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export function SideNav() {
   return (
@@ -53,6 +49,13 @@ export function SideNav() {
             </li>
           </SignedIn>
           <Entry title="Home" url="/" Icon={HomeIcon} />
+          <SignedIn>
+            <Entry
+              title="Focus on a Book"
+              modal="edit_filter"
+              Icon={MagnifyingGlassCircleIcon}
+            />
+          </SignedIn>
           <Entry
             title="Info"
             modal="full_citation"
@@ -76,11 +79,7 @@ export function SideNav() {
               url="/getting-started"
               Icon={BookmarkSquareIcon}
             />
-            <Entry
-              title="About"
-              url="/about"
-              Icon={BookmarkSquareIcon}
-            />
+            <Entry title="About" url="/about" Icon={BookmarkSquareIcon} />
           </SignedIn>
         </ul>
       </div>

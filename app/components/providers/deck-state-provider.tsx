@@ -3,6 +3,7 @@ import {
   OrderedCardsByBook,
   buildCardsByBook,
 } from "@/utilities/card-by-book-builder";
+import {Filter, emptyFilter, filtered} from "@/utilities/filtering";
 import {
   ScoreChange,
   obtainChangedScoreRequest,
@@ -13,7 +14,9 @@ import {
   Dispatch,
   SetStateAction,
   createContext,
+  useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -34,8 +37,10 @@ export interface DeckStateContext {
   obtainCurrentCardGroup: () => number;
   obtainCardById: (id: number) => Citation;
   updateCitation: (citation: Citation) => void;
-  setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
   userHasNoCards: () => boolean;
+  setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
+  obtainFilter: () => Filter;
+  resetDeck: (filter: Filter) => void;
 }
 
 interface DeckStateProviderProps {
@@ -64,8 +69,13 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const drawDeck = useRef<WrappedCard[]>([]);
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
   const [currentCardGroup, setCurrentCardGroup] = useState<number | null>(null);
+  const [filter, setFilter] = useState<Filter>(emptyFilter());
+  const [triggerDrawDeck, setTriggerDrawDeck] = useState<boolean>(false);
 
-  const userHasNoCards = () => props.allCards.length === 0;
+  const userHasNoCards = useCallback(
+    () => props.allCards.length === 0,
+    [props.allCards]
+  );
 
   const guaranteeCurrentCard = (): Citation => {
     if (!currentCard) {
@@ -79,7 +89,14 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     return currentCardGroup ?? -1;
   };
 
-  const drawCitation = (): Citation | undefined => {
+  const guaranteeDrawDeck = useCallback(() => {
+    if (drawDeck.current.length === 0) {
+      const filteredCards = filtered(props.citations, filter);
+      drawDeck.current = createDrawDeck(filteredCards);
+    }
+  }, [props.citations, filter]);
+
+  const drawCitation = useCallback((): Citation | undefined => {
     guaranteeDrawDeck();
     if (!userHasNoCards()) {
       const randomIndex = randomInRange(0, drawDeck.current.length - 1);
@@ -89,18 +106,25 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       setCurrentCardGroup(chosenWrappedCard.group); // TODO: Groups should no longer be needed
       return currentCitation;
     }
-  };
+  }, [userHasNoCards, guaranteeDrawDeck]);
 
-  const guaranteeDrawDeck = () => {
-    if (drawDeck.current.length === 0) {
-      drawDeck.current = createDrawDeck(props.citations);
+  useEffect(() => {
+    if (triggerDrawDeck) {
+      drawCitation();
+      setTriggerDrawDeck(false);
     }
-  };
+  }, [triggerDrawDeck, drawCitation]);
 
   const syncScoresToDb = async (): Promise<void> => {
     setBankedScore(bankedScore + unbankedScore);
     setUnbankedScore(0);
     saveChangedCards(obtainChangedScoreRequest());
+  };
+
+  const resetDeck = (newFilter: Filter) => {
+    setFilter(newFilter);
+    drawDeck.current = [];
+    setTriggerDrawDeck(true);
   };
 
   const incrementCurrentCardScore = (): void =>
@@ -153,6 +177,8 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         updateCitation,
         setCurrentCard,
         userHasNoCards,
+        obtainFilter: () => filter,
+        resetDeck,
       }}
     >
       {props.children}
