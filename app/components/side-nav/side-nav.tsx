@@ -49,11 +49,13 @@ export function SideNav() {
             </li>
           </SignedIn>
           <Entry title="Home" url="/" Icon={HomeIcon} />
-          <Entry
-            title="Focus on a Book"
-            modal="edit_filter"
-            Icon={MagnifyingGlassCircleIcon}
-          />
+          <SignedIn>
+            <Entry
+              title="Focus on a Book"
+              modal="edit_filter"
+              Icon={MagnifyingGlassCircleIcon}
+            />
+          </SignedIn>
           <Entry
             title="Info"
             modal="full_citation"
