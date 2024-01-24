@@ -52,7 +52,7 @@ export default function CardEditForm({
       fragment,
       entire,
       score,
-      tags: [],
+      tags,
       id,
     };
   }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id, score]);
@@ -114,7 +114,7 @@ export default function CardEditForm({
             <div className="w-16 mr-2 mt-2 mb-2">score {score}</div>
           </div>
         )}
-        <TagSelection initialTags={initialCard.tags} setTags={setTags} />
+        <TagSelection tags={initialCard.tags} setTags={setTags} />
         <div className="card-actions">
           <button
             className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-green-400"

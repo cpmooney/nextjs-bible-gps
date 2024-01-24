@@ -31,7 +31,6 @@
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
-    "react-multi-select-component": "^4.3.4",
     "tsv": "^0.2.0"
   },
   "devDependencies": {
