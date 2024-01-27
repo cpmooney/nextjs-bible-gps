@@ -5,6 +5,7 @@ import {ImageBackground} from "./components/image-background";
 import {ModalCollection} from "./components/modals/modals";
 import DeckProvider from "./components/providers/deck-provider";
 import {SideNav} from "./components/side-nav/side-nav";
+import { ModalCommunicationProvider } from "./components/providers/modal-communication-provider";
 
 const DeckPageWithBackground = () => {
   return (
@@ -27,8 +28,10 @@ const Layout = ({children}: LayoutProps) => {
           <ClerkProvider>
             <SideNav />
             <DeckProvider>
+              <ModalCommunicationProvider>
               {children}
               <ModalCollection />
+              </ModalCommunicationProvider>
             </DeckProvider>
           </ClerkProvider>
         </div>

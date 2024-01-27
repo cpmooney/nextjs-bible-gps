@@ -7,7 +7,7 @@ import {
   buildExternalUrl,
   buildFullCitation,
 } from "src/utilities/additional-citation-methods";
-import { Modal } from "./modal";
+import { Modal, closeModal } from "./modal";
 import { useDeckStateContext } from "../providers/deck-state-provider";
 import { useEffect, useState } from "react";
 import { Citation } from "@/models/citation";
@@ -29,7 +29,10 @@ export const CitationInfo = () => {
   const id = currentCard?.id?.toString() ?? "-";
   const score = currentCard?.score?.toString() ?? "-";
 
-  const editCitation = () => router.push(editUrl(obtainCurrentCard().id));
+  const editCitation = () => {
+    closeModal("full_citation");
+    router.push(editUrl(obtainCurrentCard().id));
+  }
 
   const showInExternalApp = () => {
     window.open(externalUrl, "_blank");

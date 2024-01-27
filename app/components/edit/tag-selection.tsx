@@ -1,35 +1,40 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { useDeckStateContext } from "../providers/deck-state-provider";
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
+import { showModal } from "../modals/modal";
+import { useModalCommunicationContext } from "../providers/modal-communication-provider";
 
 interface Props {
   setTags: Dispatch<SetStateAction<string[]>>;
-  tags: string[];
+  tags?: string[];
 }
 
 export const TagSelection = ({ setTags, tags }: Props) => {
-  const { obtainTagList } = useDeckStateContext();
-  const onAddTag = () => {
-    const newTag = prompt("Enter a new tag");
-    if (newTag) {
-      setTags([...tags, newTag]);
-    }
-  }
+  const { declareCloseModalCallback } = useModalCommunicationContext();
+  const onAddTag = useCallback(() => {
+    showModal("tag_selection");
+  }, [tags]);
+
+  // TODO: Might need a useEffect with a dependency here, particularly
+  // if other modals start using this.
+  useEffect(() => {
+    declareCloseModalCallback((data) => setTags(data as string[])), [];
+  });
+
   return (
-    <div>
+    <div onClick={onAddTag}>
       <label className="label font-bold">Tags</label>
-      {
-        tags
-        .sort()
-        .map((tag) => (
-          <div key={tag}>{tag}</div>
-        ))}
-                <button
-          className="btn btn-btnPrimary h-5 w-32 ml-2 mt-2 bg-blue-400"
-          onClick={onAddTag}
-        >
-          <PlusCircleIcon className="w-6 h-6" />
-        </button>
+      {currentTagListComponent(tags)}
     </div>
   );
 };
+
+const currentTagList = (tags: string[]): string[] => {
+  if (tags.length === 0) {
+    return ["None"];
+  }
+  return tags.sort();
+};
+
+const currentTagListComponent = (tags?: string[]) =>
+  currentTagList(tags ?? []).map((tag) => (
+    <div className="badge badge-lg badge-outline h-5 w-32 ml-2 mt-2">{tag}</div>
+  ));
