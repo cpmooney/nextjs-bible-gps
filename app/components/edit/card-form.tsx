@@ -15,7 +15,7 @@ import { FragmentEntry } from "./fragment-entry";
 import { NumberSelection } from "./number-selection";
 import { SuffixEntry } from "./suffix-entry";
 import { TextArea } from "./text-area";
-import { TagSelection } from "./tag-selection";
+import { TagSelectionOnForm } from "./tag-selection-on-form";
 
 interface CardEditFormProps {
   initialCard: Citation;
@@ -55,7 +55,7 @@ export default function CardEditForm({
       tags,
       id,
     };
-  }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id, score]);
+  }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id, score, tags]);
 
   const fullCitation = useMemo(() => {
     return buildFullCitation({ book, chapter, firstVerse, suffix });
@@ -114,7 +114,7 @@ export default function CardEditForm({
             <div className="w-16 mr-2 mt-2 mb-2">score {score}</div>
           </div>
         )}
-        <TagSelection tags={tags} setTags={setTags} />
+        <TagSelectionOnForm tags={tags} setTags={setTags} />
         <div className="card-actions">
           <button
             className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-green-400"

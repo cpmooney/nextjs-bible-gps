@@ -2,11 +2,17 @@
 import { CheckCircleIcon, NoSymbolIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Modal, closeModal } from "./modal";
 import { useModalCommunicationContext } from "../providers/modal-communication-provider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { TagSelectionInModal } from "../edit/tag-selection-in-modal";
 
 export const TagSelectionModal = () => {
+  const { invokeCloseModalCallback, obtainInformationAsModal } = useModalCommunicationContext();
   const [tags, setTags] = useState<string[]>([]);
-  const { invokeCloseModalCallback } = useModalCommunicationContext();
+
+  useEffect(() => {
+    setTags(obtainInformationAsModal() as string[] | undefined ?? []);
+  }, []);
+
   const closeMe = () => closeModal("tag_selection");
   const updateAndClose = () => {
     invokeCloseModalCallback(tags);
@@ -15,10 +21,8 @@ export const TagSelectionModal = () => {
   const removeTag = () => {
     setTags(tags.slice(0, tags.length - 1));
   };
-  const addTag = () => {
-    const element = inputElement();
-    setTags(tags.concat(element.value));
-    element.value = "";
+  const addTag = (tag: string) => {
+    setTags(tags.concat(tag));
   };
   return Modal({
     name: "tag_selection",
@@ -28,7 +32,7 @@ export const TagSelectionModal = () => {
           <h3 className="font-bold text-lg mb-4">Tag Selection</h3>
           {tags.map((tag) => {
             return (
-              <div className="flex">
+              <div className="flex mt-2" key={tag}>
                 <button className="flex-auto btn btn-btnPrimary bg-green-400">
                   {tag}
                 </button>
@@ -41,13 +45,7 @@ export const TagSelectionModal = () => {
               </div>
             );
           })}
-          <input id={inputElementId} className="input input-bordered" placeholder="Tag . . ." />
-          <button
-            className="flex-none btn btn-btnPrimary bg-green-400 ml-2"
-            onClick={addTag}
-          >
-            <PlusCircleIcon className="w-6 h-6" />
-          </button>
+          <TagSelectionInModal addTag={addTag} />
         </div>
         <div className="modal-action">
           <button

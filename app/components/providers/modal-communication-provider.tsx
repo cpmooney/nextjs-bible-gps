@@ -2,13 +2,15 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 
 type CloseModalCallback = (data: unknown) => void;
-interface CloseModalCallbackWrapper {
+interface ModalInitializationParams {
     callback?: CloseModalCallback;
+    data?: unknown;
 }
 
 export interface ModalCommunicationContext {
-    declareCloseModalCallback: (callback: CloseModalCallback) => void;
+    initializeModal: (params: ModalInitializationParams) => void;
     invokeCloseModalCallback: (data: unknown) => void;
+    obtainInformationAsModal: () => unknown;
 }
 
 interface ModalCommunicationProviderProps {
@@ -26,22 +28,24 @@ export const useModalCommunicationContext = () => {
 }
 
 export const ModalCommunicationProvider = (props: ModalCommunicationProviderProps) => {
-    const [closeModalCallback, setCloseModalCallback] = useState<CloseModalCallbackWrapper>({});
-    const declareCloseModalCallback = (callback: CloseModalCallback) => {
-        setCloseModalCallback({ callback });
-    };
+    const [params, setParams] = useState<ModalInitializationParams>({});
 
     const invokeCloseModalCallback = (data: unknown) => {
-        if (!closeModalCallback.callback) {
+        if (!params.callback) {
             throw new Error("No callback declared for closing modal");
         }
-        closeModalCallback.callback(data);
+        params.callback(data);
+    }
+
+    const obtainInformationAsModal = () => {
+        return params?.data;
     }
 
     return (
         <ModalCommunicationContext.Provider value={{
-            declareCloseModalCallback,
-            invokeCloseModalCallback
+            initializeModal: (params: ModalInitializationParams) => setParams(params),
+            invokeCloseModalCallback,
+            obtainInformationAsModal
             }}>
             {props.children}
         </ModalCommunicationContext.Provider>

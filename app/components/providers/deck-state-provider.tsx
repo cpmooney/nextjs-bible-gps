@@ -41,7 +41,7 @@ export interface DeckStateContext {
   setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
   obtainFilter: () => Filter;
   resetDeck: (filter: Filter) => void;
-  obtainTagList: () => string[];
+  obtainAvailableTagList: () => string[];
 }
 
 interface DeckStateProviderProps {
@@ -161,12 +161,12 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     }
   };
 
-  const obtainTagList = () => {
+  const obtainAvailableTagList = () => {
     const tags = new Set<string>();
     props.allCards.forEach((card) => {
       card.tags.forEach((tag) => tags.add(tag));
     });
-    return Array.from(tags);
+    return Array.from(tags).sort();
   }
 
   return (
@@ -188,7 +188,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         userHasNoCards,
         obtainFilter: () => filter,
         resetDeck,
-        obtainTagList
+        obtainAvailableTagList
       }}
     >
       {props.children}

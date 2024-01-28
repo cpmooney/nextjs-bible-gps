@@ -7,8 +7,8 @@ interface Props {
   tags?: string[];
 }
 
-export const TagSelection = ({ setTags, tags }: Props) => {
-  const { declareCloseModalCallback } = useModalCommunicationContext();
+export const TagSelectionOnForm = ({ setTags, tags }: Props) => {
+  const { initializeModal } = useModalCommunicationContext();
   const onAddTag = useCallback(() => {
     showModal("tag_selection");
   }, [tags]);
@@ -16,7 +16,10 @@ export const TagSelection = ({ setTags, tags }: Props) => {
   // TODO: Might need a useEffect with a dependency here, particularly
   // if other modals start using this.
   useEffect(() => {
-    declareCloseModalCallback((data) => setTags(data as string[]));
+    initializeModal({
+      data: tags,
+      callback: (data) => setTags(data as string[])
+    });
   }, []);
 
   return (
@@ -36,5 +39,5 @@ const currentTagList = (tags: string[]): string[] => {
 
 const currentTagListComponent = (tags?: string[]) =>
   currentTagList(tags ?? []).map((tag) => (
-    <div className="badge badge-lg badge-outline h-5 w-32 ml-2 mt-2">{tag}</div>
+    <div key={tag} className="badge badge-lg badge-outline h-5 w-32 ml-2 mt-2">{tag}</div>
   ));
