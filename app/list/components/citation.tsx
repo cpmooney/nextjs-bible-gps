@@ -2,6 +2,7 @@
 
 import {Citation} from "@/models/citation";
 import {PencilIcon} from "@heroicons/react/24/outline";
+import { currentTagListComponent } from "app/components/edit/tag-selection-on-form";
 import ClientOnly from "app/components/hydration-support/client-only";
 import { useDeckStateContext } from "app/components/providers/deck-state-provider";
 import {useRouter} from "next/navigation";
@@ -31,6 +32,9 @@ export default function CitationDisplay({citation}: Props) {
       <div className="flex-auto h-5 ml-2 mt-2">
         <ClientOnly>{citation.fragment}</ClientOnly>
       </div>
+      <div className="left-0 bottom-0 p-2 mt-2 text-xl">
+        {currentTagListComponent(citation.tags)}
+        </div>
       <button
         className="h-8 btn btn-btnPrimary bg-green-400 ml-2 mt-2"
         onClick={editCard}

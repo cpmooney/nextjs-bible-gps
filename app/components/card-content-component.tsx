@@ -71,7 +71,7 @@ export default function CardContentComponent({
         )}
       </button>
       <div className="absolute right-0 bottom-0 p-2 text-xl">{score}</div>
-      <div className="absolute left-0 bottom-0 p-2 text-xl">{currentTagListComponent(tags)}</div>
+      <div className="absolute left-0 bottom-0 p-2 mt-2 text-xl">{currentTagListComponent(tags)}</div>
     </>
   );
 }
