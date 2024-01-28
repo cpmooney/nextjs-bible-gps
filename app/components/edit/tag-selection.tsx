@@ -16,8 +16,8 @@ export const TagSelection = ({ setTags, tags }: Props) => {
   // TODO: Might need a useEffect with a dependency here, particularly
   // if other modals start using this.
   useEffect(() => {
-    declareCloseModalCallback((data) => setTags(data as string[])), [];
-  });
+    declareCloseModalCallback((data) => setTags(data as string[]));
+  }, []);
 
   return (
     <div onClick={onAddTag}>

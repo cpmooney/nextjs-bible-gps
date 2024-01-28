@@ -1,8 +1,10 @@
 "use client";
-import { ConsoleLogWriter } from "drizzle-orm";
 import { ReactNode, createContext, useContext, useState } from "react";
 
 type CloseModalCallback = (data: unknown) => void;
+interface CloseModalCallbackWrapper {
+    callback?: CloseModalCallback;
+}
 
 export interface ModalCommunicationContext {
     declareCloseModalCallback: (callback: CloseModalCallback) => void;
@@ -24,16 +26,16 @@ export const useModalCommunicationContext = () => {
 }
 
 export const ModalCommunicationProvider = (props: ModalCommunicationProviderProps) => {
-    const [closeModalCallback, setCloseModalCallback] = useState<CloseModalCallback | null>(null);
+    const [closeModalCallback, setCloseModalCallback] = useState<CloseModalCallbackWrapper>({});
     const declareCloseModalCallback = (callback: CloseModalCallback) => {
-        setCloseModalCallback(callback);
+        setCloseModalCallback({ callback });
     };
 
     const invokeCloseModalCallback = (data: unknown) => {
-        if (!closeModalCallback) {
+        if (!closeModalCallback.callback) {
             throw new Error("No callback declared for closing modal");
         }
-        closeModalCallback(data);
+        closeModalCallback.callback(data);
     }
 
     return (
