@@ -16,7 +16,9 @@ export const TagSelectionModal = () => {
     setTags(tags.slice(0, tags.length - 1));
   };
   const addTag = () => {
-    setTags(tags.concat(getInputValue("tag_selection_modal_new_tag")));
+    const element = inputElement();
+    setTags(tags.concat(element.value));
+    element.value = "";
   };
   return Modal({
     name: "tag_selection",
@@ -39,7 +41,7 @@ export const TagSelectionModal = () => {
               </div>
             );
           })}
-          <input id="tag_selection_modal_new_tag" className="input input-bordered" placeholder="Tag . . ." />
+          <input id={inputElementId} className="input input-bordered" placeholder="Tag . . ." />
           <button
             className="flex-none btn btn-btnPrimary bg-green-400 ml-2"
             onClick={addTag}
@@ -60,12 +62,12 @@ export const TagSelectionModal = () => {
   });
 };
 
+const inputElementId = "tag_selection_modal_new_tag"; 
 
-const getInputValue = (id: string) => {
-  const inputElement = document.getElementById(id);
-  if (!inputElement || !(inputElement instanceof HTMLInputElement)) {
-    throw new Error(`Could not find input element with id ${id}`);
+const inputElement = (): HTMLInputElement => {
+  const element = document.getElementById(inputElementId);
+  if (!element || !(element instanceof HTMLInputElement)) {
+    throw new Error(`Could not find input element with id ${inputElementId}`);
   }
-  return inputElement.value;
-};
-
+  return element;
+}
