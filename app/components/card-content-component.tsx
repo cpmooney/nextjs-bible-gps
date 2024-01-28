@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import CardAnswerComponent from "./card-answer-component";
 import { useDeckStateContext } from "./providers/deck-state-provider";
+import { currentTagListComponent } from "./edit/tag-selection-on-form";
 
 interface CardContentComponentProps {
   showingAnswer: boolean;
@@ -39,6 +40,7 @@ export default function CardContentComponent({
   const fullCitation = currentCard ? buildFullCitation(currentCard) : "";
   const fragment = currentCard?.fragment ?? "/";
   const score = currentCard?.score ?? "";
+  const tags = currentCard?.tags ?? [];
 
   let fragmentPieces = fragment.split("/");
   if (userHasNoCards()) {
@@ -69,6 +71,7 @@ export default function CardContentComponent({
         )}
       </button>
       <div className="absolute right-0 bottom-0 p-2 text-xl">{score}</div>
+      <div className="absolute left-0 bottom-0 p-2 text-xl">{currentTagListComponent(tags)}</div>
     </>
   );
 }

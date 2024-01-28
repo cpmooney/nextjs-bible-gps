@@ -37,7 +37,7 @@ const currentTagList = (tags: string[]): string[] => {
   return tags.sort();
 };
 
-const currentTagListComponent = (tags?: string[]) =>
+export const currentTagListComponent = (tags?: string[]) =>
   currentTagList(tags ?? []).map((tag) => (
     <div key={tag} className="badge badge-lg badge-outline h-5 w-32 ml-2 mt-2">{tag}</div>
   ));
