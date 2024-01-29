@@ -1,17 +1,18 @@
 "use client";
-import { CheckCircleIcon, NoSymbolIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import { Modal, closeModal } from "./modal";
-import { useModalCommunicationContext } from "../providers/modal-communication-provider";
-import { useEffect, useState } from "react";
-import { TagSelectionInModal } from "../edit/tag-selection-in-modal";
+import {CheckCircleIcon, NoSymbolIcon} from "@heroicons/react/24/outline";
+import {useEffect, useState} from "react";
+import {TagSelectionInModal} from "../edit/tag-selection-in-modal";
+import {useModalCommunicationContext} from "../providers/modal-communication-provider";
+import {Modal, closeModal} from "./modal";
 
 export const TagSelectionModal = () => {
-  const { invokeCloseModalCallback, obtainInformationAsModal } = useModalCommunicationContext();
+  const {invokeCloseModalCallback, obtainInformationAsModal} =
+    useModalCommunicationContext();
   const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
-    setTags(obtainInformationAsModal() as string[] | undefined ?? []);
-  }, []);
+    setTags((obtainInformationAsModal() as string[] | undefined) ?? []);
+  }, [obtainInformationAsModal]);
 
   const closeMe = () => closeModal("tag_selection");
   const updateAndClose = () => {
@@ -60,7 +61,7 @@ export const TagSelectionModal = () => {
   });
 };
 
-const inputElementId = "tag_selection_modal_new_tag"; 
+const inputElementId = "tag_selection_modal_new_tag";
 
 const inputElement = (): HTMLInputElement => {
   const element = document.getElementById(inputElementId);
@@ -68,4 +69,4 @@ const inputElement = (): HTMLInputElement => {
     throw new Error(`Could not find input element with id ${inputElementId}`);
   }
   return element;
-}
+};
