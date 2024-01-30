@@ -1,13 +1,13 @@
 "use server";
 
 import {Citation} from "@/models/citation";
-import { deserialize } from "@/utilities/serialize";
+import {deserialize} from "@/utilities/serialize";
 import {currentUser} from "@clerk/nextjs";
 import {User} from "@clerk/nextjs/server";
-import { demoUser } from "src/constants";
+import {demoUser} from "src/constants";
 import {invokeDeleteCardAction} from "src/server/db-delete-citation";
 import {invokeDeletePartialCardAction} from "src/server/db-delete-partial-citation";
-import { invokeDbDuplicateDemoCards } from "src/server/db-duplicate-demo-cards";
+import {invokeDbDuplicateDemoCards} from "src/server/db-duplicate-demo-cards";
 import {invokeDbImportAllAction} from "src/server/db-import-all-rows";
 import {invokeDbLoadAllPartialCitationAction} from "src/server/db-load-all-partial-citations";
 import {invokeDbLoadCitationAction} from "src/server/db-load-citation";
@@ -20,11 +20,12 @@ import {
   invokeDbSavePartialCitationAction,
 } from "src/server/db-save-partial-citation";
 import {invokeDbUpdateCitationAction} from "src/server/db-update-citation";
+import {invokeDbUpdateTagsAction} from "src/server/db-update-tags";
 
 export const duplicateDemoCards = async () => {
   const userId = await guaranteeUserId({useDemo: true});
   await invokeDbDuplicateDemoCards(userId);
-}
+};
 
 export const importAllCards = async (tsv: string) => {
   // TODO: This needs to be wired up further down.
@@ -66,6 +67,14 @@ export const loadCitation = async (citationId: number): Promise<Citation> => {
 export const saveChangedCards = async (request: SaveChangedScoresRequest) => {
   const userId = await guaranteeUserId({});
   return await invokeDbSaveChangedAction(userId, request);
+};
+
+export const updateTagsOnCitation = async (
+  citationId: number,
+  tags: string[]
+) => {
+  const userId = await guaranteeUserId({});
+  await invokeDbUpdateTagsAction(userId, citationId, tags);
 };
 
 export const guaranteeUserId = async ({

@@ -79,11 +79,10 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   );
 
   const guaranteeCurrentCard = (): Citation => {
-    if (!currentCard) {
-      // TODO This seems like a bug of some kind!
-      const nextCard = drawCitation();
+    if (currentCard) {
+      return currentCard;
     }
-    return currentCard!;
+    return drawCitation();
   };
 
   const guaranteeCurrentCardGroup = (): number => {
@@ -97,7 +96,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     }
   }, [props.citations, filter]);
 
-  const drawCitation = useCallback((): Citation | undefined => {
+  const drawCitation = useCallback((): Citation => {
     guaranteeDrawDeck();
     if (!userHasNoCards()) {
       const randomIndex = randomInRange(0, drawDeck.current.length - 1);
@@ -107,6 +106,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       setCurrentCardGroup(chosenWrappedCard.group); // TODO: Groups should no longer be needed
       return currentCitation;
     }
+    throw "drawCitation called but user has no cards!";
   }, [userHasNoCards, guaranteeDrawDeck]);
 
   useEffect(() => {
@@ -167,7 +167,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       card.tags.forEach((tag) => tags.add(tag));
     });
     return Array.from(tags).sort();
-  }
+  };
 
   return (
     <DeckStateContext.Provider
@@ -188,7 +188,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         userHasNoCards,
         obtainFilter: () => filter,
         resetDeck,
-        obtainAvailableTagList
+        obtainAvailableTagList,
       }}
     >
       {props.children}

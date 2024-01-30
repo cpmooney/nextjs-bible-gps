@@ -1,8 +1,8 @@
 "use client";
-import { CheckCircleIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { useDeckStateContext } from "./providers/deck-state-provider";
+import {CheckCircleIcon, NoSymbolIcon} from "@heroicons/react/24/outline";
+import {useState} from "react";
 import CardContentComponent from "./card-content-component";
+import {useDeckStateContext} from "./providers/deck-state-provider";
 
 export default function CardComponent() {
   const deckStateContext = useDeckStateContext();

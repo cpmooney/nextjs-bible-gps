@@ -1,35 +1,32 @@
 "use client";
-import { Citation } from "@/models/citation";
+import {Citation} from "@/models/citation";
 import {
   CheckCircleIcon,
   NoSymbolIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { deleteCard, saveCitation } from "app/actions";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
-import { buildFullCitation } from "src/utilities/additional-citation-methods";
-import { useDeckStateContext } from "../providers/deck-state-provider";
-import { BibleSelection } from "./bible-selection";
-import { FragmentEntry } from "./fragment-entry";
-import { NumberSelection } from "./number-selection";
-import { SuffixEntry } from "./suffix-entry";
-import { TextArea } from "./text-area";
-import { TagSelectionOnForm } from "./tag-selection-on-form";
+import {deleteCard, saveCitation} from "app/actions";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useMemo, useState} from "react";
+import {buildFullCitation} from "src/utilities/additional-citation-methods";
+import {useDeckStateContext} from "../providers/deck-state-provider";
+import {BibleSelection} from "./bible-selection";
+import {FragmentEntry} from "./fragment-entry";
+import {NumberSelection} from "./number-selection";
+import {SuffixEntry} from "./suffix-entry";
+import {TagSelectionOnForm} from "./tag-selection-on-form";
+import {TextArea} from "./text-area";
 
 interface CardEditFormProps {
   initialCard: Citation;
   onSave?: () => void;
 }
 
-export default function CardEditForm({
-  initialCard,
-  onSave,
-}: CardEditFormProps) {
+export default function CardEditForm({initialCard, onSave}: CardEditFormProps) {
   const searchParams = useSearchParams();
   const initialBook = searchParams?.get("book") ?? initialCard.book;
 
-  const { updateCitation } = useDeckStateContext();
+  const {updateCitation} = useDeckStateContext();
   const [book, setBook] = useState<string>(initialBook);
   const [chapter, setChapter] = useState<number>(initialCard.chapter);
   const [firstVerse, setFirstVerse] = useState<number>(initialCard.firstVerse);
@@ -55,10 +52,20 @@ export default function CardEditForm({
       tags,
       id,
     };
-  }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id, score, tags]);
+  }, [
+    book,
+    chapter,
+    firstVerse,
+    suffix,
+    fragment,
+    entire,
+    initialCard.id,
+    score,
+    tags,
+  ]);
 
   const fullCitation = useMemo(() => {
-    return buildFullCitation({ book, chapter, firstVerse, suffix });
+    return buildFullCitation({book, chapter, firstVerse, suffix});
   }, [book, chapter, firstVerse, suffix]);
 
   const cancelMe = () => {
@@ -114,6 +121,7 @@ export default function CardEditForm({
             <div className="w-16 mr-2 mt-2 mb-2">score {score}</div>
           </div>
         )}
+        <label className="label font-bold">Tags</label>
         <TagSelectionOnForm tags={tags} setTags={setTags} />
         <div className="card-actions">
           <button

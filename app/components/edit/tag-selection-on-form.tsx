@@ -1,32 +1,44 @@
-import { Dispatch, SetStateAction, useCallback, useEffect } from "react";
-import { showModal } from "../modals/modal";
-import { useModalCommunicationContext } from "../providers/modal-communication-provider";
+"use client";
+import {SignedIn} from "@clerk/nextjs";
+import {updateTagsOnCitation} from "app/actions";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {showModal} from "../modals/modal";
+import {useDeckStateContext} from "../providers/deck-state-provider";
+import {useModalCommunicationContext} from "../providers/modal-communication-provider";
 
 interface Props {
-  setTags: Dispatch<SetStateAction<string[]>>;
+  setTags?: Dispatch<SetStateAction<string[]>>;
   tags?: string[];
 }
 
-export const TagSelectionOnForm = ({ setTags, tags }: Props) => {
-  const { initializeModal } = useModalCommunicationContext();
-  const onAddTag = useCallback(() => {
-    showModal("tag_selection");
-  }, [tags]);
-
-  // TODO: Might need a useEffect with a dependency here, particularly
-  // if other modals start using this.
-  useEffect(() => {
+export const TagSelectionOnForm = ({setTags, tags}: Props) => {
+  const {obtainCurrentCard} = useDeckStateContext();
+  const {initializeModal} = useModalCommunicationContext();
+  const onAddTag = () => {
     initializeModal({
-      data: tags,
-      callback: (data) => setTags(data as string[])
+      data: currentTags,
+      callback: (data) =>
+        updateTags(data as string[], currentCitationId, setTags),
     });
-  }, []);
+    showModal("tag_selection");
+  };
+
+  // TODO: These were originally useMemos but that was being run from the server.  Why?
+  const [currentTags, setCurrentTags] = useState<string[]>([]);
+  const [currentCitationId, setCurrentCitationId] = useState<
+    number | undefined
+  >();
+
+  useEffect(() => {
+    const currentCard = obtainCurrentCard();
+    setCurrentTags(tags ?? currentCard.tags);
+    setCurrentCitationId(currentCard.id);
+  }, [obtainCurrentCard, tags]);
 
   return (
-    <div onClick={onAddTag}>
-      <label className="label font-bold">Tags</label>
-      {currentTagListComponent(tags)}
-    </div>
+    <SignedIn>
+      <div onClick={onAddTag}>{currentTagListComponent(tags)}</div>
+    </SignedIn>
   );
 };
 
@@ -39,5 +51,25 @@ const currentTagList = (tags: string[]): string[] => {
 
 export const currentTagListComponent = (tags?: string[]) =>
   currentTagList(tags ?? []).map((tag) => (
-    <div key={tag} className="badge badge-lg badge-outline h-5 w-32 ml-2 mt-2">{tag}</div>
+    <div key={tag} className="badge badge-lg badge-outline h-5 w-32 ml-2 mt-2">
+      {tag}
+    </div>
   ));
+
+const updateTags = (
+  // TODO: These were originally useMemos but that was being run from the server.  Why?
+  data: string[],
+  citationId?: number,
+  setTags?: Dispatch<SetStateAction<string[]>>
+) => {
+  if (setTags) {
+    setTags(data);
+  } else {
+    if (!citationId) {
+      throw new Error(
+        "citationId is required by defaultSetTags when setTags is not provided"
+      );
+    }
+    updateTagsOnCitation(citationId, data);
+  }
+};
