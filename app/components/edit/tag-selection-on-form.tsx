@@ -12,13 +12,20 @@ interface Props {
 }
 
 export const TagSelectionOnForm = ({setTags, tags}: Props) => {
-  const {obtainCurrentCard} = useDeckStateContext();
+  const {obtainCurrentCard, updateCitation} = useDeckStateContext();
   const {initializeModal} = useModalCommunicationContext();
   const onAddTag = () => {
     initializeModal({
       data: currentTags,
-      callback: (data) =>
-        updateTags(data as string[], currentCitationId, setTags),
+      callback: (data) => {
+        if (currentCitationId) {
+          updateCitation({
+            id: currentCitationId,
+            changes: {tags: data as string[]},
+          });
+        }
+        updateTags(data as string[], currentCitationId, setTags);
+      },
     });
     showModal("tag_selection");
   };

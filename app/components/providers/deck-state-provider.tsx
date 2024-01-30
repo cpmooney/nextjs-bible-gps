@@ -23,6 +23,10 @@ import {
 import {Citation} from "src/models/citation";
 import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
 import {randomInRange} from "src/utilities/misc";
+import {
+  UpdateCitationRequest,
+  updateCitation,
+} from "src/utilities/update-citation";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
@@ -36,7 +40,7 @@ export interface DeckStateContext {
   obtainBankedScore: () => number;
   obtainCurrentCardGroup: () => number;
   obtainCardById: (id: number) => Citation;
-  updateCitation: (citation: Citation) => void;
+  updateCitation: (request: UpdateCitationRequest) => void;
   userHasNoCards: () => boolean;
   setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
   obtainFilter: () => Filter;
@@ -78,13 +82,6 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     [props.allCards]
   );
 
-  const guaranteeCurrentCard = (): Citation => {
-    if (currentCard) {
-      return currentCard;
-    }
-    return drawCitation();
-  };
-
   const guaranteeCurrentCardGroup = (): number => {
     return currentCardGroup ?? -1;
   };
@@ -108,6 +105,13 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     }
     throw "drawCitation called but user has no cards!";
   }, [userHasNoCards, guaranteeDrawDeck]);
+
+  const guaranteeCurrentCard = useCallback((): Citation => {
+    if (currentCard) {
+      return currentCard;
+    }
+    return drawCitation();
+  }, [currentCard, drawCitation]);
 
   useEffect(() => {
     if (triggerDrawDeck) {
@@ -152,21 +156,22 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     return card;
   };
 
-  const updateCitation = (updatedCitation: Citation) => {
-    const index = props.allCards.findIndex((c) => c.id === updatedCitation.id);
-    if (index < 0) {
-      props.allCards.push(updatedCitation);
-    } else {
-      props.allCards[index] = updatedCitation;
-    }
-  };
-
   const obtainAvailableTagList = () => {
     const tags = new Set<string>();
     props.allCards.forEach((card) => {
       card.tags.forEach((tag) => tags.add(tag));
     });
     return Array.from(tags).sort();
+  };
+
+  const updateCitationEverywhere = (request: UpdateCitationRequest) => {
+    const card = obtainCardById(request.id);
+    updateCitation(card, request.changes);
+    if (currentCard?.id === request.id) {
+      const updatedCitation = updateCitation(currentCard, request.changes);
+      // TODO: Why is this not resulting in a rerender?
+      setCurrentCard(updatedCitation);
+    }
   };
 
   return (
@@ -183,7 +188,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         obtainUnbankedScore: () => unbankedScore,
         obtainBankedScore: () => bankedScore,
         obtainCardById,
-        updateCitation,
+        updateCitation: updateCitationEverywhere,
         setCurrentCard,
         userHasNoCards,
         obtainFilter: () => filter,
