@@ -25,8 +25,8 @@ interface CardEditFormProps {
 export default function CardEditForm({initialCard, onSave}: CardEditFormProps) {
   const searchParams = useSearchParams();
   const initialBook = searchParams?.get("book") ?? initialCard.book;
+  const {updateCitationLocally} = useDeckStateContext();
 
-  const {updateCitation} = useDeckStateContext();
   const [book, setBook] = useState<string>(initialBook);
   const [chapter, setChapter] = useState<number>(initialCard.chapter);
   const [firstVerse, setFirstVerse] = useState<number>(initialCard.firstVerse);
@@ -81,7 +81,9 @@ export default function CardEditForm({initialCard, onSave}: CardEditFormProps) {
 
   const saveAndClose = async () => {
     citation.id = await saveCitation(citation);
-    updateCitation({id: citation.id, changes: citation});
+    if (initialCard.id) {
+      updateCitationLocally({id: initialCard.id, changes: citation});
+    }
     if (onSave) {
       onSave();
     }

@@ -12,19 +12,19 @@ interface Props {
 }
 
 export const TagSelectionOnForm = ({setTags, tags}: Props) => {
-  const {obtainCurrentCard, updateCitation} = useDeckStateContext();
+  const {obtainCurrentCard, updateCitationLocally} = useDeckStateContext();
   const {initializeModal} = useModalCommunicationContext();
   const onAddTag = () => {
     initializeModal({
       data: currentTags,
       callback: (data) => {
         if (currentCitationId) {
-          updateCitation({
+          updateCitationLocally({
             id: currentCitationId,
             changes: {tags: data as string[]},
           });
         }
-        updateTags(data as string[], currentCitationId, setTags);
+        updateTagsOnServer(data as string[], currentCitationId, setTags);
       },
     });
     showModal("tag_selection");
@@ -63,8 +63,7 @@ export const currentTagListComponent = (tags?: string[]) =>
     </div>
   ));
 
-const updateTags = (
-  // TODO: These were originally useMemos but that was being run from the server.  Why?
+const updateTagsOnServer = (
   data: string[],
   citationId?: number,
   setTags?: Dispatch<SetStateAction<string[]>>

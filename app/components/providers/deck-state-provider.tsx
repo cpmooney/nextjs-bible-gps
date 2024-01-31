@@ -25,7 +25,6 @@ import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
 import {randomInRange} from "src/utilities/misc";
 import {
   UpdateCitationRequest,
-  updateCitation,
 } from "src/utilities/update-citation";
 
 export interface DeckStateContext {
@@ -40,7 +39,7 @@ export interface DeckStateContext {
   obtainBankedScore: () => number;
   obtainCurrentCardGroup: () => number;
   obtainCardById: (id: number) => Citation;
-  updateCitation: (request: UpdateCitationRequest) => void;
+  updateCitationLocally: (request: UpdateCitationRequest) => void;
   userHasNoCards: () => boolean;
   setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
   obtainFilter: () => Filter;
@@ -164,13 +163,14 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     return Array.from(tags).sort();
   };
 
-  const updateCitationEverywhere = (request: UpdateCitationRequest) => {
+  const updateCitationLocally = (request: UpdateCitationRequest) => {
     const card = obtainCardById(request.id);
-    updateCitation(card, request.changes);
+    // TODO: Factor this to a method
+    card.tags = request.changes.tags ?? card.tags;
+    card.fragment = request.changes.fragment ?? card.fragment;
     if (currentCard?.id === request.id) {
-      const updatedCitation = updateCitation(currentCard, request.changes);
       // TODO: Why is this not resulting in a rerender?
-      setCurrentCard(updatedCitation);
+      setCurrentCard({ ...currentCard, ...request.changes });
     }
   };
 
@@ -188,7 +188,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         obtainUnbankedScore: () => unbankedScore,
         obtainBankedScore: () => bankedScore,
         obtainCardById,
-        updateCitation: updateCitationEverywhere,
+        updateCitationLocally,
         setCurrentCard,
         userHasNoCards,
         obtainFilter: () => filter,
