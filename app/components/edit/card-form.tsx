@@ -81,9 +81,7 @@ export default function CardEditForm({initialCard, onSave}: CardEditFormProps) {
 
   const saveAndClose = async () => {
     citation.id = await saveCitation(citation);
-    if (initialCard.id) {
-      updateCitationLocally({id: initialCard.id, changes: citation});
-    }
+    updateCitationLocally(citation);
     if (onSave) {
       onSave();
     }

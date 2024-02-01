@@ -23,9 +23,6 @@ import {
 import {Citation} from "src/models/citation";
 import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
 import {randomInRange} from "src/utilities/misc";
-import {
-  UpdateCitationRequest,
-} from "src/utilities/update-citation";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
@@ -38,8 +35,8 @@ export interface DeckStateContext {
   obtainUnbankedScore: () => number;
   obtainBankedScore: () => number;
   obtainCurrentCardGroup: () => number;
-  obtainCardById: (id: number) => Citation;
-  updateCitationLocally: (request: UpdateCitationRequest) => void;
+  obtainCardById: (id: number) => Citation | undefined;
+  updateCitationLocally: (newCitation: Citation) => void;
   userHasNoCards: () => boolean;
   setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
   obtainFilter: () => Filter;
@@ -147,12 +144,11 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
 
   const obtainCardsByBook = () => buildCardsByBook(props.allCards);
   const obtainAllCitations = () => props.allCards;
-  const obtainCardById = (id: number): Citation => {
-    const card = props.allCards.find((c) => c.id === id)!;
-    if (!card) {
-      throw new Error(`No card found with id ${id}`);
-    }
-    return card;
+  const obtainCardById = (id: number): Citation | undefined =>
+    props.allCards.find((c) => c.id === id);
+
+  const findCardIndexById = (id: number): number | undefined => {
+    return props.allCards.findIndex((c) => c.id === id);
   };
 
   const obtainAvailableTagList = () => {
@@ -163,15 +159,30 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     return Array.from(tags).sort();
   };
 
-  const updateCitationLocally = (request: UpdateCitationRequest) => {
-    const card = obtainCardById(request.id);
-    // TODO: Factor this to a method
-    card.tags = request.changes.tags ?? card.tags;
-    card.fragment = request.changes.fragment ?? card.fragment;
-    if (currentCard?.id === request.id) {
-      // TODO: Why is this not resulting in a rerender?
-      setCurrentCard({ ...currentCard, ...request.changes });
+  const updateCitationLocally = (newCitation: Citation) => {
+    if (!newCitation.id) {
+      throw new Error("Cannot update a citation without an id");
     }
+    const indexOfCardToUpdate = findCardIndexById(newCitation.id);
+    if (!indexOfCardToUpdate || indexOfCardToUpdate === -1) {
+      addCitationToLoadedList(newCitation);
+    } else {
+      updateCitationInLoadedList(indexOfCardToUpdate, newCitation);
+    }
+  };
+
+  const updateCitationInLoadedList = (
+    indexOfCard: number,
+    newCitation: Citation
+  ) => {
+    props.allCards[indexOfCard] = newCitation;
+    if (currentCard?.id === newCitation.id) {
+      setCurrentCard(newCitation);
+    }
+  };
+
+  const addCitationToLoadedList = (card: Citation) => {
+    props.allCards.push(card);
   };
 
   return (
