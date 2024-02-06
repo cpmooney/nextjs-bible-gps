@@ -1,11 +1,12 @@
 "use client";
-import { Citation } from "@/models/citation";
-import { buildFullCitation } from "@/utilities/additional-citation-methods";
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import {Citation} from "@/models/citation";
+import {buildFullCitation} from "@/utilities/additional-citation-methods";
+import {PlusCircleIcon} from "@heroicons/react/24/outline";
+import {useRouter} from "next/navigation";
+import {useEffect, useMemo, useState} from "react";
 import CardAnswerComponent from "./card-answer-component";
-import { useDeckStateContext } from "./providers/deck-state-provider";
+import Prompt, {PromptPreference} from "./prompt";
+import {useDeckStateContext} from "./providers/deck-state-provider";
 
 interface CardContentComponentProps {
   showingAnswer: boolean;
@@ -21,41 +22,40 @@ export default function CardContentComponent({
     router.push("/getting-started");
   };
 
-  const { obtainCurrentCard, userHasNoCards } = useDeckStateContext();
+  const {obtainCurrentCard, userHasNoCards} = useDeckStateContext();
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
 
   useEffect(() => {
     setCurrentCard(obtainCurrentCard());
   }, [obtainCurrentCard]);
 
-  const fragmentTextSize = useMemo(() => {
-    const fragmentLength = currentCard?.fragment?.length  ?? 0;
-    if (fragmentLength <= 53) {
-      return "text-2xl";
-    }
-    return "text-xl";
-  }, [currentCard]);
-
   const fullCitation = currentCard ? buildFullCitation(currentCard) : "";
-  const fragment = currentCard?.fragment ?? "/";
   const score = currentCard?.score ?? "";
-
-  let fragmentPieces = fragment.split("/");
-  if (userHasNoCards()) {
-    fragmentPieces = ["Click to start", "your journey!"];
-  }
 
   const bigButtonClickHandler = userHasNoCards() ? getStarted : showAnswer;
 
+  const preference: PromptPreference = "entire";
+
+  const answerHeight = useMemo(() => {
+    switch (preference) {
+      /*
+      case "fragment":
+        return "h-40";
+        */
+      case "entire":
+        return "h-24";
+    }
+  }, [preference]);
+
   return (
     <>
-      <h2 className={`text-center ${fragmentTextSize} h-16 mb-2`}>
-        {fragmentPieces[0]}
-        <br />
-        {fragmentPieces[1]}
-      </h2>
+      <Prompt
+        preference={preference}
+        citation={currentCard}
+        userHasNoCards={userHasNoCards()}
+      />
       <button
-        className="btn btn-btnPrimary text-white bg-blue-600 hover:bg-blue-300 disabled:bg-blue-200 disabled:text-gray-700 h-40 text-xl"
+        className={`btn btn-btnPrimary text-white bg-blue-600 hover:bg-blue-300 disabled:bg-blue-200 disabled:text-gray-700 text-xl ${answerHeight}`}
         onClick={bigButtonClickHandler}
         disabled={showingAnswer}
       >
