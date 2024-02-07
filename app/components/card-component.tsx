@@ -1,8 +1,7 @@
 "use client";
-import { CheckCircleIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { useDeckStateContext } from "./providers/deck-state-provider";
+import {useState} from "react";
 import CardContentComponent from "./card-content-component";
+import {useDeckStateContext} from "./providers/deck-state-provider";
 
 export default function CardComponent() {
   const deckStateContext = useDeckStateContext();
@@ -25,29 +24,37 @@ export default function CardComponent() {
   };
 
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
-      <div className="card-body">
-        <CardContentComponent
-          showingAnswer={showingAnswer}
-          showAnswer={() => setShowingAnswer(true)}
-        />
-        <div className="card-actions">
-          <button
-            className="flex-1 btn btn-btnPrimary enabled:bg-green-400 h-20"
-            onClick={correct}
-            disabled={!showingAnswer}
-          >
-            <CheckCircleIcon className="h-10 w-10 mr-2" />
-          </button>
-          <button
-            className="flex-1 btn btn-btnPrimary enabled:bg-red-400 h-20"
-            onClick={wrong}
-            disabled={!showingAnswer}
-          >
-            <NoSymbolIcon className="h-10 w-10 mr-2" />
-          </button>
+    <>
+      <div className="card w-96 bg-base-100 shadow-xl mb-4">
+        <div className="card-body">
+          <label className="label font-bold">TEXT</label>
+          <CardContentComponent
+            showingAnswer={showingAnswer}
+            showAnswer={() => setShowingAnswer(true)}
+          />
         </div>
       </div>
-    </div>
+      <div className="card w-96 bg-base-100 shadow-xl">
+        <div className="card-body">
+          <label className="label font-bold">GRADE YOURSELF</label>
+          <div className="card-actions">
+            <button
+              className="flex-1 btn btn-btnPrimary enabled:bg-green-400 h-20"
+              onClick={correct}
+              disabled={!showingAnswer}
+            >
+              <label className="label font-bold">CORRECT</label>
+            </button>
+            <button
+              className="flex-1 btn btn-btnPrimary enabled:bg-red-400 h-20"
+              onClick={wrong}
+              disabled={!showingAnswer}
+            >
+              <label className="label font-bold">INCORRECT</label>
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

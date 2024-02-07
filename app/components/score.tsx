@@ -1,65 +1,47 @@
 "use client";
-import {ChevronDoubleRightIcon} from "@heroicons/react/24/outline";
-import { useDeckStateContext } from "./providers/deck-state-provider";
-import { useUser } from '@clerk/nextjs';
+import {useUser} from "@clerk/nextjs";
+import {useMemo} from "react";
+import {useDeckStateContext} from "./providers/deck-state-provider";
 
 export default function ScoreComponent() {
-  const {syncScoresToDb, obtainBankedScore, obtainUnbankedScore} = useDeckStateContext();
-  const { isSignedIn } = useUser();
+  const {
+    obtainCurrentCard,
+    syncScoresToDb,
+    obtainBankedScore,
+    obtainUnbankedScore,
+  } = useDeckStateContext();
+  const {isSignedIn} = useUser();
 
-  const unbankedScore = obtainUnbankedScore();
-  const bankedScore = obtainBankedScore();
+  const unbankedScore = useMemo(() => {
+    return obtainUnbankedScore();
+  }, [obtainUnbankedScore]);
+  const bankedScore = useMemo(() => {
+    return obtainBankedScore();
+  }, [obtainBankedScore]);
+  const currentCard = useMemo(() => {
+    return obtainCurrentCard();
+  }, [obtainCurrentCard]);
+  const score = useMemo(() => {
+    return currentCard ? currentCard.score : "";
+  }, [currentCard]);
 
-  const getChangeColorClass = () => {
-    if (unbankedScore < 0) {
-      return "text-red-600";
-    }
-    if (unbankedScore === 0) {
-      return "text-gray-600";
-    }
-    if (unbankedScore < 10) {
-      return "text-green-600";
-    }
-    if (unbankedScore < 30) {
-      return "text-lime-600";
-    }
-    return "text-yellow-600";
-  };
-
-  const getTotalScoreColorClass = () => {
-    return "text-green-600";
-  };
-
-  const chevronClicked = () => {
+  const saveScore = () => {
     if (isSignedIn) {
       syncScoresToDb();
     } else {
       alert("Create a user to take advantage of this feature!");
     }
-  }
+  };
 
   return (
-    <div className="flex flex-row w-96">
-      <div className="card bg-base-100 shadow-xl mr-4 mt-4 flex-1">
-        <div className="card-body">
-          <div className={`justify-center text-5xl ${getChangeColorClass()}`}>
-            {unbankedScore}
-          </div>
-        </div>
-      </div>
-      <div className="flex items-center justify-center mr-4">
-        <button className="btn btn-btnPrimary" onClick={chevronClicked}>
-          <ChevronDoubleRightIcon className="w-8 h-8 mr-2" />
-        </button>
-      </div>
-      <div className="card bg-base-100 shadow-xl mt-4 flex-1">
-        <div className="card-body">
-          <div
-            className={`justify-center text-4xl ${getTotalScoreColorClass()}`}
-          >
-            {bankedScore}
-          </div>
-        </div>
+    <div className="card bg-base-100 shadow-xl mr-4 mt-4 w-96">
+      <div className="card-body">
+        <label className="label font-bold">CARD SCORE</label>
+        {score}
+        <label className="label font-bold">UNSAVED TOTAL SCORE</label>
+        {unbankedScore}
+        <label className="label font-bold">SAVED TOTAL SCORE</label>
+        {bankedScore}
       </div>
     </div>
   );

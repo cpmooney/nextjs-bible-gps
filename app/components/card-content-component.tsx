@@ -7,7 +7,7 @@ import {useEffect, useMemo, useState} from "react";
 import CardAnswerComponent from "./card-answer-component";
 import Prompt from "./prompt";
 import {useDeckStateContext} from "./providers/deck-state-provider";
-import { useUserPreferenceContext } from "./providers/user-preference-provider";
+import {useUserPreferenceContext} from "./providers/user-preference-provider";
 
 interface CardContentComponentProps {
   showingAnswer: boolean;
@@ -32,7 +32,6 @@ export default function CardContentComponent({
   }, [obtainCurrentCard]);
 
   const fullCitation = currentCard ? buildFullCitation(currentCard) : "";
-  const score = currentCard?.score ?? "";
 
   const bigButtonClickHandler = userHasNoCards() ? getStarted : showAnswer;
 
@@ -66,7 +65,6 @@ export default function CardContentComponent({
           />
         )}
       </button>
-      <div className="absolute right-0 bottom-0 p-2 text-xl">{score}</div>
     </>
   );
 }
