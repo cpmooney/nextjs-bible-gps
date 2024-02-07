@@ -1,8 +1,7 @@
 "use client";
-import {Citation} from "@/models/citation";
-import {Fragment, useMemo} from "react";
-
-export type PromptPreference = "fragment" | "entire";
+import { Citation } from "@/models/citation";
+import { Fragment, useMemo } from "react";
+import { PromptPreference } from "./providers/user-preference-provider";
 
 interface Props {
   preference: PromptPreference;
@@ -10,7 +9,11 @@ interface Props {
   userHasNoCards: boolean;
 }
 
-export default function Prompt({preference, citation, userHasNoCards}: Props) {
+export default function Prompt({
+  preference,
+  citation,
+  userHasNoCards,
+}: Props) {
   const promptText = useMemo(() => {
     if (userHasNoCards) {
     }
@@ -73,7 +76,7 @@ export default function Prompt({preference, citation, userHasNoCards}: Props) {
     <>
       <h2
         className={`${promptTextSize} ${promptHeight} ${promptTextAlign} mb-2 ${fadeNearBottom}`}
-        style={{overflow: "hidden", textOverflow: "ellipsis"}}
+        style={{ overflow: "hidden", textOverflow: "ellipsis" }}
       >
         {promptText.map((text, index) => (
           <Fragment key={index}>
