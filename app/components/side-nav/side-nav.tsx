@@ -14,6 +14,7 @@ import {
 import { Entry } from "./entry";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Beta } from "../preference/beta";
+import { BetaSideNav } from "./beta-side-nav";
 
 export function SideNav() {
   return (
@@ -62,29 +63,7 @@ export function SideNav() {
               url="/getting-started"
               Icon={BookmarkSquareIcon}
             />
-            <Beta>
-              <Entry
-                title="Focus on a Book"
-                modal="edit_filter"
-                Icon={MagnifyingGlassCircleIcon}
-              />
-              <Entry
-                title="Add New"
-                url="/partial-list"
-                Icon={PlusCircleIcon}
-              />
-              <Entry
-                title="Export"
-                modal="export_import"
-                Icon={ArrowsUpDownIcon}
-              />
-              <Entry
-                title="Quick Fragment"
-                modal="create_partial_citation"
-                Icon={LightBulbIcon}
-              />
-              <Entry title="About" url="/about" Icon={BookmarkSquareIcon} />
-            </Beta>
+            <BetaSideNav />
           </SignedIn>
         </ul>
       </div>
