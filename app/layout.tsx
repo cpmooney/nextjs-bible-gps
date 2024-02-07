@@ -4,8 +4,9 @@ import "../styles/globals.css";
 import { ImageBackground } from "./components/image-background";
 import { ModalCollection } from "./components/modals/modals";
 import DeckProvider from "./components/providers/deck-provider";
-import { SideNav } from "./components/side-nav/side-nav";
+import { SideNav } from "./components/nav/side-nav";
 import { UserPreferenceProvider } from "./components/providers/user-preference-provider";
+import { TopNav } from "./components/nav/top-nav";
 
 const DeckPageWithBackground = () => {
   return (
@@ -27,7 +28,7 @@ const Layout = ({ children }: LayoutProps) => {
         <div className="ml-5 mt-5">
           <ClerkProvider>
             <UserPreferenceProvider>
-              <SideNav />
+              <TopNav />
               <DeckProvider>
                 {children}
                 <ModalCollection />

@@ -1,40 +1,19 @@
 "use client";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import {
-  ArrowsUpDownIcon,
-  Bars3Icon,
   BookmarkSquareIcon,
   FaceSmileIcon,
   HomeIcon,
   InformationCircleIcon,
-  LightBulbIcon,
   ListBulletIcon,
-  MagnifyingGlassCircleIcon,
-  PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Entry } from "./entry";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { Beta } from "../preference/beta";
-import { BetaSideNav } from "./beta-side-nav";
 
-export function SideNav() {
+export function TopNav() {
   return (
-    <div className="drawer z-50">
-      <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content">
-        <label
-          htmlFor="my-drawer"
-          className="btn btn-primary drawer-button mb-2"
-        >
-          <Bars3Icon className="w-6" />
-        </label>
-      </div>
-      <div className="drawer-side">
-        <label
-          htmlFor="my-drawer"
-          aria-label="close sidebar"
-          className="drawer-overlay"
-        ></label>
-        <ul className="menu bg-base-200 w-56">
+    <div className="navbar bg-base-100 w-96 mb-4">
+      <div className="navbar-center hidden lg:flex">
+        <ul className="menu menu-horizontal px-1">
           <SignedOut>
             <SignInButton mode="modal">
               <li>
@@ -63,7 +42,6 @@ export function SideNav() {
               url="/getting-started"
               Icon={BookmarkSquareIcon}
             />
-            <BetaSideNav />
           </SignedIn>
         </ul>
       </div>
