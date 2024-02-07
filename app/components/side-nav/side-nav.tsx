@@ -13,6 +13,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { Entry } from "./entry";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Beta } from "../preference/beta";
+import { BetaSideNav } from "./beta-side-nav";
 
 export function SideNav() {
   return (
@@ -49,13 +51,6 @@ export function SideNav() {
             </li>
           </SignedIn>
           <Entry title="Home" url="/" Icon={HomeIcon} />
-          <SignedIn>
-            <Entry
-              title="Focus on a Book"
-              modal="edit_filter"
-              Icon={MagnifyingGlassCircleIcon}
-            />
-          </SignedIn>
           <Entry
             title="Info"
             modal="full_citation"
@@ -63,23 +58,12 @@ export function SideNav() {
           />
           <SignedIn>
             <Entry title="List" url="/list" Icon={ListBulletIcon} />
-            <Entry title="Add New" url="/partial-list" Icon={PlusCircleIcon} />
-            <Entry
-              title="Export"
-              modal="export_import"
-              Icon={ArrowsUpDownIcon}
-            />
-            <Entry
-              title="Quick Fragment"
-              modal="create_partial_citation"
-              Icon={LightBulbIcon}
-            />
             <Entry
               title="Getting Started"
               url="/getting-started"
               Icon={BookmarkSquareIcon}
             />
-            <Entry title="About" url="/about" Icon={BookmarkSquareIcon} />
+            <BetaSideNav />
           </SignedIn>
         </ul>
       </div>

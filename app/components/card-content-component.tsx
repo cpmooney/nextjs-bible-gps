@@ -5,8 +5,9 @@ import {PlusCircleIcon} from "@heroicons/react/24/outline";
 import {useRouter} from "next/navigation";
 import {useEffect, useMemo, useState} from "react";
 import CardAnswerComponent from "./card-answer-component";
-import Prompt, {PromptPreference} from "./prompt";
+import Prompt from "./prompt";
 import {useDeckStateContext} from "./providers/deck-state-provider";
+import { useUserPreferenceContext } from "./providers/user-preference-provider";
 
 interface CardContentComponentProps {
   showingAnswer: boolean;
@@ -24,6 +25,7 @@ export default function CardContentComponent({
 
   const {obtainCurrentCard, userHasNoCards} = useDeckStateContext();
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
+  const {promptDisplay} = useUserPreferenceContext();
 
   useEffect(() => {
     setCurrentCard(obtainCurrentCard());
@@ -34,23 +36,19 @@ export default function CardContentComponent({
 
   const bigButtonClickHandler = userHasNoCards() ? getStarted : showAnswer;
 
-  const preference: PromptPreference = "entire";
-
   const answerHeight = useMemo(() => {
-    switch (preference) {
-      /*
+    switch (promptDisplay) {
       case "fragment":
         return "h-40";
-        */
       case "entire":
         return "h-24";
     }
-  }, [preference]);
+  }, [promptDisplay]);
 
   return (
     <>
       <Prompt
-        preference={preference}
+        preference={promptDisplay}
         citation={currentCard}
         userHasNoCards={userHasNoCards()}
       />
