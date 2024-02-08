@@ -27,7 +27,7 @@ export default function CardEditPage({ params }: CardEditPageParams) {
   }
 
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
+    <div className="card bg-base-100 shadow-xl">
       <CardEditForm initialCard={initialCard} onSave={onSave} />
     </div>
   );
