@@ -54,7 +54,16 @@ export default function CardEditForm({
       tags: [],
       id,
     };
-  }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id, score]);
+  }, [
+    book,
+    chapter,
+    firstVerse,
+    suffix,
+    fragment,
+    entire,
+    initialCard.id,
+    score,
+  ]);
 
   const fullCitation = useMemo(() => {
     return buildFullCitation({ book, chapter, firstVerse, suffix });
@@ -82,10 +91,8 @@ export default function CardEditForm({
 
   return (
     <>
-      <div className="card-body">
-        <div className="w-full">
-          <Label title="Citation" />
-        </div>
+      <div className="m-4 p-4 bg-white shadow-xl">
+        <Label title="Citation" />
         <div className="flex space-x-2">
           <BibleSelection setBook={setBook} initialBook={initialBook} />
           <NumberSelection
@@ -101,40 +108,36 @@ export default function CardEditForm({
             initialValue={initialCard.suffix}
           />
         </div>
-        <Label title={fullCitation} />
-        <FragmentEntry
-          setString={setFragment}
-          initialValue={initialCard.fragment}
-        />
+      </div>
+      <div className="m-4 p-4 bg-white shadow-xl">
         <TextArea setString={setEntire} initialValue={initialCard.entire} />
+      </div>
+      <div className="m-4 p-4 bg-white shadow-xl flex">
+        <button
+          className="ml-2 mr-2 mt-2 mb-2 flex-1"
+          onClick={saveAndClose}
+        >
+          <Label title="Save" />
+        </button>
+        <button className=" ml-2 mr-2 mt-2 mb-2 flex-1" onClick={cancelMe}>
+          <Label title="Cancel" />
+        </button>
+        {citation.id && (
+          <button
+            className="h-8 ml-2 mt-2 flex-1"
+            onClick={deleteThisCard}
+          >
+            <Label title="Delete" />
+          </button>
+        )}
+      </div>
+      <div className="m-4 p-4 bg-white shadow-xl">
         {citation.id && (
           <div className="flex ml-auto">
             <div className="w-16 mr-2 mt-2 mb-2">id {citation.id}</div>
             <div className="w-16 mr-2 mt-2 mb-2">score {score}</div>
           </div>
         )}
-        <div className="card-actions">
-          <button
-            className=" ml-2 mr-2 mt-2 mb-2 bg-green-400"
-            onClick={saveAndClose}
-          >
-            <CheckCircleIcon className="h-8 w-8" />
-          </button>
-          <button
-            className=" ml-2 mr-2 mt-2 mb-2 bg-red-400"
-            onClick={cancelMe}
-          >
-            <NoSymbolIcon className="h-8 w-8" />
-          </button>
-          {citation.id && (
-            <button
-              className="h-8  bg-orange-400 ml-2 mt-2"
-              onClick={deleteThisCard}
-            >
-              <TrashIcon className="h-8 w-8" />
-            </button>
-          )}
-        </div>
       </div>
     </>
   );

@@ -10,17 +10,23 @@ interface Props {
   book: string;
   citations: Citation[];
   active: boolean;
+  activateBook: (book: string) => void;
 }
 
-export const Book = ({ book, citations, active }: Props) => {
+export const Book = ({ book, citations, active, activateBook }: Props) => {
   const router = useRouter();
   const newCard = () => {
     router.push(`/edit/0?book=${book}`);
   };
+  const numberOfCards = citations.length;
   return (
-    <div className="bg-base-200 mb-2 p-4 shadow-xl">
-      <Label title={book} />
-      <div>
+    <div id={book} className="bg-white m-4 p-4 shadow-xl" onClick={() => activateBook(book)}>
+      <div className="flex max-w-2xl text-2xl justify-between">
+        <div className="pr-2"><Label title={book} /></div>
+        <div className="flex-auto" />
+        <div className="pl-2">{numberOfCards} citations</div>
+      </div>
+      <div className={`pt-4 ${active ? null : 'hidden' }`}>
         <button
           className="h-5 w-full ml-2 mt-2 flex mb-4"
           onClick={newCard}

@@ -27,7 +27,7 @@ export default function CitationDisplay({citation}: Props) {
 
   return (
     <div className="flex">
-      <button className="text-left h-5 w-24 m-4" onClick={gotoVerse}>
+      <button className="shrink-0 text-left h-5 w-16 m-4" onClick={gotoVerse}>
         <ClientOnly>{citationForDisplay}</ClientOnly>
       </button>
       <div className="text-left flex-auto h-5 mt-4 overflow-hidden whitespace-nowrap">
