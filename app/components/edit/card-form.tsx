@@ -1,21 +1,16 @@
 "use client";
 import { Citation } from "@/models/citation";
-import {
-  CheckCircleIcon,
-  NoSymbolIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
 import { deleteCard, saveCitation } from "app/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { buildFullCitation } from "src/utilities/additional-citation-methods";
 import { useDeckStateContext } from "../providers/deck-state-provider";
 import { BibleSelection } from "./bible-selection";
-import { FragmentEntry } from "./fragment-entry";
 import { NumberSelection } from "./number-selection";
 import { SuffixEntry } from "./suffix-entry";
 import { TextArea } from "./text-area";
 import Label from "../label";
+import { ActionButton } from "../action-button";
 
 interface CardEditFormProps {
   initialCard: Citation;
@@ -113,22 +108,10 @@ export default function CardEditForm({
         <TextArea setString={setEntire} initialValue={initialCard.entire} />
       </div>
       <div className="m-4 p-4 bg-white shadow-xl flex">
-        <button
-          className="ml-2 mr-2 mt-2 mb-2 flex-1"
-          onClick={saveAndClose}
-        >
-          <Label title="Save" />
-        </button>
-        <button className=" ml-2 mr-2 mt-2 mb-2 flex-1" onClick={cancelMe}>
-          <Label title="Cancel" />
-        </button>
+        <ActionButton title="Save" onClick={saveAndClose} />
+        <ActionButton title="Cancel" onClick={cancelMe} />
         {citation.id && (
-          <button
-            className="h-8 ml-2 mt-2 flex-1"
-            onClick={deleteThisCard}
-          >
-            <Label title="Delete" />
-          </button>
+          <ActionButton title="Delete" onClick={deleteThisCard} />
         )}
       </div>
       <div className="m-4 p-4 bg-white shadow-xl">

@@ -31,7 +31,7 @@ export const obtainChangedScoreRequest = (): SaveChangedScoresRequest => {
   });
 };
 
-const computeScoreDelta = (scoreChange: ScoreChange, score: number): number => {
+export const computeScoreDelta = (scoreChange: ScoreChange, score: number): number => {
   if (scoreChange === ScoreChange.Increment) {
     return 1;
   } else if (scoreChange === ScoreChange.Reset) {

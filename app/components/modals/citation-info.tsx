@@ -1,15 +1,14 @@
 "use client";
-import { BookOpenIcon, PencilIcon } from "@heroicons/react/24/outline";
 import {
-  buildExternalUrl,
   buildFullCitation,
 } from "src/utilities/additional-citation-methods";
-import { Modal } from "./modal";
+import { Modal, closeModal } from "./modal";
 import { useDeckStateContext } from "../providers/deck-state-provider";
 import { useEffect, useState } from "react";
 import { Citation } from "@/models/citation";
 import { useRouter } from "next/navigation";
 import Label from "../label";
+import { ActionButton } from "../action-button";
 
 export const CitationInfo = () => {
   const { obtainCurrentCard } = useDeckStateContext();
@@ -23,41 +22,32 @@ export const CitationInfo = () => {
 
   const entire = currentCard?.entire ?? "";
   const fullCitation = currentCard ? buildFullCitation(currentCard) : "";
-  const externalUrl = currentCard ? buildExternalUrl(currentCard) : "";
-  const id = currentCard?.id?.toString() ?? "-";
   const score = currentCard?.score?.toString() ?? "-";
+  const id = currentCard?.id ?? 0;
 
-  const editCitation = () => router.push(editUrl(obtainCurrentCard().id));
-
-  const showInExternalApp = () => {
-    window.open(externalUrl, "_blank");
-  };
+  const editCitation = () => {
+    router.push(editUrl(obtainCurrentCard().id));
+    closeModal("full_citation");
+  }
 
   return Modal({
     name: "full_citation",
     contents: (
-      <div>
+      <>
         <div>
           <Label title={fullCitation} />
           <p className="text-lg">{entire}</p>
-        </div>
-        <div>
-          <div className="flex mr-2 mt-6 mb-2 justify-start bg-gray-200">
-            <div className="flex-1 m-1">
-              Current Score on This Citation
-            </div>
-            <div className="flex-1 m-1">
-              {score}
-            </div>
+          <div className="flex mr-2 mt-6 mb-2 justify-start border-b-2">
+            <div className="m-1">Score . . .</div>
+            <div className="ml-auto m-1">{score}</div>
           </div>
-          <button className=" mr-2 mt-2 mb-2" onClick={editCitation}>
-            <PencilIcon className="w-6" />
-          </button>
-          <button className=" mr-2 mt-2 mb-2" onClick={showInExternalApp}>
-            <BookOpenIcon className="h-8 w-8" />
-          </button>
+          <div className="flex mr-2 mt-6 mb-2 justify-start border-b-2">
+            <div className="m-1">ID . . .</div>
+            <div className="ml-auto m-1">{id}</div>
+          </div>
+          <ActionButton title="Edit" onClick={editCitation} />
         </div>
-      </div>
+      </>
     ),
   });
 };

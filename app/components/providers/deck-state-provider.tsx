@@ -27,7 +27,6 @@ export interface DeckStateContext {
   drawCitation: () => Citation | undefined;
   incrementCurrentCardScore: () => void;
   decrementCurrentCardScore: () => void;
-  syncScoresToDb: () => Promise<void>;
   obtainCardsByBook: () => OrderedCardsByBook;
   obtainAllCitations: () => Citation[];
   obtainUnbankedScore: () => number;
@@ -132,9 +131,11 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     scoreChange: ScoreRecorder.ScoreChange,
     setUnbankedScore: Dispatch<SetStateAction<number>>
   ) => {
+    const scoreDelta = ScoreRecorder.computeScoreDelta(scoreChange, card.score);
     const scoreChangeRecord = ScoreRecorder.recordScoreChange(card, scoreChange, setUnbankedScore);
     if (isSignedIn && !manualSave) {
       saveChangedCards([scoreChangeRecord]);
+      setBankedScore(() => bankedScore + scoreDelta);
     } else {
       // TODO: Implement caching.  cardsWithChangedScores should be moved here.
     }
@@ -181,7 +182,6 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         obtainCurrentCardGroup: guaranteeCurrentCardGroup,
         incrementCurrentCardScore,
         decrementCurrentCardScore: decrementCurrentCardScore,
-        syncScoresToDb,
         obtainCardsByBook,
         obtainAllCitations,
         obtainUnbankedScore: () => unbankedScore,
