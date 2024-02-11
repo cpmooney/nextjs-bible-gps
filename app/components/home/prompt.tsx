@@ -15,7 +15,7 @@ export default function Prompt({preference, citation, userHasNoCards}: Props) {
     }
     if (citation) {
       switch (preference) {
-        case "fragment":
+        case "key-words":
           return citation.fragment.split("/");
         case "entire":
           return [citation.entire];
@@ -26,7 +26,7 @@ export default function Prompt({preference, citation, userHasNoCards}: Props) {
 
   const promptTextAlign = useMemo(() => {
     switch (preference) {
-      case "fragment":
+      case "key-words":
         return "text-center";
       case "entire":
         return "text-left";
@@ -35,7 +35,7 @@ export default function Prompt({preference, citation, userHasNoCards}: Props) {
 
   const promptTextSize = useMemo(() => {
     switch (preference) {
-      case "fragment":
+      case "key-words":
         const fragmentLength = citation?.fragment?.length ?? 0;
         if (fragmentLength <= 53) {
           return "text-2xl";
@@ -52,7 +52,7 @@ export default function Prompt({preference, citation, userHasNoCards}: Props) {
 
   const promptHeight = useMemo(() => {
     switch (preference) {
-      case "fragment":
+      case "key-words":
         return "h-16";
       case "entire":
         return "h-64";
@@ -61,7 +61,7 @@ export default function Prompt({preference, citation, userHasNoCards}: Props) {
 
   const fadeNearBottom = useMemo(() => {
     switch (preference) {
-      case "fragment":
+      case "key-words":
         return "fade-out";
       case "entire":
         return "";
