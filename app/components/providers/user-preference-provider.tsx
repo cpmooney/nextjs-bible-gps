@@ -1,17 +1,15 @@
 "use client";
 import { ReactNode, createContext, useContext } from "react";
 
-// TODO: Does this need to be client?
-
 interface Props {
   children: ReactNode;
 }
 
-export type PromptPreference = "fragment" | "entire";
+export type PromptPreference = "key-words" | "entire";
 
 export interface UserPreferenceContext {
   promptDisplay: PromptPreference;
-  betaFeatures: boolean;
+  manualSave: boolean;
 }
 
 export const UserPreferenceProvider = ({ children }: Props) => {
@@ -19,8 +17,8 @@ export const UserPreferenceProvider = ({ children }: Props) => {
     <>
       <UserPreferenceContext.Provider
         value={{
-          betaFeatures: false,
           promptDisplay: "entire",
+          manualSave: false
         }}
       >
         {children}
@@ -40,6 +38,6 @@ export const useUserPreferenceContext = () => {
 }
 
 const UserPreferenceContext = createContext<UserPreferenceContext>({
-  betaFeatures: true,
   promptDisplay: "entire",
+  manualSave: true,
 });

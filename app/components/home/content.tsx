@@ -31,7 +31,7 @@ export default function Content() {
 
   const answerHeight = useMemo(() => {
     switch (promptDisplay) {
-      case "fragment":
+      case "key-words":
         return "h-40";
       case "entire":
         return "h-24";

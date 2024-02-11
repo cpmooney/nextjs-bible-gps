@@ -3,24 +3,26 @@ import { useDeckStateContext } from "../providers/deck-state-provider";
 import { useCardStateContext } from "./card-state-provider";
 
 export default function ResponseButtons() {
-  const deckStateContext = useDeckStateContext();
-  const { showingAnswer, hideAnswer } = useCardStateContext()
+  const { drawCitation, incrementCurrentCardScore, decrementCurrentCardScore } =
+    useDeckStateContext();
+  const { showingAnswer, hideAnswer } = useCardStateContext();
 
   const advanceToNextCard = () => {
-    deckStateContext.drawCitation();
+    drawCitation();
   };
 
-  const correct = () => {
+  const correct = async () => {
     hideAnswer();
-    deckStateContext.incrementCurrentCardScore();
+    incrementCurrentCardScore();
     advanceToNextCard();
   };
 
-  const wrong = () => {
+  const wrong = async () => {
     hideAnswer();
-    deckStateContext.decrementCurrentCardScore();
+    decrementCurrentCardScore();
     advanceToNextCard();
   };
+
   return (
     <div className="w-full flex">
       <button

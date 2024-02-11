@@ -27,7 +27,7 @@ export default function InfoButton() {
         />
       </svg>
       <label>
-        View Citation
+        View This Citation
       </label>
     </button>
   );

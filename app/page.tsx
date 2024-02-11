@@ -2,7 +2,6 @@ import { CardStateProvider } from "./components/home/card-state-provider";
 import Content from "./components/home/content";
 import InfoButton from "./components/home/info-button";
 import ResponseButtons from "./components/home/response-buttons";
-import Score from "./components/home/score";
 import Label from "./components/label";
 
 export default function Home() {
@@ -21,9 +20,6 @@ export default function Home() {
           <div className="mt-2">
             <InfoButton />
           </div>
-        </div>
-        <div className="w-full max-w-2xl bg-white shadow-xl mb-4 p-4">
-          <Score />
         </div>
       </div>
     </CardStateProvider>
