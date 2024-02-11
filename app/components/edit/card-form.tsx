@@ -1,20 +1,16 @@
 "use client";
 import { Citation } from "@/models/citation";
-import {
-  CheckCircleIcon,
-  NoSymbolIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
 import { deleteCard, saveCitation } from "app/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { buildFullCitation } from "src/utilities/additional-citation-methods";
 import { useDeckStateContext } from "../providers/deck-state-provider";
 import { BibleSelection } from "./bible-selection";
-import { FragmentEntry } from "./fragment-entry";
 import { NumberSelection } from "./number-selection";
 import { SuffixEntry } from "./suffix-entry";
 import { TextArea } from "./text-area";
+import Label from "../label";
+import { ActionButton } from "../action-button";
 
 interface CardEditFormProps {
   initialCard: Citation;
@@ -53,7 +49,16 @@ export default function CardEditForm({
       tags: [],
       id,
     };
-  }, [book, chapter, firstVerse, suffix, fragment, entire, initialCard.id, score]);
+  }, [
+    book,
+    chapter,
+    firstVerse,
+    suffix,
+    fragment,
+    entire,
+    initialCard.id,
+    score,
+  ]);
 
   const fullCitation = useMemo(() => {
     return buildFullCitation({ book, chapter, firstVerse, suffix });
@@ -81,10 +86,8 @@ export default function CardEditForm({
 
   return (
     <>
-      <div className="card-body">
-        <div className="w-full">
-          <label className="label font-bold">Citation</label>
-        </div>
+      <div className="m-4 p-4 bg-white shadow-xl">
+        <Label title="Citation" />
         <div className="flex space-x-2">
           <BibleSelection setBook={setBook} initialBook={initialBook} />
           <NumberSelection
@@ -100,40 +103,24 @@ export default function CardEditForm({
             initialValue={initialCard.suffix}
           />
         </div>
-        <label className="label font-italics">{fullCitation}</label>
-        <FragmentEntry
-          setString={setFragment}
-          initialValue={initialCard.fragment}
-        />
+      </div>
+      <div className="m-4 p-4 bg-white shadow-xl">
         <TextArea setString={setEntire} initialValue={initialCard.entire} />
+      </div>
+      <div className="m-4 p-4 bg-white shadow-xl flex">
+        <ActionButton title="Save" onClick={saveAndClose} />
+        <ActionButton title="Cancel" onClick={cancelMe} />
+        {citation.id && (
+          <ActionButton title="Delete" onClick={deleteThisCard} />
+        )}
+      </div>
+      <div className="m-4 p-4 bg-white shadow-xl">
         {citation.id && (
           <div className="flex ml-auto">
             <div className="w-16 mr-2 mt-2 mb-2">id {citation.id}</div>
             <div className="w-16 mr-2 mt-2 mb-2">score {score}</div>
           </div>
         )}
-        <div className="card-actions">
-          <button
-            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-green-400"
-            onClick={saveAndClose}
-          >
-            <CheckCircleIcon className="h-8 w-8" />
-          </button>
-          <button
-            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-red-400"
-            onClick={cancelMe}
-          >
-            <NoSymbolIcon className="h-8 w-8" />
-          </button>
-          {citation.id && (
-            <button
-              className="h-8 btn btn-btnPrimary bg-orange-400 ml-2 mt-2"
-              onClick={deleteThisCard}
-            >
-              <TrashIcon className="h-8 w-8" />
-            </button>
-          )}
-        </div>
       </div>
     </>
   );

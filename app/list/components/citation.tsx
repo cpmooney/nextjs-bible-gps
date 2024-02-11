@@ -23,21 +23,22 @@ export default function CitationDisplay({citation}: Props) {
     router.push('/');
   }
 
+  const firstFiveWords = citation.entire.split(' ').slice(0, 5).join(' ');
+
   return (
     <div className="flex">
-      <button className="btn btn-btnPrimary h-5 w-32 ml-2 mt-2 bg-blue-400" onClick={gotoVerse}>
+      <button className="shrink-0 text-left h-5 w-16 m-4" onClick={gotoVerse}>
         <ClientOnly>{citationForDisplay}</ClientOnly>
       </button>
-      <div className="flex-auto h-5 ml-2 mt-2">
-        <ClientOnly>{citation.fragment}</ClientOnly>
+      <div className="text-left flex-auto h-5 mt-4 overflow-hidden whitespace-nowrap">
+        <ClientOnly>{firstFiveWords} . . .</ClientOnly>
       </div>
       <button
-        className="h-8 btn btn-btnPrimary bg-green-400 ml-2 mt-2"
+        className="h-8 ml-2 mt-4 w-8 shrink-0"
         onClick={editCard}
       >
         <PencilIcon className="h-5 w-5" />
       </button>
-
     </div>
   );
 }

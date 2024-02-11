@@ -3,13 +3,9 @@ import {
   OrderedCardsByBook,
   buildCardsByBook,
 } from "@/utilities/card-by-book-builder";
-import {Filter, emptyFilter, filtered} from "@/utilities/filtering";
-import {
-  ScoreChange,
-  obtainChangedScoreRequest,
-  recordScoreChange,
-} from "@/utilities/score-recorder";
-import {saveChangedCards} from "app/actions";
+import { Filter, emptyFilter, filtered } from "@/utilities/filtering";
+import * as ScoreRecorder from "@/utilities/score-recorder";
+import { saveChangedCards } from "app/actions";
 import {
   Dispatch,
   SetStateAction,
@@ -20,16 +16,17 @@ import {
   useRef,
   useState,
 } from "react";
-import {Citation} from "src/models/citation";
-import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
-import {randomInRange} from "src/utilities/misc";
+import { Citation } from "src/models/citation";
+import { WrappedCard, createDrawDeck } from "src/utilities/draw-deck-builder";
+import { randomInRange } from "src/utilities/misc";
+import { useUserPreferenceContext } from "./user-preference-provider";
+import { useUser } from "@clerk/nextjs";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
   drawCitation: () => Citation | undefined;
   incrementCurrentCardScore: () => void;
   decrementCurrentCardScore: () => void;
-  syncScoresToDb: () => Promise<void>;
   obtainCardsByBook: () => OrderedCardsByBook;
   obtainAllCitations: () => Citation[];
   obtainUnbankedScore: () => number;
@@ -61,6 +58,8 @@ export const useDeckStateContext = () => {
 };
 
 export const CardArrayProvider = (props: DeckStateProviderProps) => {
+  const { manualSave } = useUserPreferenceContext();
+  const { isSignedIn } = useUser();
   const [unbankedScore, setUnbankedScore] = useState<number>(0);
   const [bankedScore, setBankedScore] = useState<number>(
     props.initialBankedScore
@@ -118,7 +117,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const syncScoresToDb = async (): Promise<void> => {
     setBankedScore(bankedScore + unbankedScore);
     setUnbankedScore(0);
-    saveChangedCards(obtainChangedScoreRequest());
+    saveChangedCards(ScoreRecorder.obtainChangedScoreRequest());
   };
 
   const resetDeck = (newFilter: Filter) => {
@@ -127,17 +126,32 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     setTriggerDrawDeck(true);
   };
 
+  const recordScoreChange = (
+    card: Citation,
+    scoreChange: ScoreRecorder.ScoreChange,
+    setUnbankedScore: Dispatch<SetStateAction<number>>
+  ) => {
+    const scoreDelta = ScoreRecorder.computeScoreDelta(scoreChange, card.score);
+    const scoreChangeRecord = ScoreRecorder.recordScoreChange(card, scoreChange, setUnbankedScore);
+    if (isSignedIn && !manualSave) {
+      saveChangedCards([scoreChangeRecord]);
+      setBankedScore(() => bankedScore + scoreDelta);
+    } else {
+      // TODO: Implement caching.  cardsWithChangedScores should be moved here.
+    }
+  };
+
   const incrementCurrentCardScore = (): void =>
     recordScoreChange(
       guaranteeCurrentCard(),
-      ScoreChange.Increment,
+      ScoreRecorder.ScoreChange.Increment,
       setUnbankedScore
     );
 
   const decrementCurrentCardScore = (): void =>
     recordScoreChange(
       guaranteeCurrentCard(),
-      ScoreChange.Reset,
+      ScoreRecorder.ScoreChange.Reset,
       setUnbankedScore
     );
 
@@ -168,7 +182,6 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         obtainCurrentCardGroup: guaranteeCurrentCardGroup,
         incrementCurrentCardScore,
         decrementCurrentCardScore: decrementCurrentCardScore,
-        syncScoresToDb,
         obtainCardsByBook,
         obtainAllCitations,
         obtainUnbankedScore: () => unbankedScore,

@@ -6,7 +6,7 @@ export const recordScoreChange = (
   card: Citation,
   scoreChange: ScoreChange,
   setUnbankedScore: Dispatch<SetStateAction<number>>
-): void => {
+): ScoreChangeRecord => {
   const scoreDelta = computeScoreDelta(scoreChange, card.score);
   setUnbankedScore((unbankedScore) => unbankedScore + scoreDelta);
   card.score += scoreDelta;
@@ -14,7 +14,7 @@ export const recordScoreChange = (
   if (!card.id) {
     throw new Error("Card has no id");
   }
-  cardsWithChangedScores[card.id] = {
+  return {
     id: card.id,
     score: card.score,
     lastReviewed: card.lastReviewed.toISOString(),
@@ -31,7 +31,7 @@ export const obtainChangedScoreRequest = (): SaveChangedScoresRequest => {
   });
 };
 
-const computeScoreDelta = (scoreChange: ScoreChange, score: number): number => {
+export const computeScoreDelta = (scoreChange: ScoreChange, score: number): number => {
   if (scoreChange === ScoreChange.Increment) {
     return 1;
   } else if (scoreChange === ScoreChange.Reset) {

@@ -15,9 +15,9 @@ export const Modal = (props: ModalProps) => {
 
   return (
     <dialog id={modalId} className="modal" ref={dialogRef}>
-      <div className="modal-box">
+      <div className="p-4 m-4">
         <button
-          className="btn btn-sm btn-circle absolute right-2 top-2"
+          className="absolute right-2 top-2"
           onClick={closeMe}
         >
           <XMarkIcon className="h-8 w-8" />

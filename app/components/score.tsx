@@ -1,66 +1,29 @@
 "use client";
-import {ChevronDoubleRightIcon} from "@heroicons/react/24/outline";
+import { useMemo } from "react";
+import Label from "./label";
 import { useDeckStateContext } from "./providers/deck-state-provider";
-import { useUser } from '@clerk/nextjs';
 
-export default function ScoreComponent() {
-  const {syncScoresToDb, obtainBankedScore, obtainUnbankedScore} = useDeckStateContext();
-  const { isSignedIn } = useUser();
-
-  const unbankedScore = obtainUnbankedScore();
-  const bankedScore = obtainBankedScore();
-
-  const getChangeColorClass = () => {
-    if (unbankedScore < 0) {
-      return "text-red-600";
-    }
-    if (unbankedScore === 0) {
-      return "text-gray-600";
-    }
-    if (unbankedScore < 10) {
-      return "text-green-600";
-    }
-    if (unbankedScore < 30) {
-      return "text-lime-600";
-    }
-    return "text-yellow-600";
-  };
-
-  const getTotalScoreColorClass = () => {
-    return "text-green-600";
-  };
-
-  const chevronClicked = () => {
-    if (isSignedIn) {
-      syncScoresToDb();
-    } else {
-      alert("Create a user to take advantage of this feature!");
-    }
-  }
-
+export default function Score() {
+  const { obtainBankedScore, obtainCurrentCard } = useDeckStateContext();
+  const currentScore = useMemo(
+    () => obtainBankedScore().toString(),
+    [obtainBankedScore]
+  );
+  const currentCardScore = useMemo(
+    () => obtainCurrentCard()?.score.toString(),
+    [obtainCurrentCard]
+  );
   return (
-    <div className="flex flex-row w-96">
-      <div className="card bg-base-100 shadow-xl mr-4 mt-4 flex-1">
-        <div className="card-body">
-          <div className={`justify-center text-5xl ${getChangeColorClass()}`}>
-            {unbankedScore}
-          </div>
-        </div>
+    <>
+      <Label title="Here are your killer stats!" />
+      <div className="flex justify-between mb-4">
+        <div className="text-2xl">Total score . . .</div>
+        <div className="mr-8 text-2xl text-right">{currentScore}</div>
       </div>
-      <div className="flex items-center justify-center mr-4">
-        <button className="btn btn-btnPrimary" onClick={chevronClicked}>
-          <ChevronDoubleRightIcon className="w-8 h-8 mr-2" />
-        </button>
+      <div className="flex justify-between">
+        <div className="text-2xl">Score this citation . . .</div>
+        <div className="mr-8 text-2xl text-right">{currentCardScore}</div>
       </div>
-      <div className="card bg-base-100 shadow-xl mt-4 flex-1">
-        <div className="card-body">
-          <div
-            className={`justify-center text-4xl ${getTotalScoreColorClass()}`}
-          >
-            {bankedScore}
-          </div>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
