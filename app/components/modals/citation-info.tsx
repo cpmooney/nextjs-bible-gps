@@ -1,8 +1,5 @@
 "use client";
-import {
-  BookOpenIcon,
-  PencilIcon,
-} from "@heroicons/react/24/outline";
+import { BookOpenIcon, PencilIcon } from "@heroicons/react/24/outline";
 import {
   buildExternalUrl,
   buildFullCitation,
@@ -12,6 +9,7 @@ import { useDeckStateContext } from "../providers/deck-state-provider";
 import { useEffect, useState } from "react";
 import { Citation } from "@/models/citation";
 import { useRouter } from "next/navigation";
+import Label from "../label";
 
 export const CitationInfo = () => {
   const { obtainCurrentCard } = useDeckStateContext();
@@ -39,28 +37,29 @@ export const CitationInfo = () => {
     name: "full_citation",
     contents: (
       <div>
-        <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">{fullCitation}</h3>
+        <div>
+          <Label title={fullCitation} />
           <p className="text-lg">{entire}</p>
         </div>
-        <div className="modal-action">
-          <div className="mr-2 mt-2 mb-2 justify-start">id {id}</div>
-          <div className="mr-2 mt-2 mb-2 justify-start">score {score}</div>
-          <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
-            onClick={editCitation}
-          >
+        <div>
+          <div className="flex mr-2 mt-6 mb-2 justify-start bg-gray-200">
+            <div className="flex-1 m-1">
+              Current Score on This Citation
+            </div>
+            <div className="flex-1 m-1">
+              {score}
+            </div>
+          </div>
+          <button className=" mr-2 mt-2 mb-2" onClick={editCitation}>
             <PencilIcon className="w-6" />
           </button>
-          <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
-            onClick={showInExternalApp}
-          >
+          <button className=" mr-2 mt-2 mb-2" onClick={showInExternalApp}>
             <BookOpenIcon className="h-8 w-8" />
           </button>
         </div>
       </div>
-    )});
+    ),
+  });
 };
 
 const editUrl = (cardId?: number) => {

@@ -46,14 +46,14 @@ export default function Content() {
           userHasNoCards={userHasNoCards()}
         />
         <button
-          className={`w-full btn btn-btnPrimary text-white bg-blue-600 hover:bg-blue-300 disabled:bg-blue-200 disabled:text-gray-700 text-xl ${answerHeight}`}
+          className={`w-full text-white bg-blue-600 hover:bg-blue-300 disabled:bg-blue-200 disabled:text-gray-700 text-xl pt-2 ${answerHeight}`}
           onClick={showAnswerClickHandler}
-          disabled={showingAnswer}
+          disabled={showingAnswer()}
         >
           {userHasNoCards() ? (
             <PlusCircleIcon className="w-12 h-12" />
           ) : (
-            <Answer answer={fullCitation} showingAnswer={showingAnswer} />
+            <Answer answer={fullCitation} showingAnswer={showingAnswer()} />
           )}
         </button>
     </>

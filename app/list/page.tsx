@@ -25,12 +25,8 @@ export default function CardListPage() {
   const cardsByBook: OrderedCardsByBook = obtainCardsByBook();
   return (
     <div>
-      <div className="card bg-base-100 shadow-xl mr-4 mt-4 flex-1">
-        <div className="card-body">
-          <div className="justify-center text-2xl">
-            # of cards: {numberOfCards}
-          </div>
-        </div>
+      <div className="max-w-2xl bg-base-100 shadow-xl p-4 m-4 text-2xl">
+        # of cards: {numberOfCards}
       </div>
       <div>
         {cardsByBook.map(({ book, cards }) => {

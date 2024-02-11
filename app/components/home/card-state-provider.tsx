@@ -6,7 +6,7 @@ interface Props {
 }
 
 interface CardStateContext {
-  showingAnswer: boolean;
+  showingAnswer: () => boolean;
   showAnswer: () => void;
   hideAnswer: () => void;
 }
@@ -17,15 +17,9 @@ export const CardStateProvider = ({ children }: Props) => {
     <>
       <CardStateContext.Provider
         value={{
-          showingAnswer: false,
-          hideAnswer: () => {
-            console.log('hideAnswer');
-            setShowingAnswer(false);
-          },
-          showAnswer: () => {
-            console.log('showAnswer');
-            setShowingAnswer(true);
-          }
+          showingAnswer: () => showingAnswer,
+          hideAnswer: () => setShowingAnswer(false),
+          showAnswer: () => setShowingAnswer(true)
         }}
       >
         {children}
@@ -45,7 +39,7 @@ export const useCardStateContext = () => {
 }
 
 const CardStateContext = createContext<CardStateContext>({
-  showingAnswer: false,
+  showingAnswer: () => false,
   hideAnswer: () => {
     throw new Error("hideAnswer called too early");
   },

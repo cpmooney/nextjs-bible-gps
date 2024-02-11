@@ -1,25 +1,30 @@
 import { CardStateProvider } from "./components/home/card-state-provider";
 import Content from "./components/home/content";
+import InfoButton from "./components/home/info-button";
 import ResponseButtons from "./components/home/response-buttons";
 import Score from "./components/home/score";
+import Label from "./components/label";
 
 export default function Home() {
   return (
     <CardStateProvider>
       <div className="p-4">
-      <div className="w-full max-w-2xl bg-base-100 shadow-xl mb-4 p-4">
-        <label className="label font-bold uppercase">Grade Yourself</label>
-        <div className="card-actions">
+        <div className="w-full max-w-2xl bg-white shadow-xl mb-4 p-4">
+          <div className="mt-2">
+            <InfoButton />
+          </div>
+        </div>
+        <div className="w-full max-w-2xl bg-white shadow-xl mb-4 p-4">
+          <Label title="Guess the citation for this passage" />
+          <Content />
+        </div>
+        <div className="w-full max-w-2xl bg-white shadow-xl mb-4 p-4">
+          <Label title="How did you do?" />
           <ResponseButtons />
         </div>
-      </div>
-      <div className="w-full max-w-2xl bg-base-100 shadow-xl mb-4 p-4">
-        <label className="label font-bold uppercase">Text</label>
-        <Content />
-      </div>
-      <div className="w-full max-w-2xl bg-base-100 shadow-xl mb-4 p-4">
-        <Score />
-      </div>
+        <div className="w-full max-w-2xl bg-white shadow-xl mb-4 p-4">
+          <Score />
+        </div>
       </div>
     </CardStateProvider>
   );

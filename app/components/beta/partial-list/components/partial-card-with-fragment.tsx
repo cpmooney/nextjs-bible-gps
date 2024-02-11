@@ -33,13 +33,13 @@ export default function PartialCardWithFragment({
   return (
     <div className="flex">
       <button
-        className="flex-auto btn btn-btnPrimary bg-green-400"
+        className="flex-auto  bg-green-400"
         onClick={editCard}
       >
         {fragment}
       </button>
       <button
-        className="flex-none btn btn-btnPrimary bg-red-400 ml-2"
+        className="flex-none  bg-red-400 ml-2"
         onClick={deleteCard}
       >
         <NoSymbolIcon className="w-6 h-6" />

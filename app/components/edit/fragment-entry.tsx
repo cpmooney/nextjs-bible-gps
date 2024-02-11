@@ -2,6 +2,7 @@
 import { searchByFragmentUrl } from "@/utilities/additional-citation-methods";
 import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline";
 import { ChangeEvent, Dispatch, SetStateAction, useRef } from "react";
+import Label from "../label";
 
 interface StringEntryProps {
   setString: Dispatch<SetStateAction<string>>;
@@ -25,7 +26,7 @@ export const FragmentEntry = ({
   return (
     <div>
       <div className="w-full">
-        <label className="label font-bold">Fragment</label>
+        <Label title="Fragment" />
       </div>
       <div className="flex">
         <input
@@ -36,7 +37,7 @@ export const FragmentEntry = ({
           defaultValue={initialValue}
         ></input>
         <button
-          className="flex-none btn btn-btnPrimary ml-2 mr-2 mb-2"
+          className="flex-none  ml-2 mr-2 mb-2"
           onClick={searchByFragment}
         >
           <MagnifyingGlassCircleIcon className="h-8 w-8" />

@@ -26,7 +26,7 @@ export const EditFilter = () => {
           Current Filter: {initialFilteredBook}
         </div>
           <button
-            className="btn btn-btnPrimary mr-2 mt-2 mb-2"
+            className=" mr-2 mt-2 mb-2"
             onClick={declareFilterAndClose("none")}
           >
             None
@@ -36,7 +36,7 @@ export const EditFilter = () => {
             return (
               <button
               key={loadedBook.book}
-                className="btn btn-btnPrimary mr-2 mt-2 mb-2"
+                className=" mr-2 mt-2 mb-2"
                 onClick={declareFilterAndClose(loadedBook.book)}
               >
                 {loadedBook.book} ({loadedBook.length})

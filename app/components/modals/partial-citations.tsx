@@ -29,7 +29,7 @@ export const PartialCitationModal = () => {
         </div>
         <div className="modal-action">
           <button
-            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2"
+            className=" ml-2 mr-2 mt-2 mb-2"
             onClick={saveAndClose}
           >
             <CheckCircleIcon className="h-8 w-8" />

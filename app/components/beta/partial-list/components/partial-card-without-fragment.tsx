@@ -13,7 +13,7 @@ export default function ParitalCardWithoutFragment() {
   return (
     <div className="flex">
       <button
-        className="flex-auto btn btn-btnPrimary bg-green-400"
+        className="flex-auto  bg-green-400"
         onClick={editCard}
       >
         <PlusCircleIcon className="w-6 h-6" />

@@ -14,7 +14,7 @@ export default function LetsGo() {
   };
   return (
     <button
-      className="flex-1 btn btn-btnPrimary enabled:bg-green-400 h-20"
+      className="flex-1  enabled:bg-green-400 h-20"
       onClick={letsGo}
       disabled={!userHasNoCards()}
     >

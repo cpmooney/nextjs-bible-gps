@@ -1,26 +1,18 @@
 "use client";
 import Link from "next/link";
-import { showModal } from "../modals/modal";
 
 interface Props {
   title: string;
   url?: string;
-  modal?: string;
 }
 
-export function Entry({ title, url, modal }: Props) {
-  const onClick = () => {
-    // TODO: There must be a more react-y way to accomplish this
-    if (modal) {
-      window.postMessage({ name: modal, action: "show" }, "*");
-      showModal(modal);
-    }
-  };
-
+export function Entry({ title, url }: Props) {
   return (
-    <li onClick={onClick}>
+    <li>
       <LinkElement url={url}>
-        {title}
+        <div className="mt-1 uppercase">
+          {title}
+        </div>
       </LinkElement>
     </li>
   );

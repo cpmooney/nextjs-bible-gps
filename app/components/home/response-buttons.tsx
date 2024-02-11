@@ -1,42 +1,42 @@
 "use client";
-import { useState } from "react";
 import { useDeckStateContext } from "../providers/deck-state-provider";
+import { useCardStateContext } from "./card-state-provider";
 
 export default function ResponseButtons() {
   const deckStateContext = useDeckStateContext();
-  const [showingAnswer, setShowingAnswer] = useState(false);
+  const { showingAnswer, hideAnswer } = useCardStateContext()
 
   const advanceToNextCard = () => {
     deckStateContext.drawCitation();
   };
 
   const correct = () => {
-    setShowingAnswer(false);
+    hideAnswer();
     deckStateContext.incrementCurrentCardScore();
     advanceToNextCard();
   };
 
   const wrong = () => {
-    setShowingAnswer(false);
+    hideAnswer();
     deckStateContext.decrementCurrentCardScore();
     advanceToNextCard();
   };
   return (
-    <>
+    <div className="w-full flex">
       <button
-        className="flex-1 btn btn-btnPrimary enabled:bg-green-400 h-20"
+        className="flex-1 enabled:bg-green-400 h-20 disabled:bg-gray-200 disabled:text-gray-400 text-xl font-bold uppercase mr-4"
         onClick={correct}
-        disabled={!showingAnswer}
+        disabled={!showingAnswer()}
       >
-        <label className="label font-bold">CORRECT</label>
+        Correct
       </button>
       <button
-        className="flex-1 btn btn-btnPrimary enabled:bg-red-400 h-20"
+        className="flex-1 enabled:bg-red-400 h-20 disabled:bg-gray-200 disabled:text-gray-400 text-xl font-bold uppercase"
         onClick={wrong}
-        disabled={!showingAnswer}
+        disabled={!showingAnswer()}
       >
-        <label className="label font-bold">INCORRECT</label>
+        Incorrect
       </button>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,5 @@
 import { ChangeEvent } from "react";
+import Label from "../label";
 
 interface Props {
   setString: (value: string) => void;
@@ -12,7 +13,7 @@ export const TextArea = ({ setString, initialValue }: Props) => {
   return (
     <div>
       <div className="w-full">
-        <label className="label font-bold">Entire Block</label>
+        <Label title="Entire Passage" />
       </div>
       <textarea
         className="input input-bordered w-full h-32"

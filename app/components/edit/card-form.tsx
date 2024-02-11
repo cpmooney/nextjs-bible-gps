@@ -15,6 +15,7 @@ import { FragmentEntry } from "./fragment-entry";
 import { NumberSelection } from "./number-selection";
 import { SuffixEntry } from "./suffix-entry";
 import { TextArea } from "./text-area";
+import Label from "../label";
 
 interface CardEditFormProps {
   initialCard: Citation;
@@ -83,7 +84,7 @@ export default function CardEditForm({
     <>
       <div className="card-body">
         <div className="w-full">
-          <label className="label font-bold">Citation</label>
+          <Label title="Citation" />
         </div>
         <div className="flex space-x-2">
           <BibleSelection setBook={setBook} initialBook={initialBook} />
@@ -100,7 +101,7 @@ export default function CardEditForm({
             initialValue={initialCard.suffix}
           />
         </div>
-        <label className="label font-italics">{fullCitation}</label>
+        <Label title={fullCitation} />
         <FragmentEntry
           setString={setFragment}
           initialValue={initialCard.fragment}
@@ -114,20 +115,20 @@ export default function CardEditForm({
         )}
         <div className="card-actions">
           <button
-            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-green-400"
+            className=" ml-2 mr-2 mt-2 mb-2 bg-green-400"
             onClick={saveAndClose}
           >
             <CheckCircleIcon className="h-8 w-8" />
           </button>
           <button
-            className="btn btn-btnPrimary ml-2 mr-2 mt-2 mb-2 bg-red-400"
+            className=" ml-2 mr-2 mt-2 mb-2 bg-red-400"
             onClick={cancelMe}
           >
             <NoSymbolIcon className="h-8 w-8" />
           </button>
           {citation.id && (
             <button
-              className="h-8 btn btn-btnPrimary bg-orange-400 ml-2 mt-2"
+              className="h-8  bg-orange-400 ml-2 mt-2"
               onClick={deleteThisCard}
             >
               <TrashIcon className="h-8 w-8" />
