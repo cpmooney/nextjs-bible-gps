@@ -16,7 +16,7 @@ export default function Home() {
           <Label title="How did you do?" />
           <ResponseButtons />
         </div>
-        <div className="w-full max-w-2xl bg-white shadow-xl mb-4 p-4">
+        <div className="w-full max-w-2xl bg-white shadow-xl mb-4 p-4 hidden">
           <div className="mt-2">
             <InfoButton />
           </div>
