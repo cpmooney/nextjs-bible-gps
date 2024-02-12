@@ -9,6 +9,7 @@ export type PromptPreference = "key-words" | "entire";
 
 export interface UserPreferenceContext {
   promptDisplay: PromptPreference;
+  advancedView: boolean
   manualSave: boolean;
 }
 
@@ -18,7 +19,8 @@ export const UserPreferenceProvider = ({ children }: Props) => {
       <UserPreferenceContext.Provider
         value={{
           promptDisplay: "entire",
-          manualSave: false
+          manualSave: false,
+          advancedView: false
         }}
       >
         {children}
@@ -39,5 +41,6 @@ export const useUserPreferenceContext = () => {
 
 const UserPreferenceContext = createContext<UserPreferenceContext>({
   promptDisplay: "entire",
-  manualSave: true,
+  manualSave: false,
+  advancedView: false
 });

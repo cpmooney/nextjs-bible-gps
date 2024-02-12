@@ -70,6 +70,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const [currentCardGroup, setCurrentCardGroup] = useState<number | null>(null);
   const [filter, setFilter] = useState<Filter>(emptyFilter());
   const [triggerDrawDeck, setTriggerDrawDeck] = useState<boolean>(false);
+  const [cardsWithChangedScores, setCardsWithChangedScores] = useState<ScoreRecorder.ScoreChangeRecords>({})
 
   const userHasNoCards = useCallback(
     () => props.allCards.length === 0,
@@ -116,8 +117,8 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
 
   const syncScoresToDb = async (): Promise<void> => {
     setBankedScore(bankedScore + unbankedScore);
-    setUnbankedScore(0);
-    saveChangedCards(ScoreRecorder.obtainChangedScoreRequest());
+    ;
+    saveChangedCards(ScoreRecorder.obtainChangedScoreRequest(cardsWithChangedScores));
   };
 
   const resetDeck = (newFilter: Filter) => {
@@ -137,7 +138,10 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       saveChangedCards([scoreChangeRecord]);
       setBankedScore(() => bankedScore + scoreDelta);
     } else {
-      // TODO: Implement caching.  cardsWithChangedScores should be moved here.
+      if (!card.id) {
+        throw "Card has no id";
+      }
+      setCardsWithChangedScores({ ...cardsWithChangedScores, [card.id]: scoreChangeRecord });
     }
   };
 
