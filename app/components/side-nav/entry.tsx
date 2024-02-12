@@ -8,13 +8,13 @@ interface Props {
 
 export function Entry({ title, url }: Props) {
   return (
-    <li>
+    <div className="flex-1">
       <LinkElement url={url}>
         <div className="mt-1 uppercase">
           {title}
         </div>
       </LinkElement>
-    </li>
+    </div>
   );
 }
 

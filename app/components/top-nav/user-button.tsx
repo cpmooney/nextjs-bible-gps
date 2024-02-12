@@ -1,10 +1,11 @@
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import { FaceSmileIcon } from "@heroicons/react/24/outline";
 import { UserButton as ClerkUserButton } from "@clerk/nextjs";
+import { UserName } from "./user-name";
 
 export function UserButton() {
   return (
-    <li>
+    <div>
       <SignedOut>
         <SignInButton mode="modal">
           <div className="flex">
@@ -14,8 +15,11 @@ export function UserButton() {
         </SignInButton>
       </SignedOut>
       <SignedIn>
-        <ClerkUserButton />
+        <div className="flex">
+          <ClerkUserButton />
+          <UserName />
+        </div>
       </SignedIn>
-    </li>
+    </div>
   );
 }

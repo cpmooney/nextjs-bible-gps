@@ -21,7 +21,7 @@ export const recordScoreChange = (
   };
 };
 
-export const obtainChangedScoreRequest = (): SaveChangedScoresRequest => {
+export const obtainChangedScoreRequest = (cardsWithChangedScores: ScoreChangeRecords): SaveChangedScoresRequest => {
   return Object.entries(cardsWithChangedScores).map(([id, changeInfo]) => {
     return {
       id: parseInt(id),
@@ -45,12 +45,10 @@ export enum ScoreChange {
   Reset,
 }
 
-const cardsWithChangedScores: ScoreChangeRecords = {};
-
 interface ScoreChangeRecord {
   id: number;
   score: number;
   lastReviewed: string;
 }
 
-type ScoreChangeRecords = Record<number, ScoreChangeRecord>;
+export type ScoreChangeRecords = Record<number, ScoreChangeRecord>;
