@@ -26,14 +26,14 @@ export default function ResponseButtons() {
   return (
     <div className="w-full flex">
       <button
-        className="flex-1 enabled:bg-green h-20 disabled:bg-gray-200 disabled:text-gray-400 text-xl font-bold uppercase mr-4"
+        className="flex-1 bg-orange-1 h-20 text-xl text-white font-bold uppercase mr-4"
         onClick={correct}
         disabled={!showingAnswer()}
       >
         Correct
       </button>
       <button
-        className="flex-1 enabled:bg-red h-20 disabled:bg-gray-200 disabled:text-gray-400 text-xl font-bold uppercase"
+        className="flex-1 bg-orange-1 h-20 text-xl text-white font-bold uppercase"
         onClick={wrong}
         disabled={!showingAnswer()}
       >
