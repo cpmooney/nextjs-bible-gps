@@ -5,7 +5,7 @@ import { UserName } from "./user-name";
 
 export function UserButton() {
   return (
-    <li>
+    <div>
       <SignedOut>
         <SignInButton mode="modal">
           <div className="flex">
@@ -20,6 +20,6 @@ export function UserButton() {
           <UserName />
         </div>
       </SignedIn>
-    </li>
+    </div>
   );
 }
