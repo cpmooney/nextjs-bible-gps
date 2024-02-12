@@ -14,7 +14,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <html>
       <body>
-        <div className="min-h-screen w-screen bg-gray-200">
+        <div className="min-h-screen w-screen bg-gray">
           <ClerkProvider>
             <UserPreferenceProvider>
               <TopNavBar />
