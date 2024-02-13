@@ -3,9 +3,10 @@ import {
   OrderedCardsByBook,
   buildCardsByBook,
 } from "@/utilities/card-by-book-builder";
-import { Filter, emptyFilter, filtered } from "@/utilities/filtering";
+import {Filter, emptyFilter, filtered} from "@/utilities/filtering";
 import * as ScoreRecorder from "@/utilities/score-recorder";
-import { saveChangedCards } from "app/actions";
+import {useUser} from "@clerk/nextjs";
+import {saveChangedCards} from "app/actions";
 import {
   Dispatch,
   SetStateAction,
@@ -16,14 +17,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { Citation } from "src/models/citation";
-import { WrappedCard, createDrawDeck } from "src/utilities/draw-deck-builder";
-import { randomInRange } from "src/utilities/misc";
-import { useUserPreferenceContext } from "./user-preference-provider";
-import { useUser } from "@clerk/nextjs";
+import {Citation} from "src/models/citation";
+import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
+import {randomInRange} from "src/utilities/misc";
+import {useUserPreferenceContext} from "./user-preference-provider";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
+  obtainOptionalCurrentCard: () => Citation | null;
   drawCitation: () => Citation | undefined;
   incrementCurrentCardScore: () => void;
   decrementCurrentCardScore: () => void;
@@ -58,8 +59,8 @@ export const useDeckStateContext = () => {
 };
 
 export const CardArrayProvider = (props: DeckStateProviderProps) => {
-  const { manualSave } = useUserPreferenceContext();
-  const { isSignedIn } = useUser();
+  const {manualSave} = useUserPreferenceContext();
+  const {isSignedIn} = useUser();
   const [unbankedScore, setUnbankedScore] = useState<number>(0);
   const [bankedScore, setBankedScore] = useState<number>(
     props.initialBankedScore
@@ -70,7 +71,8 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const [currentCardGroup, setCurrentCardGroup] = useState<number | null>(null);
   const [filter, setFilter] = useState<Filter>(emptyFilter());
   const [triggerDrawDeck, setTriggerDrawDeck] = useState<boolean>(false);
-  const [cardsWithChangedScores, setCardsWithChangedScores] = useState<ScoreRecorder.ScoreChangeRecords>({})
+  const [cardsWithChangedScores, setCardsWithChangedScores] =
+    useState<ScoreRecorder.ScoreChangeRecords>({});
 
   const userHasNoCards = useCallback(
     () => props.allCards.length === 0,
@@ -117,8 +119,9 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
 
   const syncScoresToDb = async (): Promise<void> => {
     setBankedScore(bankedScore + unbankedScore);
-    ;
-    saveChangedCards(ScoreRecorder.obtainChangedScoreRequest(cardsWithChangedScores));
+    saveChangedCards(
+      ScoreRecorder.obtainChangedScoreRequest(cardsWithChangedScores)
+    );
   };
 
   const resetDeck = (newFilter: Filter) => {
@@ -133,7 +136,11 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     setUnbankedScore: Dispatch<SetStateAction<number>>
   ) => {
     const scoreDelta = ScoreRecorder.computeScoreDelta(scoreChange, card.score);
-    const scoreChangeRecord = ScoreRecorder.recordScoreChange(card, scoreChange, setUnbankedScore);
+    const scoreChangeRecord = ScoreRecorder.recordScoreChange(
+      card,
+      scoreChange,
+      setUnbankedScore
+    );
     if (isSignedIn && !manualSave) {
       saveChangedCards([scoreChangeRecord]);
       setBankedScore(() => bankedScore + scoreDelta);
@@ -141,7 +148,10 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       if (!card.id) {
         throw "Card has no id";
       }
-      setCardsWithChangedScores({ ...cardsWithChangedScores, [card.id]: scoreChangeRecord });
+      setCardsWithChangedScores({
+        ...cardsWithChangedScores,
+        [card.id]: scoreChangeRecord,
+      });
     }
   };
 
@@ -183,6 +193,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       value={{
         drawCitation,
         obtainCurrentCard: guaranteeCurrentCard,
+        obtainOptionalCurrentCard: () => currentCard,
         obtainCurrentCardGroup: guaranteeCurrentCardGroup,
         incrementCurrentCardScore,
         decrementCurrentCardScore: decrementCurrentCardScore,
