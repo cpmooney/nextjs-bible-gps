@@ -11,6 +11,7 @@ import { SuffixEntry } from "./suffix-entry";
 import { TextArea } from "./text-area";
 import Label from "../label";
 import { ActionButton } from "../action-button";
+import { FragmentEntry } from "./fragment-entry";
 
 interface CardEditFormProps {
   initialCard: Citation;
@@ -86,7 +87,7 @@ export default function CardEditForm({
 
   return (
     <>
-      <div className="m-4 p-4 bg-white shadow-xl">
+      <div className="mt-1 p-4 bg-off-white-1">
         <Label title="Citation" />
         <div className="flex space-x-2">
           <BibleSelection setBook={setBook} initialBook={initialBook} />
@@ -104,17 +105,20 @@ export default function CardEditForm({
           />
         </div>
       </div>
-      <div className="m-4 p-4 bg-white shadow-xl">
+      <div className="mt-1 p-4 bg-off-white-1">
+        <FragmentEntry setString={setFragment} initialValue={initialCard.fragment} />
+      </div>
+      <div className="mt-1 p-4 bg-off-white-1">
         <TextArea setString={setEntire} initialValue={initialCard.entire} />
       </div>
-      <div className="m-4 p-4 bg-white shadow-xl flex">
+      <div className="mt-1 p-4 bg-off-white-1 flex">
         <ActionButton title="Save" onClick={saveAndClose} />
         <ActionButton title="Cancel" onClick={cancelMe} />
         {citation.id && (
           <ActionButton title="Delete" onClick={deleteThisCard} />
         )}
       </div>
-      <div className="m-4 p-4 bg-white shadow-xl">
+      <div className="mt-1 p-4 bg-off-white-1 flex">
         {citation.id && (
           <div className="flex ml-auto">
             <div className="w-16 mr-2 mt-2 mb-2">id {citation.id}</div>

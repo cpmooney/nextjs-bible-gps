@@ -1,4 +1,5 @@
-import {Go} from "./go";
+import {DrawerButton} from "./drawer-button";
+import {HomeButton} from "./home-button";
 import {Score} from "./score";
 import {UserButton} from "./user-button";
 
@@ -11,7 +12,8 @@ export const Header = () => {
       <div className="flex-1 text-center">
         <Score />
       </div>
-      <Go />
+      <HomeButton />
+      <DrawerButton />
     </div>
   );
 };

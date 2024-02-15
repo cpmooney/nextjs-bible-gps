@@ -1,6 +1,5 @@
 "use client";
 import { searchByFragmentUrl } from "@/utilities/additional-citation-methods";
-import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline";
 import { ChangeEvent, Dispatch, SetStateAction, useRef } from "react";
 import Label from "../label";
 
@@ -36,12 +35,6 @@ export const FragmentEntry = ({
           onChange={handleChange}
           defaultValue={initialValue}
         ></input>
-        <button
-          className="flex-none  ml-2 mr-2 mb-2"
-          onClick={searchByFragment}
-        >
-          <MagnifyingGlassCircleIcon className="h-8 w-8" />
-        </button>
       </div>
     </div>
   );

@@ -2,8 +2,10 @@ import {ClerkProvider} from "@clerk/nextjs";
 import {ReactNode} from "react";
 import "../styles/globals.css";
 import {Header} from "./components/header/header";
+import {ExtendedMenu} from "./components/menu/extended-menu";
 import {ModalCollection} from "./components/modals/modals";
 import DeckProvider from "./components/providers/deck-provider";
+import DrawerStateProvider from "./components/providers/drawer-state-provider";
 import {UserPreferenceProvider} from "./components/providers/user-preference-provider";
 
 interface LayoutProps {
@@ -18,9 +20,12 @@ const Layout = ({children}: LayoutProps) => {
           <ClerkProvider>
             <UserPreferenceProvider>
               <DeckProvider>
-                <Header />
-                {children}
-                <ModalCollection />
+                <DrawerStateProvider>
+                  <Header />
+                  {children}
+                  <ModalCollection />
+                  <ExtendedMenu />
+                </DrawerStateProvider>
               </DeckProvider>
             </UserPreferenceProvider>
           </ClerkProvider>
