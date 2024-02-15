@@ -1,5 +1,5 @@
 import CitationDetails from "./components/citation-details";
-import {CardStateProvider} from "./components/home/card-state-provider";
+import { CardStateProvider } from "./components/home/card-state-provider";
 import Content from "./components/home/content";
 import ResponseButtons from "./components/home/response-buttons";
 import InfoButton from "./components/info-button";

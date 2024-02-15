@@ -20,7 +20,7 @@ export const Book = ({ book, citations, active, activateBook }: Props) => {
   };
   const numberOfCards = citations.length;
   return (
-    <div id={book} className="bg-white m-4 p-4 shadow-xl" onClick={() => activateBook(book)}>
+    <div id={book} className="bg-off-white-1 mt-1 p-4" onClick={() => activateBook(book)}>
       <div className="flex max-w-2xl text-2xl justify-between">
         <div className="pr-2"><Label title={book} /></div>
         <div className="flex-auto" />

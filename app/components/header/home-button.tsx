@@ -20,7 +20,7 @@ export const HomeButton = () => {
 
   return (
     <button onClick={onClick}>
-      <div className="ml-auto">
+      <div className="ml-auto mr-2">
         {isHome ? null : <HomeIcon className="h-8 w-8" />}
       </div>
     </button>
