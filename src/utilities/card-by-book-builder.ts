@@ -3,20 +3,10 @@ import {Citation} from "@/models/citation";
 
 export type OrderedCardsByBook = {book: string; cards: Citation[]}[];
 
-export const buildCardsByBook = (
-  cards: Citation[],
-  filter?: string
-): OrderedCardsByBook => {
+export const buildCardsByBook = (cards: Citation[]): OrderedCardsByBook => {
   const cardsByBook: CardsByBook = {};
-  let filteredCards: Citation[] | undefined;
 
-  if (filter) {
-    filteredCards = cards.filter(cardFilter(filter));
-  } else {
-    filteredCards = cards;
-  }
-
-  filteredCards.forEach((card) => {
+  cards.forEach((card) => {
     if (!cardsByBook[card.book]) {
       cardsByBook[card.book] = [];
     }
@@ -35,15 +25,6 @@ export const buildCardsByBook = (
 };
 
 type CardsByBook = Record<string, Citation[]>;
-
-const cardFilter: (filter: string) => (card: Citation) => boolean = (
-  filter
-) => {
-  if (filter === "missingFragment") {
-    return (card) => !card.fragment;
-  }
-  throw new Error(`Unknown filter: ${filter}`);
-};
 
 const compareCards = (card1: Citation, card2: Citation): number => {
   if (card2.chapter === card1.chapter) {

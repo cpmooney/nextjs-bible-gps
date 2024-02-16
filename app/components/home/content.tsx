@@ -4,8 +4,12 @@ import {buildFullCitation} from "@/utilities/additional-citation-methods";
 import {PlusCircleIcon} from "@heroicons/react/24/outline";
 import {useRouter} from "next/navigation";
 import {useEffect, useMemo, useState} from "react";
+import Label from "../label";
 import {useDeckStateContext} from "../providers/deck-state-provider";
-import {useUserPreferenceContext} from "../providers/user-preference-provider";
+import {
+  PromptPreference,
+  useUserPreferenceContext,
+} from "../providers/user-preference-provider";
 import Answer from "./answer";
 import {useCardStateContext} from "./card-state-provider";
 import Prompt from "./prompt";
@@ -25,14 +29,35 @@ export default function Content() {
     router.push("/getting-started");
   };
 
-  const fullCitation = currentCard ? buildFullCitation(currentCard) : "";
-
   const showAnswerClickHandler = userHasNoCards() ? getStarted : showAnswer;
 
   const promptDisplay = useMemo(
     () => obtainPromptDisplay(),
     [obtainPromptDisplay]
   );
+
+  const promptLabel = useMemo(
+    () => promptLabels[promptDisplay],
+    [promptDisplay]
+  );
+
+  const answerText: string = useMemo(() => {
+    if (!currentCard) {
+      return "";
+    }
+    switch (promptDisplay) {
+      case "fragment-citation":
+        return buildFullCitation(currentCard);
+      case "entire-citation":
+        return buildFullCitation(currentCard);
+      case "citation-fragment":
+        return currentCard.fragment;
+      case "citation-entire":
+        return currentCard.entire;
+      default:
+        throw new Error("Invalid prompt display");
+    }
+  }, [promptDisplay, currentCard]);
 
   const answerHeight = useMemo(() => {
     switch (promptDisplay) {
@@ -45,6 +70,7 @@ export default function Content() {
 
   return (
     <>
+      <Label title={promptLabel} />
       <Prompt
         preference={promptDisplay}
         citation={currentCard}
@@ -58,9 +84,16 @@ export default function Content() {
         {userHasNoCards() ? (
           <PlusCircleIcon className="w-12 h-12" />
         ) : (
-          <Answer answer={fullCitation} showingAnswer={showingAnswer()} />
+          <Answer answer={answerText} showingAnswer={showingAnswer()} />
         )}
       </button>
     </>
   );
 }
+
+const promptLabels: Record<PromptPreference, string> = {
+  "citation-entire": "What is the passage for this citation?",
+  "citation-fragment": "What is this passage talking about?",
+  "entire-citation": "What is the citation for this passage?",
+  "fragment-citation": "Where does it talk about this?",
+};
