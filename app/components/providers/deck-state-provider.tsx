@@ -169,7 +169,8 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       setUnbankedScore
     );
 
-  const obtainCardsByBook = () => buildCardsByBook(props.allCards);
+  const obtainCardsByBook = (filter?: string) =>
+    buildCardsByBook(props.allCards, filter);
   const obtainAllCitations = () => props.allCards;
   const obtainCardById = (id: number): Citation => {
     const card = props.allCards.find((c) => c.id === id)!;
