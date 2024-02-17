@@ -28,8 +28,8 @@ export interface DeckStateContext {
   drawCitation: () => Citation | undefined;
   incrementCurrentCardScore: () => void;
   decrementCurrentCardScore: () => void;
-  obtainCardsByBook: () => OrderedCardsByBook;
-  obtainAllCitations: () => Citation[];
+  obtainCardsByBook: (filter: string | null) => OrderedCardsByBook;
+  obtainFilteredCitations: () => Citation[];
   obtainUnbankedScore: () => number;
   obtainBankedScore: () => number;
   obtainCurrentCardGroup: () => number;
@@ -38,7 +38,7 @@ export interface DeckStateContext {
   userHasNoCards: () => boolean;
   setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
   obtainFilter: () => Filter;
-  resetDeck: (filter: Filter) => void;
+  declareFilter: (filter: Filter) => void;
 }
 
 interface DeckStateProviderProps {
@@ -59,7 +59,7 @@ export const useDeckStateContext = () => {
 };
 
 export const CardArrayProvider = (props: DeckStateProviderProps) => {
-  const {manualSave} = useUserPreferenceContext();
+  const {obtainManualSave} = useUserPreferenceContext();
   const {isSignedIn} = useUser();
   const [unbankedScore, setUnbankedScore] = useState<number>(0);
   const [bankedScore, setBankedScore] = useState<number>(
@@ -124,7 +124,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     );
   };
 
-  const resetDeck = (newFilter: Filter) => {
+  const declareFilter = (newFilter: Filter) => {
     setFilter(newFilter);
     drawDeck.current = [];
     setTriggerDrawDeck(true);
@@ -141,7 +141,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       scoreChange,
       setUnbankedScore
     );
-    if (isSignedIn && !manualSave) {
+    if (isSignedIn && !obtainManualSave()) {
       saveChangedCards([scoreChangeRecord]);
       setBankedScore(() => bankedScore + scoreDelta);
     } else {
@@ -169,8 +169,9 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       setUnbankedScore
     );
 
-  const obtainCardsByBook = () => buildCardsByBook(props.allCards);
-  const obtainAllCitations = () => props.allCards;
+  const obtainCardsByBook = () => buildCardsByBook(obtainFilteredCitations());
+  const obtainFilteredCitations = () => filtered(props.allCards, filter);
+
   const obtainCardById = (id: number): Citation => {
     const card = props.allCards.find((c) => c.id === id)!;
     if (!card) {
@@ -198,7 +199,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         incrementCurrentCardScore,
         decrementCurrentCardScore: decrementCurrentCardScore,
         obtainCardsByBook,
-        obtainAllCitations,
+        obtainFilteredCitations,
         obtainUnbankedScore: () => unbankedScore,
         obtainBankedScore: () => bankedScore,
         obtainCardById,
@@ -206,7 +207,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         setCurrentCard,
         userHasNoCards,
         obtainFilter: () => filter,
-        resetDeck,
+        declareFilter,
       }}
     >
       {props.children}

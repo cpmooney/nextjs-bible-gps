@@ -1,26 +1,41 @@
 "use client";
-import { ReactNode, createContext, useContext } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 
 interface Props {
   children: ReactNode;
 }
 
-export type PromptPreference = "key-words" | "entire";
+export type PromptPreference =
+  | "entire-citation"
+  | "citation-entire"
+  | "fragment-citation"
+  | "citation-fragment";
 
 export interface UserPreferenceContext {
-  promptDisplay: PromptPreference;
-  advancedView: boolean
-  manualSave: boolean;
+  obtainPromptDisplay: () => PromptPreference;
+  obtainAdvancedView: () => boolean;
+  obtainManualSave: () => boolean;
+  setPromptDisplay: (value: PromptPreference) => void;
+  setAdvancedView: (value: boolean) => void;
+  setManualSave: (value: boolean) => void;
 }
 
 export const UserPreferenceProvider = ({ children }: Props) => {
+  const [promptDisplay, setPromptDisplay] =
+    useState<PromptPreference>("entire-citation");
+  const [advancedView, setAdvancedView] = useState<boolean>(false);
+  const [manualSave, setManualSave] = useState<boolean>(false);
+
   return (
     <>
       <UserPreferenceContext.Provider
         value={{
-          promptDisplay: "entire",
-          manualSave: false,
-          advancedView: false
+          obtainAdvancedView: () => advancedView,
+          obtainPromptDisplay: () => promptDisplay,
+          obtainManualSave: () => manualSave,
+          setAdvancedView,
+          setPromptDisplay,
+          setManualSave,
         }}
       >
         {children}
@@ -37,10 +52,25 @@ export const useUserPreferenceContext = () => {
     );
   }
   return context;
-}
+};
 
 const UserPreferenceContext = createContext<UserPreferenceContext>({
-  promptDisplay: "entire",
-  manualSave: false,
-  advancedView: false
+  obtainAdvancedView: () => {
+    throw new Error("obtainAdvancedView not implemented");
+  },
+  obtainPromptDisplay: () => {
+    throw new Error("obtainPromptDisplay not implemented");
+  },
+  obtainManualSave: () => {
+    throw new Error("obtainManualSave not implemented");
+  },
+  setPromptDisplay: (_promptPreference: PromptPreference) => {
+    throw new Error("setAdvancedView not implemented");
+  },
+  setAdvancedView: (_value: boolean) => {
+    throw new Error("setAdvancedView not implemented");
+  },
+  setManualSave: (_value: boolean) => {
+    throw new Error("setManualSave not implemented");
+  },
 });
