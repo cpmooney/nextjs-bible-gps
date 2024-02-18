@@ -25,6 +25,9 @@ export const ExtendedMenu = () => {
         <Link href="/edit/0" onClick={closeDrawer}>
           <Label title="Add a New Citation" />
         </Link>
+        <Link href="/preferences" onClick={closeDrawer}>
+          <Label title="Preferences" />
+        </Link>
       </div>
     </Drawer>
   );
