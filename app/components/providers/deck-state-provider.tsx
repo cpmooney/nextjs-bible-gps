@@ -18,9 +18,9 @@ import {
   useState,
 } from "react";
 import {Citation} from "src/models/citation";
+import { useUserPreferenceStore } from "src/store/user-preference-store";
 import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
 import {randomInRange} from "src/utilities/misc";
-import {useUserPreferenceContext} from "./user-preference-provider";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
@@ -59,7 +59,7 @@ export const useDeckStateContext = () => {
 };
 
 export const CardArrayProvider = (props: DeckStateProviderProps) => {
-  const {manualSave} = useUserPreferenceContext();
+  const {manualSave} = useUserPreferenceStore();
   const {isSignedIn} = useUser();
   const [unbankedScore, setUnbankedScore] = useState<number>(0);
   const [bankedScore, setBankedScore] = useState<number>(
