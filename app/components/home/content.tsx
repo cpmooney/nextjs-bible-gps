@@ -3,18 +3,18 @@ import { Citation } from "@/models/citation";
 import { buildFullCitation } from "@/utilities/additional-citation-methods";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import Answer from "./answer";
 import Prompt from "./prompt";
 import { useDeckStateContext } from "../providers/deck-state-provider";
-import { useUserPreferenceContext } from "../providers/user-preference-provider";
 import { useCardStateContext } from "./card-state-provider";
+import { useUserPreferenceStore } from "src/store/user-preference-store";
 
 export default function Content() {
   const { showingAnswer, showAnswer } = useCardStateContext();
   const { obtainCurrentCard, userHasNoCards } = useDeckStateContext();
   const [currentCard, setCurrentCard] = useState<Citation | null>(null);
-  const { promptDisplay } = useUserPreferenceContext();
+  const { promptDisplay } = useUserPreferenceStore();
 
   useEffect(() => {
     setCurrentCard(obtainCurrentCard());
@@ -31,9 +31,9 @@ export default function Content() {
 
   const answerHeight = useMemo(() => {
     switch (promptDisplay) {
-      case "key-words":
+      case "fragment-citation":
         return "h-40";
-      case "entire":
+      case "entire-citation":
         return "h-24";
     }
   }, [promptDisplay]);

@@ -6,7 +6,6 @@ import {ExtendedMenu} from "./components/menu/extended-menu";
 import {ModalCollection} from "./components/modals/modals";
 import DeckProvider from "./components/providers/deck-provider";
 import DrawerStateProvider from "./components/providers/drawer-state-provider";
-import {UserPreferenceProvider} from "./components/providers/user-preference-provider";
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,7 +17,6 @@ const Layout = ({children}: LayoutProps) => {
       <body>
         <div className="min-h-screen w-screen bg-dark-primary">
           <ClerkProvider>
-            <UserPreferenceProvider>
               <DeckProvider>
                 <DrawerStateProvider>
                   <Header />
@@ -27,7 +25,6 @@ const Layout = ({children}: LayoutProps) => {
                   <ExtendedMenu />
                 </DrawerStateProvider>
               </DeckProvider>
-            </UserPreferenceProvider>
           </ClerkProvider>
         </div>
       </body>
