@@ -15,7 +15,8 @@
     "generate": "drizzle-kit generate:pg --config=drizzle.config.ts",
     "migrate": "drizzle-kit push:pg --config=drizzle.config.ts",
     "drizzle-studio": "drizzle-kit studio --config=drizzle.config.ts",
-    "test": "jest"
+    "test": "jest",
+    "prestart": "postcss src/css/global.css -o styles/global.css"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.26.2",
@@ -47,6 +48,8 @@
     "jest": "^29.7.0",
     "pg": "^8.11.3",
     "postcss": "^8",
+    "postcss-cli": "^11.0.0",
+    "postcss-import": "^16.0.1",
     "tailwindcss": "^3.3.5",
     "ts-jest": "^29.1.1",
     "typescript": "^5",

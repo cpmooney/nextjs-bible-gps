@@ -8,11 +8,11 @@ const config: Config = {
   ],
   theme: {
     colors: {
-      'dark-primary': '#2F362E',
-      'secondary': '#2C3E50',
-      'primary': '#E87334',
-      'light-primary': '#F2EBE4',
-      'white': '#FFFFFF',
+      'primary': 'var(--color-primary)',
+      'secondary': 'var(--color-secondary)',
+      'white': 'var(--color-white)',
+      'dark-primary': 'var(--color-dark-primary)',
+      'light-primary': 'var(--color-light-primary)',
     },
     extend: {
       backgroundImage: {
