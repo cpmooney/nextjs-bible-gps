@@ -87,7 +87,7 @@ export default function CardEditForm({
 
   return (
     <>
-      <div className="mt-1 p-4 bg-off-white-1">
+      <div className="mt-1 p-4 bg-light-primary">
         <Label title="Citation" />
         <div className="flex space-x-2">
           <BibleSelection setBook={setBook} initialBook={initialBook} />
@@ -105,20 +105,20 @@ export default function CardEditForm({
           />
         </div>
       </div>
-      <div className="mt-1 p-4 bg-off-white-1">
+      <div className="mt-1 p-4 bg-light-primary">
         <FragmentEntry setString={setFragment} initialValue={initialCard.fragment} />
       </div>
-      <div className="mt-1 p-4 bg-off-white-1">
+      <div className="mt-1 p-4 bg-light-primary">
         <TextArea setString={setEntire} initialValue={initialCard.entire} />
       </div>
-      <div className="mt-1 p-4 bg-off-white-1 flex">
+      <div className="mt-1 p-4 bg-light-primary flex">
         <ActionButton title="Save" onClick={saveAndClose} />
         <ActionButton title="Cancel" onClick={cancelMe} />
         {citation.id && (
           <ActionButton title="Delete" onClick={deleteThisCard} />
         )}
       </div>
-      <div className="mt-1 p-4 bg-off-white-1 flex">
+      <div className="mt-1 p-4 bg-light-primary flex">
         {citation.id && (
           <div className="flex ml-auto">
             <div className="w-16 mr-2 mt-2 mb-2">id {citation.id}</div>

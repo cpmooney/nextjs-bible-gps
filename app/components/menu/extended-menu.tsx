@@ -12,7 +12,7 @@ export const ExtendedMenu = () => {
   const {closeDrawer, isOpen} = useDrawerStateContext();
   return (
     <Drawer open={isOpen} direction="right" lockBackgroundScroll onClose={closeDrawer}>
-      <div ref={divRef} className="h-full bg-off-white-1 p-4">
+      <div ref={divRef} className="h-full bg-light-primary p-4">
         <button className="mb-8" onClick={closeDrawer}>
           <XMarkIcon className="h-8 w-8" />
         </button>

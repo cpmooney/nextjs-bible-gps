@@ -43,7 +43,7 @@ export default function CardListPage() {
 
   return (
     <div>
-      <div className="bg-off-white-1 p-4 text-2xl">
+      <div className="bg-light-primary p-4 text-2xl">
         You have {numberOfCards} citations
       </div>
       <div>

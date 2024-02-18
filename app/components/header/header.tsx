@@ -5,7 +5,7 @@ import {UserButton} from "./user-button";
 
 export const Header = () => {
   return (
-    <div className="bg-dark-gray-1 text-off-white-1 flex justify-between p-2">
+    <div className="bg-dark-primary text-light-primary flex justify-between p-2">
       <div className="flex-1">
         <UserButton />
       </div>

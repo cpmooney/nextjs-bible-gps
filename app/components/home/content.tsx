@@ -46,7 +46,7 @@ export default function Content() {
           userHasNoCards={userHasNoCards()}
         />
         <button
-          className={`w-full text-white bg-dark-gray-3 hover:bg-blue-300 disabled:bg-blue-200 disabled:text-gray-700 text-xl pt-2 ${answerHeight}`}
+          className={`w-full text-white bg-secondary hover:bg-blue-300 disabled:bg-blue-200 disabled:text-gray-700 text-xl pt-2 ${answerHeight}`}
           onClick={showAnswerClickHandler}
           disabled={showingAnswer()}
         >

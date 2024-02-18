@@ -3,7 +3,7 @@ import LetsGo from "./components/lets-go";
 export default function GettingStarted() {
   // TODO: Find a better way to manage content so we don't need to worry about escaping, rendering
   return (
-    <div className="bg-off-white-1 mt-1 p-4">
+    <div className="bg-light-primary mt-1 p-4">
       <h2 className="text-center text-2xl h-16 mb-2">Gang Gang!</h2>
       <p className="mb-8">
         We are PUMPED that you are choosing us to partner with you on your

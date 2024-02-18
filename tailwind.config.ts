@@ -8,16 +8,11 @@ const config: Config = {
   ],
   theme: {
     colors: {
-      'dark-gray-1': '#2F362E',
-      'orange-1': '#E87334',
-      'brown-1': '#766453',
-      'off-white-1': '#F2EBE4',
-      'orange-2': '#E87334',
-      'dark-gray-2': '#484848',
+      'dark-primary': '#2F362E',
+      'secondary': '#2C3E50',
+      'primary': '#E87334',
+      'light-primary': '#F2EBE4',
       'white': '#FFFFFF',
-      'off-white-2': '#E5E5EB',
-      'dark-gray-3': '#2C3E50',
-      'dark-gray-4': '#676986'
     },
     extend: {
       backgroundImage: {
