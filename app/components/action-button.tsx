@@ -8,7 +8,7 @@ interface Props {
 
 export const ActionButton = ({ title, onClick }: Props) => {
     return (
-        <button className="justify-center m-4 text-white bg-dark-gray-1 p-4" onClick={onClick}>
+        <button className="justify-center m-4 text-white bg-dark-primary p-4" onClick={onClick}>
             {title}
         </button>
     );

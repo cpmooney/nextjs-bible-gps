@@ -14,7 +14,7 @@ export const Score = () => {
   }, [obtainBankedScore]);
 
   return (
-    <div className="mt-1 text-xl text-off-white-1 text-center">
+    <div className="mt-1 text-xl text-light-primary text-center">
       {scoreDisplay}
     </div>
   );
