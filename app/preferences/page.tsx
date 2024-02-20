@@ -1,6 +1,7 @@
 "use client";
 import Label from "app/components/label";
 import {useDeckStateContext} from "app/components/providers/deck-state-provider";
+import { ThemeChanger } from "app/components/theme-changer";
 import Link from "next/link";
 import {useMemo} from "react";
 import { useUserPreferenceStore } from "src/store/user-preference-store";
@@ -28,7 +29,7 @@ export default function Preferences() {
 
   return (
     <>
-      <div className="bg-off-white-1 mt-1 p-4">
+      <div className="bg-light-primary mt-1 p-4">
         <Label title="Preferences" />
         <div className="mt-2">
           Advanced view:{" "}
@@ -53,6 +54,8 @@ export default function Preferences() {
             <option value="fragment-citation">Fragment citation</option>
             <option value="citation-fragment">Citation fragment</option>
           </select>
+          Theme:{" "}
+          <ThemeChanger />
         </div>
       </div>
       <div

@@ -1,27 +1,23 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {DEFAULT_THEME, ThemeOptions} from "src/themes";
+import {useEffect} from "react";
+import { useUserPreferenceStore } from "src/store/user-preference-store";
+import {ThemeOptions} from "src/themes";
 import {applyTheme} from "src/themes/utils";
 
 export const ThemeChanger = () => {
-  const [currentTheme, setCurrentTheme] = useState(DEFAULT_THEME);
+  const {theme, setTheme} = useUserPreferenceStore();
 
   const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newTheme = e.target.value;
-    setCurrentTheme(newTheme);
+    setTheme(newTheme);
     applyTheme(newTheme);
   };
 
-  useEffect(() => {
-    applyTheme(currentTheme);
-  }, [currentTheme]);
-
   return (
     <select
-      value={currentTheme}
+      value={theme}
       onChange={handleThemeChange}
-      className="absolute top-0 right-0 p-2 m-4 bg-white rounded-md"
     >
       {ThemeOptions.map(({name, themeName}) => (
         <option key={themeName} value={themeName}>

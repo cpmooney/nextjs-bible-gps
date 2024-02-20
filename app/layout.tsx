@@ -5,6 +5,7 @@ import { Header } from "./components/header/header";
 import { ExtendedMenu } from "./components/menu/extended-menu";
 import { ModalCollection } from "./components/modals/modals";
 import DeckProvider from "./components/providers/deck-provider";
+import { InitializeOnClient } from "./components/initialize-on-client";
 
 interface LayoutProps {
   children: ReactNode;
@@ -15,6 +16,7 @@ const Layout = ({ children }: LayoutProps) => {
     <html>
       <body>
         <div className="min-h-screen w-screen bg-dark-primary">
+          <InitializeOnClient />
           <ClerkProvider>
             <DeckProvider>
               <Header />

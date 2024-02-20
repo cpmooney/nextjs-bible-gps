@@ -5,7 +5,6 @@ import {useRef} from "react";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 import Label from "../label";
-import {ThemeChanger} from "../theme-changer";
 import { useDrawerStateStore } from "src/store/drawer-state-store";
 
 export const ExtendedMenu = () => {
