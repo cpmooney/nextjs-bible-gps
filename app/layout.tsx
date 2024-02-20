@@ -1,29 +1,29 @@
-import { ClerkProvider } from "@clerk/nextjs";
-import { ReactNode } from "react";
+import {ClerkProvider} from "@clerk/nextjs";
+import {ReactNode} from "react";
 import "../styles/globals.css";
-import { Header } from "./components/header/header";
-import { ExtendedMenu } from "./components/menu/extended-menu";
-import { ModalCollection } from "./components/modals/modals";
-import DeckProvider from "./components/providers/deck-provider";
-import { InitializeOnClient } from "./components/initialize-on-client";
+import {Header} from "./components/header/header";
+import {InitializeOnClient} from "./components/initialize-on-client";
+import {ExtendedMenu} from "./components/menu/extended-menu";
+import {ModalCollection} from "./components/modals/modals";
+import DataProvider from "./components/providers/data-provider";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({children}: LayoutProps) => {
   return (
     <html>
       <body>
         <div className="min-h-screen w-screen bg-dark-primary">
           <InitializeOnClient />
           <ClerkProvider>
-            <DeckProvider>
+            <DataProvider>
               <Header />
               {children}
               <ModalCollection />
               <ExtendedMenu />
-            </DeckProvider>
+            </DataProvider>
           </ClerkProvider>
         </div>
       </body>

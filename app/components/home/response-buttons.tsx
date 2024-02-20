@@ -1,26 +1,21 @@
 "use client";
-import { useDeckStateContext } from "../providers/deck-state-provider";
-import { useCardStateContext } from "./card-state-provider";
+import {useDeckStore} from "src/store/deck-store";
+import {useCardStateContext} from "./card-state-provider";
 
 export default function ResponseButtons() {
-  const { drawCitation, incrementCurrentCardScore, decrementCurrentCardScore } =
-    useDeckStateContext();
-  const { showingAnswer, hideAnswer } = useCardStateContext();
-
-  const advanceToNextCard = () => {
-    drawCitation();
-  };
+  const deckStore = useDeckStore();
+  const {showingAnswer, hideAnswer} = useCardStateContext();
 
   const correct = async () => {
     hideAnswer();
-    incrementCurrentCardScore();
-    advanceToNextCard();
+    deckStore.actions.incrementCurrentCardScore();
+    deckStore.actions.advanceToNextCard();
   };
 
   const wrong = async () => {
     hideAnswer();
-    decrementCurrentCardScore();
-    advanceToNextCard();
+    deckStore.actions.decrementCurrentCardScore();
+    deckStore.actions.advanceToNextCard();
   };
 
   return (
