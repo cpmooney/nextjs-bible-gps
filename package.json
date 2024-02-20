@@ -16,7 +16,7 @@
     "migrate": "drizzle-kit push:pg --config=drizzle.config.ts",
     "drizzle-studio": "drizzle-kit studio --config=drizzle.config.ts",
     "test": "jest",
-    "build-css": "postcss src/css/globals.css -o styles/globals.css"
+    "prebuild": "postcss src/css/globals.css -o styles/globals.css"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.26.2",
