@@ -1,7 +1,7 @@
 "use client";
 import {Citation} from "@/models/citation";
 import {Fragment, useMemo} from "react";
-import {PromptPreference} from "../providers/user-preference-provider";
+import { PromptPreference } from "src/store/user-preference-store";
 
 interface Props {
   preference: PromptPreference;

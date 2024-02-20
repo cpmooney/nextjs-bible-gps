@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 
-type PromptPreference =
-"citation-fragment" |
-"citation-entire" |
-"fragment-citation" |
-"entire-citation";
+export const PromptPreferenceOptions = [
+  "entire-citation",
+  "citation-entire",
+  "fragment-citation",
+  "citation-fragment"
+];
 
-type Theme = "tactical" | "girl-power";
+export type PromptPreference = typeof PromptPreferenceOptions[number];
 
 interface UserPreferenceStore {
   promptDisplay: PromptPreference;
