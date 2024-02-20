@@ -25,19 +25,17 @@ import {randomInRange} from "src/utilities/misc";
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
   obtainOptionalCurrentCard: () => Citation | null;
-  drawCitation: () => Citation | undefined;
-  incrementCurrentCardScore: () => void;
-  decrementCurrentCardScore: () => void;
   obtainCardsByBook: () => OrderedCardsByBook;
   obtainAllCitations: () => Citation[];
   obtainUnbankedScore: () => number;
   obtainBankedScore: () => number;
   obtainCurrentCardGroup: () => number;
   obtainCardById: (id: number) => Citation;
-  updateCitation: (citation: Citation) => void;
   userHasNoCards: () => boolean;
-  setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
   obtainFilter: () => Filter;
+
+  updateCitation: (citation: Citation) => void;
+  setCurrentCard: Dispatch<SetStateAction<Citation | null>>;
   resetDeck: (filter: Filter) => void;
 }
 
