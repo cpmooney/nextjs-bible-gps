@@ -5,15 +5,15 @@ import {useRef} from "react";
 import Drawer from "react-modern-drawer";
 import "react-modern-drawer/dist/index.css";
 import Label from "../label";
-import {useDrawerStateContext} from "../providers/drawer-state-provider";
 import {ThemeChanger} from "../theme-changer";
+import { useDrawerStateStore } from "src/store/drawer-state-store";
 
 export const ExtendedMenu = () => {
   const divRef = useRef<HTMLDivElement>(null);
-  const {closeDrawer, isOpen} = useDrawerStateContext();
+  const {closeDrawer, drawerOpen} = useDrawerStateStore();
   return (
     <Drawer
-      open={isOpen}
+      open={drawerOpen}
       direction="right"
       lockBackgroundScroll
       onClose={closeDrawer}

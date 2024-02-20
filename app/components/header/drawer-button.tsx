@@ -1,10 +1,10 @@
 "use client";
 
 import {Bars3BottomRightIcon} from "@heroicons/react/24/outline";
-import {useDrawerStateContext} from "../providers/drawer-state-provider";
+import { useDrawerStateStore } from "src/store/drawer-state-store";
 
 export const DrawerButton = () => {
-  const {openDrawer} = useDrawerStateContext();
+  const {openDrawer} = useDrawerStateStore();
 
   return (
     <button onClick={openDrawer}>
