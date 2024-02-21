@@ -1,21 +1,25 @@
 "use client";
-import {useDeckStore} from "src/store/deck-store";
+import {useQuizActions} from "src/store/quiz-actions";
 import {useCardStateContext} from "./card-state-provider";
 
 export default function ResponseButtons() {
-  const deckStore = useDeckStore();
+  const {
+    advanceToNextCard,
+    decrementCurrentCardScore,
+    incrementCurrentCardScore,
+  } = useQuizActions();
   const {showingAnswer, hideAnswer} = useCardStateContext();
 
   const correct = async () => {
     hideAnswer();
-    deckStore.actions.incrementCurrentCardScore();
-    deckStore.actions.advanceToNextCard();
+    incrementCurrentCardScore();
+    advanceToNextCard();
   };
 
   const wrong = async () => {
     hideAnswer();
-    deckStore.actions.decrementCurrentCardScore();
-    deckStore.actions.advanceToNextCard();
+    decrementCurrentCardScore();
+    advanceToNextCard();
   };
 
   return (

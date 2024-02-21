@@ -1,24 +1,16 @@
 import {Citation} from "@/models/citation";
 import {buildCardsByBook} from "@/utilities/card-by-book-builder";
-import {Filter, emptyFilter, filtered} from "@/utilities/filtering";
+import {Filter, filtered} from "@/utilities/filtering";
 import {create} from "zustand";
 
 interface DeckDataStore {
   cards: Citation[];
-  currentCard: Citation | null;
-  filter: Filter;
   setCards: (cards: Citation[]) => void;
-  setCurrentCard: (card: Citation | null) => void;
-  setFilter: (filter: Filter) => void;
 }
 
-const useDeckDataStore = create<DeckDataStore>((set) => ({
+export const useDeckDataStore = create<DeckDataStore>((set) => ({
   cards: [],
   setCards: (cards) => set({cards}),
-  currentCard: null,
-  setCurrentCard: (currentCard) => set({currentCard}),
-  filter: emptyFilter(),
-  setFilter: (filter) => set({filter}),
 }));
 
 interface Getters {
