@@ -1,5 +1,5 @@
 "use client";
-import {useQuizActions} from "src/store/quiz-actions";
+import {useDrawDeckActions} from "src/store/draw-deck-actions";
 import {useCardStateContext} from "./card-state-provider";
 
 export default function ResponseButtons() {
@@ -7,7 +7,7 @@ export default function ResponseButtons() {
     advanceToNextCard,
     decrementCurrentCardScore,
     incrementCurrentCardScore,
-  } = useQuizActions();
+  } = useDrawDeckActions();
   const {showingAnswer, hideAnswer} = useCardStateContext();
 
   const correct = async () => {

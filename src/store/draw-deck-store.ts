@@ -15,10 +15,9 @@ export const useDrawDeckStore = create<DrawDeckStore>((set) => ({
   setCurrentCard: (currentCard) => set({currentCard}),
 }));
 
-export const useGuaranteedCurrentCard = () => {
-  const {currentCard} = useDrawDeckStore();
-  if (!currentCard) {
-    throw new Error("No current card");
-  }
-  return currentCard;
+export const useCardById = () => {
+  const {drawDeck} = useDrawDeckStore();
+  return (id: number) => {
+    return drawDeck.find((card) => card.id === id);
+  };
 };

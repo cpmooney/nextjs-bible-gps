@@ -1,9 +1,11 @@
 import {bibleBooks} from "@/models/books";
 import {Citation} from "@/models/citation";
+import {useDeckDataStore} from "./deck-data-store";
 
 export type OrderedCardsByBook = {book: string; cards: Citation[]}[];
 
-export const buildCardsByBook = (cards: Citation[]): OrderedCardsByBook => {
+export const useCardsByBook = (): OrderedCardsByBook => {
+  const {cards} = useDeckDataStore();
   const cardsByBook: CardsByBook = {};
 
   cards.forEach((card) => {
