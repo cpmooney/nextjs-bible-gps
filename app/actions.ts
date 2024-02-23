@@ -7,9 +7,16 @@ import {User} from "@clerk/nextjs/server";
 import { demoUser } from "src/constants";
 import { invokeDbDuplicateDemoCards } from "src/server/db-duplicate-demo-cards";
 import {invokeDbImportAllAction} from "src/server/db-import-all-rows";
-import {invokeDbLoadAllPartialCitationAction} from "src/server/db-load-all-partial-citations";
 import {invokeDbLoadCitationAction} from "src/server/db-load-citation";
 import {invokeDbUpdateCitationAction} from "src/server/actions/db-update-citation";
+import { DbAction, invokeAction } from "src/server/actions/db-action";
+
+export const invokeDbActions = async (actions: DbAction[]) => {
+  const userId = await guaranteeUserId({});
+  await Promise.all(
+    actions.map(({ actionName, args }) => invokeAction(actionName, userId, args))
+  );
+}
 
 export const duplicateDemoCards = async () => {
   const userId = await guaranteeUserId({useDemo: true});
@@ -21,11 +28,6 @@ export const importAllCards = async (tsv: string) => {
   const userId = await guaranteeUserId({useDemo: true});
   const allCitations = deserialize(tsv);
   await invokeDbImportAllAction(userId, allCitations);
-};
-
-export const loadPartialCitations = async () => {
-  const userId = await guaranteeUserId({});
-  return await invokeDbLoadAllPartialCitationAction(userId);
 };
 
 export const saveCitation = async (citation: Citation): Promise<number> => {

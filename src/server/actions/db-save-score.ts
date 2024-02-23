@@ -7,7 +7,7 @@ import {
   obtainDebugMessages,
   usingDebugger,
 } from "../../utilities/debugger";
-import { SaveChangedScoresRequest } from "./db-action";
+import { SaveChangedScoresRequest } from "./db-update-citation";
 
 export const invokeDbSaveChangedAction = async (
   userId: string,

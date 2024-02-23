@@ -1,43 +1,49 @@
-import { Citation, ZodCitation } from "@/models/citation";
+import { Citation } from "@/models/citation";
 import { invokeDeleteCardAction } from "./db-delete-citation";
 import { invokeDbSaveChangedAction } from "./db-save-score";
-import { SaveChangedScoresRequest, ZodSaveChangedScoresRequest, invokeDbUpdateCitationAction } from "./db-update-citation";
-import { z } from "zod";
+import { SaveChangedScoresRequest, invokeDbUpdateCitationAction } from "./db-update-citation";
 
 const ActionNames = ['delete-citation', 'save-score', 'update-citation'];
 
 type ActionNameType = typeof ActionNames[number];
 
-export const invokeAction = (actionName: ActionNameType,
+export interface DbAction {
+    actionName: ActionNameType;
+    args: unknown;
+}
+
+export const invokeAction = async (actionName: ActionNameType,
     userId: string,
     args: unknown) => {
         switch (actionName) {
             case 'delete-citation':
-                return invokeDeleteCardAction(userId, args as number);
+                return await invokeDeleteCardAction(userId, args as number);
             case 'save-score':
-                return invokeDbSaveChangedAction(userId, args as SaveChangedScoresRequest);
+                return await invokeDbSaveChangedAction(userId, args as SaveChangedScoresRequest);
             case 'update-citation':
-                return invokeDbUpdateCitationAction(userId, args as Citation);
+                return await invokeDbUpdateCitationAction(userId, args as Citation);
             default:
                 throw new Error(`Unknown action name: ${actionName}`);
         }
     }
 
-export const createAction = (actionName: ActionNameType, args: unknown) => {
-}
-
-const asNumber = (value: unknown): number => {
-    if (typeof value !== 'number') {
-        throw new Error(`Expected a number, got ${value}`);
+export const createDeleteAction = (citationId: number): DbAction => {
+    return {
+        actionName: 'delete-citation',
+        args: citationId,
     }
-    return value;
+};
+
+export const createSaveScoreAction = (changedRequest: SaveChangedScoresRequest): DbAction => {
+    return {
+        actionName: 'save-score',
+        args: changedRequest,
+    }
 }
 
-const isSavedChangedScoresRequest = (value: unknown): value is SaveChangedScoresRequest => {
-    return ZodSaveChangedScoresRequest.parse(value);
+export const createUpdateCitationAction = (citation: Citation): DbAction => {
+    return {
+        actionName: 'update-citation',
+        args: citation,
+    }
 }
-
-const isCitation = (value: unknown) => {
-    return ZodCitation.parse(value);
-}
-

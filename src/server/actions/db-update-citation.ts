@@ -2,7 +2,6 @@ import {CitationTable} from "db/schema/citation-table";
 import {Citation} from "src/models/citation";
 import {obtainDatabase, usingDatabase} from "../../utilities/database";
 import {debugLog, usingDebugger} from "../../utilities/debugger";
-import {z} from "zod";
 
 export const invokeDbUpdateCitationAction = async (
   userId: string,
@@ -34,11 +33,9 @@ const citationWithoutId = (citation: Citation): Citation => {
   return citationWithoutId;
 };
 
-export const ZodSaveChangedScoresRequest = z.object({
-    id: z.number(),
-    score: z.number(),
-    lastReviewed: z.date(),
-});
-
-export type SaveChangedScoresRequest = z.infer<typeof ZodSaveChangedScoresRequest>;
+export interface SaveChangedScoresRequest {
+  id: number;
+  score: number;
+  lastReviewed: Date;
+}
 
