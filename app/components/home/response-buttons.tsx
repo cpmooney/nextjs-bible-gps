@@ -1,5 +1,5 @@
 "use client";
-import {useDrawDeckActions} from "src/store/draw-deck-actions";
+import {useDrawDeckActions} from "src/store/actions/draw-deck-actions";
 import {useCardStateContext} from "./card-state-provider";
 
 export default function ResponseButtons() {
