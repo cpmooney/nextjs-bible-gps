@@ -2,9 +2,9 @@ import {Citation} from "@/models/citation";
 import {createDrawDeck} from "@/utilities/draw-deck-builder";
 import {ScoreChange, recordScoreChange} from "@/utilities/score-recorder";
 import {useMemo} from "react";
-import {useDeckDataStore} from "./deck-data-store";
-import {useDrawDeckStore} from "./draw-deck-store";
-import {useFilteredCitations} from "./filter-state-store";
+import {useDeckDataStore} from "../deck-store";
+import {useDrawDeckStore} from "../draw-deck-store";
+import {useFilteredCitations} from "../filter-state-store";
 
 export const useGuaranteedCurrentCard = () => {
   const {currentCard} = useDrawDeckStore();

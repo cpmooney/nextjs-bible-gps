@@ -1,6 +1,6 @@
 import {Filter, emptyFilter, filtered} from "@/utilities/filtering";
 import {create} from "zustand";
-import {useDeckDataStore} from "./deck-data-store";
+import {useDeckDataStore} from "./deck-store";
 
 interface FilterStateStore {
   filter: Filter;

@@ -5,21 +5,11 @@ import { deserialize } from "@/utilities/serialize";
 import {currentUser} from "@clerk/nextjs";
 import {User} from "@clerk/nextjs/server";
 import { demoUser } from "src/constants";
-import {invokeDeleteCardAction} from "src/server/db-delete-citation";
-import {invokeDeletePartialCardAction} from "src/server/db-delete-partial-citation";
 import { invokeDbDuplicateDemoCards } from "src/server/db-duplicate-demo-cards";
 import {invokeDbImportAllAction} from "src/server/db-import-all-rows";
 import {invokeDbLoadAllPartialCitationAction} from "src/server/db-load-all-partial-citations";
 import {invokeDbLoadCitationAction} from "src/server/db-load-citation";
-import {
-  SaveChangedScoresRequest,
-  invokeDbSaveChangedAction,
-} from "src/server/db-save-changed";
-import {
-  SavePartialCitationRequest,
-  invokeDbSavePartialCitationAction,
-} from "src/server/db-save-partial-citation";
-import {invokeDbUpdateCitationAction} from "src/server/db-update-citation";
+import {invokeDbUpdateCitationAction} from "src/server/actions/db-update-citation";
 
 export const duplicateDemoCards = async () => {
   const userId = await guaranteeUserId({useDemo: true});
@@ -33,24 +23,9 @@ export const importAllCards = async (tsv: string) => {
   await invokeDbImportAllAction(userId, allCitations);
 };
 
-export const deleteCard = async (id: number) => {
-  const userId = await guaranteeUserId({});
-  return await invokeDeleteCardAction(userId, id);
-};
-
-export const deletePartialCard = async (id: number) => {
-  const userId = await guaranteeUserId({});
-  return await invokeDeletePartialCardAction(userId, id);
-};
-
 export const loadPartialCitations = async () => {
   const userId = await guaranteeUserId({});
   return await invokeDbLoadAllPartialCitationAction(userId);
-};
-
-export const savePartialCards = async (request: SavePartialCitationRequest) => {
-  const userId = await guaranteeUserId({});
-  return await invokeDbSavePartialCitationAction(userId, request);
 };
 
 export const saveCitation = async (citation: Citation): Promise<number> => {
@@ -61,11 +36,6 @@ export const saveCitation = async (citation: Citation): Promise<number> => {
 export const loadCitation = async (citationId: number): Promise<Citation> => {
   const userId = await guaranteeUserId({});
   return await invokeDbLoadCitationAction(userId, citationId);
-};
-
-export const saveChangedCards = async (request: SaveChangedScoresRequest) => {
-  const userId = await guaranteeUserId({});
-  return await invokeDbSaveChangedAction(userId, request);
 };
 
 export const guaranteeUserId = async ({

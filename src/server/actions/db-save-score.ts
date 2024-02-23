@@ -1,18 +1,13 @@
 import {CitationTable} from "db/schema/citation-table";
 import {and, eq} from "drizzle-orm";
-import {obtainDatabase, usingDatabase} from "../utilities/database";
+import {obtainDatabase, usingDatabase} from "../../utilities/database";
 import {
   DebugMessage,
   debugLog,
   obtainDebugMessages,
   usingDebugger,
-} from "../utilities/debugger";
-
-export type SaveChangedScoresRequest = {
-  id: number;
-  score: number;
-  lastReviewed: string;
-}[];
+} from "../../utilities/debugger";
+import { SaveChangedScoresRequest } from "./db-action";
 
 export const invokeDbSaveChangedAction = async (
   userId: string,
@@ -25,17 +20,13 @@ export const invokeDbSaveChangedAction = async (
     `Saving changed citations: ${JSON.stringify(changedRequest)}`
   );
 
-  await Promise.all(
-    changedRequest.map(async (record) => {
       try {
-        const lastReviewed = new Date(record.lastReviewed);
+        const lastReviewed = new Date(changedRequest.lastReviewed);
         debugLog("info", "lastReviewed" + lastReviewed);
-        await updateRecord(userId, record.id, record.score, lastReviewed);
+        await updateRecord(userId, changedRequest.id, changedRequest.score, lastReviewed);
       } catch (e) {
         debugLog("error", "Error updating record: " + e);
       }
-    })
-  );
   return obtainDebugMessages();
 };
 
