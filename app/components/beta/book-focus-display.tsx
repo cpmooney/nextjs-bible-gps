@@ -1,21 +1,19 @@
 "use client";
 
-import {Filter} from "@/utilities/filtering";
 import {useEffect, useState} from "react";
-import {useDeckStateContext} from "../providers/deck-state-provider";
+import { useFilterStateStore } from "src/store/filter-state-store";
 
 export default function BookFocusDisplay() {
-  const {obtainFilter} = useDeckStateContext();
+  const {filter} = useFilterStateStore();
   const [bookFocus, setBookFocus] = useState<string | null>(null);
 
   useEffect(() => {
-    const filter: Filter = obtainFilter();
     if (filter.kind === "book" && filter.value !== "none") {
       setBookFocus(filter.value);
     } else {
       setBookFocus(null);
     }
-  }, [obtainFilter]);
+  }, [filter]);
 
   return bookFocus ? (
     <div className="card bg-base-100 shadow-xl mt-4 mb-4">
