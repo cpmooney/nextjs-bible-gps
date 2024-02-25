@@ -1,10 +1,8 @@
 "use client";
 import { Citation } from "@/models/citation";
-import { deleteCard, saveCitation } from "app/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { buildFullCitation } from "src/utilities/additional-citation-methods";
-import { useDeckStateContext } from "../providers/deck-state-provider";
 import { BibleSelection } from "./bible-selection";
 import { NumberSelection } from "./number-selection";
 import { SuffixEntry } from "./suffix-entry";
@@ -12,20 +10,19 @@ import { TextArea } from "./text-area";
 import Label from "../label";
 import { ActionButton } from "../action-button";
 import { FragmentEntry } from "./fragment-entry";
+import { useDeckDataActions } from "src/store/actions/deck-data-actions";
 
 interface CardEditFormProps {
   initialCard: Citation;
-  onSave?: () => void;
 }
 
 export default function CardEditForm({
-  initialCard,
-  onSave,
+  initialCard
 }: CardEditFormProps) {
   const searchParams = useSearchParams();
   const initialBook = searchParams?.get("book") ?? initialCard.book;
 
-  const { updateCitation } = useDeckStateContext();
+  const { invokeUpdate, invokeDelete } = useDeckDataActions();
   const [book, setBook] = useState<string>(initialBook);
   const [chapter, setChapter] = useState<number>(initialCard.chapter);
   const [firstVerse, setFirstVerse] = useState<number>(initialCard.firstVerse);
@@ -73,15 +70,11 @@ export default function CardEditForm({
     if (!citation.id) {
       throw new Error("Cannot delete a card without an id");
     }
-    deleteCard(citation.id);
+    invokeDelete(citation.id);
   };
 
   const saveAndClose = async () => {
-    citation.id = await saveCitation(citation);
-    updateCitation(citation);
-    if (onSave) {
-      onSave();
-    }
+    await invokeUpdate(citation);
     router.push(`/list?id=${citation.id}`);
   };
 

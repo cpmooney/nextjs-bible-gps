@@ -1,12 +1,10 @@
 "use server";
 
 import {Citation} from "@/models/citation";
-import { deserialize } from "@/utilities/serialize";
 import {currentUser} from "@clerk/nextjs";
 import {User} from "@clerk/nextjs/server";
 import { demoUser } from "src/constants";
 import { invokeDbDuplicateDemoCards } from "src/server/db-duplicate-demo-cards";
-import {invokeDbImportAllAction} from "src/server/db-import-all-rows";
 import {invokeDbLoadCitationAction} from "src/server/db-load-citation";
 import {invokeDbUpdateCitationAction} from "src/server/actions/db-update-citation";
 import { DbAction, invokeAction } from "src/server/actions/db-action";
@@ -18,17 +16,18 @@ export const invokeDbActions = async (actions: DbAction[]) => {
   );
 }
 
+export const createNewCitation = async (citation: Citation): Promise<number> => {
+    if (citation.id) {
+        throw new Error('Do not call createNewCitation for a citation which is already in the db');
+    }
+  const userId = await guaranteeUserId({});
+  return invokeDbUpdateCitationAction(userId, citation);
+}
+
 export const duplicateDemoCards = async () => {
   const userId = await guaranteeUserId({useDemo: true});
   await invokeDbDuplicateDemoCards(userId);
 }
-
-export const importAllCards = async (tsv: string) => {
-  // TODO: This needs to be wired up further down.
-  const userId = await guaranteeUserId({useDemo: true});
-  const allCitations = deserialize(tsv);
-  await invokeDbImportAllAction(userId, allCitations);
-};
 
 export const saveCitation = async (citation: Citation): Promise<number> => {
   const userId = await guaranteeUserId({});

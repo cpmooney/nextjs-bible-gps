@@ -1,16 +1,16 @@
 "use client";
-import {OrderedCardsByBook} from "src/store/cards-by-book-action";
-import {useDeckStateContext} from "../providers/deck-state-provider";
+import { OrderedCardsByBook, useCardsByBook } from "src/store/actions/cards-by-book-actions";
 import {Modal, closeModal} from "./modal";
+import { useFilterStateStore } from "src/store/filter-state-store";
 
 export const EditFilter = () => {
-  const {obtainCardsByBook, resetDeck, obtainFilter} = useDeckStateContext();
+  const { filter, setFilter } = useFilterStateStore();
+  const cardsByBook = useCardsByBook();
 
-  const initialFilteredBook = obtainFilter()?.value ?? "none";
-  const cardsByBook = obtainCardsByBook();
+  const initialFilteredBook = filter.kind;
 
   const declareFilterAndClose = (chosenBook: string) => () => {
-    resetDeck({kind: "book", value: resolveBook(chosenBook)});
+    setFilter({kind: "book", value: resolveBook(chosenBook)});
     closeModal("edit_filter");
   };
 

@@ -1,6 +1,6 @@
 import {bibleBooks} from "@/models/books";
 import {Citation} from "@/models/citation";
-import {useDeckDataStore} from "../deck-store";
+import {useDeckDataStore} from "../deck-data-store";
 
 export type OrderedCardsByBook = {book: string; cards: Citation[]}[];
 

@@ -2,11 +2,11 @@
 
 import {duplicateDemoCards} from "app/actions";
 import {ActionButton} from "app/components/action-button";
-import {useDeckStateContext} from "app/components/providers/deck-state-provider";
 import {useRouter} from "next/navigation";
+import { useDeckDataStore } from "src/store/deck-data-store";
 
 export default function LetsGo() {
-  const {userHasNoCards} = useDeckStateContext();
+  const {userHasNoCards} = useDeckDataStore();
   const router = useRouter();
   const letsGo = async () => {
     await duplicateDemoCards();

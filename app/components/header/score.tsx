@@ -1,17 +1,17 @@
 "use client";
 import {useMemo} from "react";
-import {useDeckStateContext} from "../providers/deck-state-provider";
+import { useDeckDataStore } from "src/store/deck-data-store";
 
 export const Score = () => {
-  const {obtainBankedScore} = useDeckStateContext();
+  const {totalScore} = useDeckDataStore();
 
   const scoreDisplay = useMemo(() => {
-    const totalScore = obtainBankedScore();
-    if (totalScore > 0) {
-      return `Score: ${totalScore}`;
+    const myTotalScore = totalScore();
+    if (myTotalScore > 0) {
+      return `Score: ${myTotalScore}`;
     }
     return "";
-  }, [obtainBankedScore]);
+  }, [totalScore]);
 
   return (
     <div className="mt-1 text-xl text-light-primary text-center">

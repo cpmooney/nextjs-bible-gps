@@ -1,4 +1,4 @@
-import {z} from "zod";
+import { z } from "zod";
 
 export const ZodCitation = z.object({
   id: z.optional(z.number()),
@@ -15,3 +15,19 @@ export const ZodCitation = z.object({
 });
 
 export type Citation = z.infer<typeof ZodCitation>;
+
+export const findCardById = (id: number, cards: Citation[]): Citation | undefined => {
+  return cards.find((c) => c.id === id);
+};
+
+export const guaranteeCardById = (id: number, cards: Citation[]): Citation => {
+  const card = findCardById(id, cards);
+  if (!card) {
+    throw new Error(`Card with id ${id} not found`);
+  }
+  return card;
+}
+
+export const findCardIndexById = (id: number, cards: Citation[]): number => {
+  return cards.findIndex((c) => c.id === id);
+}

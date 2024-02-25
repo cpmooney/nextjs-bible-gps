@@ -1,34 +1,25 @@
 "use client";
 import { Citation } from "@/models/citation";
-import { deletePartialCard } from "app/actions";
 import CardEditForm from "app/components/edit/card-form";
-import { useDeckStateContext } from "app/components/providers/deck-state-provider";
 import { useSearchParams } from "next/navigation";
+import { useDeckDataStore } from "src/store/deck-data-store";
 
 interface CardEditPageParams {
   params: { id: string };
 }
 
 export default function CardEditPage({ params }: CardEditPageParams) {
-  const { obtainCardById } = useDeckStateContext();
+  const { guaranteedById } = useDeckDataStore();
 
   // TODO: How do adapt this so that id is undefined when we want to create a new card?
   const id = parseInt(params.id);
-
   const searchParams = useSearchParams();
   const fragment = searchParams?.get("fragment");
-  const fragmentId = searchParams?.get("fragment-id");
-
-  const initialCard = id > 0 ? obtainCardById(id) : defaultInitialCard(fragment);
-  const onSave = () => {
-    if (fragmentId) {
-      deletePartialCard(parseInt(fragmentId));
-    }
-  }
+  const initialCard = id > 0 ? guaranteedById(id) : defaultInitialCard(fragment);
 
   return (
     <>
-      <CardEditForm initialCard={initialCard} onSave={onSave} />
+      <CardEditForm initialCard={initialCard} />
     </>
   );
 }

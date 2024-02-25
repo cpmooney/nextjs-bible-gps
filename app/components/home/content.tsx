@@ -1,24 +1,20 @@
 "use client";
-import { Citation } from "@/models/citation";
 import { buildFullCitation } from "@/utilities/additional-citation-methods";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import Answer from "./answer";
 import Prompt from "./prompt";
-import { useDeckStateContext } from "../providers/deck-state-provider";
 import { useCardStateContext } from "./card-state-provider";
 import { useUserPreferenceStore } from "src/store/user-preference-store";
+import { useDeckDataStore } from "src/store/deck-data-store";
+import { useDrawDeckStore } from "src/store/draw-deck-store";
 
 export default function Content() {
   const { showingAnswer, showAnswer } = useCardStateContext();
-  const { obtainCurrentCard, userHasNoCards } = useDeckStateContext();
-  const [currentCard, setCurrentCard] = useState<Citation | null>(null);
+  const {  userHasNoCards } = useDeckDataStore();
+  const { currentCard } = useDrawDeckStore();
   const { promptDisplay } = useUserPreferenceStore();
-
-  useEffect(() => {
-    setCurrentCard(obtainCurrentCard());
-  }, [obtainCurrentCard]);
 
   const router = useRouter();
   const getStarted = () => {

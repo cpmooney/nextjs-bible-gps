@@ -1,7 +1,7 @@
 import { Citation } from "@/models/citation";
 import { invokeDeleteCardAction } from "./db-delete-citation";
 import { invokeDbSaveChangedAction } from "./db-save-score";
-import { SaveChangedScoresRequest, invokeDbUpdateCitationAction } from "./db-update-citation";
+import { ScoreUpdate, invokeDbUpdateCitationAction } from "./db-update-citation";
 
 const ActionNames = ['delete-citation', 'save-score', 'update-citation'];
 
@@ -19,7 +19,7 @@ export const invokeAction = async (actionName: ActionNameType,
             case 'delete-citation':
                 return await invokeDeleteCardAction(userId, args as number);
             case 'save-score':
-                return await invokeDbSaveChangedAction(userId, args as SaveChangedScoresRequest);
+                return await invokeDbSaveChangedAction(userId, args as ScoreUpdate);
             case 'update-citation':
                 return await invokeDbUpdateCitationAction(userId, args as Citation);
             default:
@@ -27,14 +27,14 @@ export const invokeAction = async (actionName: ActionNameType,
         }
     }
 
-export const createDeleteAction = (citationId: number): DbAction => {
+export const createDeleteAction = (cardId: number): DbAction => {
     return {
         actionName: 'delete-citation',
-        args: citationId,
+        args: cardId,
     }
 };
 
-export const createSaveScoreAction = (changedRequest: SaveChangedScoresRequest): DbAction => {
+export const createSaveScoreAction = (changedRequest: ScoreUpdate): DbAction => {
     return {
         actionName: 'save-score',
         args: changedRequest,
@@ -42,8 +42,12 @@ export const createSaveScoreAction = (changedRequest: SaveChangedScoresRequest):
 }
 
 export const createUpdateCitationAction = (citation: Citation): DbAction => {
+    if (!citation.id) {
+        throw "Asynchronous creation is not yet supported -- need to call createNewCitation instead!";
+    }
     return {
         actionName: 'update-citation',
         args: citation,
     }
 }
+

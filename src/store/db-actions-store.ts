@@ -1,30 +1,31 @@
-import { Citation } from "@/models/citation";
 import { invokeDbActions } from "app/actions";
-import { DbAction, createDeleteAction, createSaveScoreAction, createUpdateCitationAction } from "src/server/actions/db-action";
-import { SaveChangedScoresRequest } from "src/server/actions/db-update-citation";
+import { DbAction } from "src/server/actions/db-action";
 import {create} from "zustand";
+import { immer } from "zustand/middleware/immer";
 
 interface DbActionStore {
     actions: DbAction[];
-    createDeleteAction: (citationId: number) => void;
-    createSaveScoreAction: (changedRequest: SaveChangedScoresRequest) => void;
-    createUpdateCitationAction: (citation: Citation) => void;
+    queueAction: (action: DbAction) => void;
     invokeActions: () => Promise<void>;
 }
 
-export const useDbActionsStore = create<DbActionStore>((set, get) => ({
-    actions: [],
-    createDeleteAction: (citationId: number) => {
-        set({actions: [...get().actions, createDeleteAction(citationId)]});
-    },
-    createSaveScoreAction: (changedRequest: SaveChangedScoresRequest) => {
-        set({actions: [...get().actions, createSaveScoreAction(changedRequest)]});
-    },
-    createUpdateCitationAction: (citation: Citation) => {
-        set({actions: [...get().actions, createUpdateCitationAction(citation)]});
-    },
-    invokeActions: async () => {
-        await invokeDbActions(get().actions);
-        set({actions: []});
-    }
-}));
+export const useDbActionsStore = create(
+    immer<DbActionStore>((set, get) => ({
+        actions: [],
+        queueAction: (action) => {
+            set((state) => {
+                state.actions.push(action);
+            });
+        },
+        invokeActions: async () => {
+            const actions = get().actions;
+            if (actions.length === 0) {
+                return;
+            }
+            await invokeDbActions(actions);
+            set((state) => {
+                state.actions = [];
+            });
+        }
+    }))
+);

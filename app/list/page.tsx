@@ -2,28 +2,26 @@
 
 import {Citation} from "@/models/citation";
 import {toKebabCase} from "@/utilities/misc";
-import {useDeckStateContext} from "app/components/providers/deck-state-provider";
 import {useSearchParams} from "next/navigation";
 import {useCallback, useEffect, useState} from "react";
-import {OrderedCardsByBook} from "src/store/cards-by-book-action";
 import {Book} from "./components/book";
+import { useCardsByBook } from "src/store/actions/cards-by-book-actions";
+import { useDeckDataStore } from "src/store/deck-data-store";
 
 export default function CardListPage() {
   const searchParams = useSearchParams();
-  const {obtainCardsByBook, obtainCardById, obtainAllCitations} =
-    useDeckStateContext();
+  const {cards, guaranteedById} = useDeckDataStore();
+  const cardsByBook = useCardsByBook();
   const id = searchParams?.get("id");
   const citationToActivate: Citation | undefined = id
-    ? obtainCardById(parseInt(id))
+    ? guaranteedById(parseInt(id))
     : undefined;
   const [numberOfCards, setNumberOfCards] = useState(0);
   const [activeBook, setActiveBook] = useState<string | undefined>();
 
   useEffect(() => {
-    setNumberOfCards(obtainAllCitations().length);
-  }, [obtainAllCitations]);
-
-  const cardsByBook: OrderedCardsByBook = obtainCardsByBook();
+    setNumberOfCards(cards.length);
+  }, [cards]);
 
   const bookIsActive = useCallback(
     (book: string) => {

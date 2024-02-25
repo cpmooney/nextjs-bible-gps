@@ -7,11 +7,11 @@ import {
   obtainDebugMessages,
   usingDebugger,
 } from "../../utilities/debugger";
-import { SaveChangedScoresRequest } from "./db-update-citation";
+import { ScoreUpdate } from "./db-update-citation";
 
 export const invokeDbSaveChangedAction = async (
   userId: string,
-  changedRequest: SaveChangedScoresRequest
+  changedRequest: ScoreUpdate
 ): Promise<DebugMessage[]> => {
   usingDatabase({CitationTable});
   usingDebugger("db-save-changed", userId);

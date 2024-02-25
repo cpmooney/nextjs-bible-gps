@@ -3,15 +3,15 @@
 import {Citation} from "@/models/citation";
 import {PencilIcon} from "@heroicons/react/24/outline";
 import ClientOnly from "app/components/hydration-support/client-only";
-import { useDeckStateContext } from "app/components/providers/deck-state-provider";
 import {useRouter} from "next/navigation";
+import { useDrawDeckStore } from "src/store/draw-deck-store";
 
 interface Props {
   citation: Citation;
 }
 
 export default function CitationDisplay({citation}: Props) {
-  const { setCurrentCard } = useDeckStateContext();
+  const { setCurrentCard } = useDrawDeckStore();
   const router = useRouter();
   const editCard = () => {
     router.push(`/edit/${citation.id}`);

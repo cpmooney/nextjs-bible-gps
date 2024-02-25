@@ -1,5 +1,5 @@
 import {CitationTable} from "db/schema/citation-table";
-import {Citation} from "src/models/citation";
+import { Citation} from "src/models/citation";
 import {obtainDatabase, usingDatabase} from "../../utilities/database";
 import {debugLog, usingDebugger} from "../../utilities/debugger";
 
@@ -33,7 +33,7 @@ const citationWithoutId = (citation: Citation): Citation => {
   return citationWithoutId;
 };
 
-export interface SaveChangedScoresRequest {
+export interface ScoreUpdate {
   id: number;
   score: number;
   lastReviewed: Date;

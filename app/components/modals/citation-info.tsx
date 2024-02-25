@@ -3,22 +3,15 @@ import {
   buildFullCitation,
 } from "src/utilities/additional-citation-methods";
 import { Modal, closeModal } from "./modal";
-import { useDeckStateContext } from "../providers/deck-state-provider";
-import { useEffect, useState } from "react";
-import { Citation } from "@/models/citation";
 import { useRouter } from "next/navigation";
 import Label from "../label";
 import { ActionButton } from "../action-button";
+import { useDrawDeckStore } from "src/store/draw-deck-store";
 
 export const CitationInfo = () => {
-  const { obtainCurrentCard } = useDeckStateContext();
-  const [currentCard, setCurrentCard] = useState<Citation | null>(null);
+  const { currentCard } = useDrawDeckStore();
 
   const router = useRouter();
-
-  useEffect(() => {
-    setCurrentCard(obtainCurrentCard());
-  }, [obtainCurrentCard]);
 
   const entire = currentCard?.entire ?? "";
   const fullCitation = currentCard ? buildFullCitation(currentCard) : "";
@@ -26,7 +19,7 @@ export const CitationInfo = () => {
   const id = currentCard?.id ?? 0;
 
   const editCitation = () => {
-    router.push(editUrl(obtainCurrentCard().id));
+    router.push(editUrl(id));
     closeModal("full_citation");
   }
 

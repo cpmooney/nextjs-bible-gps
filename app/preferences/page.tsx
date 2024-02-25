@@ -1,9 +1,9 @@
 "use client";
 import Label from "app/components/label";
-import {useDeckStateContext} from "app/components/providers/deck-state-provider";
 import { ThemeChanger } from "app/components/theme-changer";
 import Link from "next/link";
 import {useMemo} from "react";
+import { useDeckDataStore } from "src/store/deck-data-store";
 import { useUserPreferenceStore } from "src/store/user-preference-store";
 
 export default function Preferences() {
@@ -15,17 +15,17 @@ export default function Preferences() {
     setPromptDisplay,
     setManualSave,
   } = useUserPreferenceStore();
-  const {obtainAllCitations} = useDeckStateContext();
+  const {cards} = useDeckDataStore();
   const citationsWithoutFragmentsCount = useMemo(() => {
     if (
       promptDisplay === "citation-fragment" ||
       promptDisplay === "fragment-citation"
     ) {
-      return obtainAllCitations().filter((citation) => !citation.fragment)
+      return cards.filter((citation) => !citation.fragment)
         .length;
     }
     return 0;
-  }, [obtainAllCitations, promptDisplay]);
+  }, [cards, promptDisplay]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import {Citation} from "src/models/citation";
+import { Citation } from "src/models/citation";
 
 export const recordScoreChange = (
   card: Citation,
@@ -8,7 +8,7 @@ export const recordScoreChange = (
   card.score += scoreDelta;
   card.lastReviewed = new Date();
   if (!card.id) {
-    throw new Error("Card has no id");
+    throw new Error("Cannot record score change for card which has not yet been added to the db");
   }
   return {
     id: card.id,

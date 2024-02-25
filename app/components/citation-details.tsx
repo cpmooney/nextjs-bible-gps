@@ -1,12 +1,12 @@
 "use client";
 import {useMemo} from "react";
-import {useDeckStateContext} from "./providers/deck-state-provider";
+import { useDrawDeckActions } from "src/store/actions/draw-deck-actions";
 
 export default function CitationDetails() {
-  const {obtainOptionalCurrentCard} = useDeckStateContext();
+  const { optionalCurrentCard } = useDrawDeckActions();
   const currentCardScore = useMemo(
-    () => obtainOptionalCurrentCard()?.score.toString(),
-    [obtainOptionalCurrentCard]
+    () => optionalCurrentCard()?.score.toString(),
+    [optionalCurrentCard]
   );
   return (
     <>
