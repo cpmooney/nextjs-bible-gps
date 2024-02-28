@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source .env.development.local
+
+psql $POSTGRES_URL -c "\COPY citations TO 'backup/citations-$(date +\%Y\%m\%d).csv' WITH CSV HEADER"
+

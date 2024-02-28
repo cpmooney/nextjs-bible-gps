@@ -1,0 +1,8 @@
+#!/bin/bash
+
+source .env.development.local
+
+#pg_dump -Fc -v -d $POSTGRESL_URL -f out.bak
+
+psql $POSTGRES_URL
+
