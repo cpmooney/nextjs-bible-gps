@@ -1,7 +1,6 @@
 import { invokeDbActions } from "app/actions";
 import { DbAction } from "src/server/actions/db-action";
 import {create} from "zustand";
-import { immer } from "zustand/middleware/immer";
 
 interface DbActionStore {
     actions: DbAction[];
@@ -10,11 +9,12 @@ interface DbActionStore {
 }
 
 export const useDbActionsStore = create(
-    immer<DbActionStore>((set, get) => ({
+    ((set, get: () => DbActionStore) => ({
         actions: [],
         queueAction: (action) => {
             set((state) => {
                 state.actions.push(action);
+                return state;
             });
         },
         invokeActions: async () => {
@@ -25,6 +25,7 @@ export const useDbActionsStore = create(
             await invokeDbActions(actions);
             set((state) => {
                 state.actions = [];
+                return state;
             });
         }
     }))

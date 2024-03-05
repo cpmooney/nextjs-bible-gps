@@ -12,7 +12,7 @@ import { useDrawDeckStore } from "src/store/draw-deck-store";
 
 export default function Content() {
   const { showingAnswer, showAnswer } = useCardStateContext();
-  const {  userHasNoCards } = useDeckDataStore();
+  const { userHasNoCards } = useDeckDataStore();
   const { currentCard } = useDrawDeckStore();
   const { promptDisplay } = useUserPreferenceStore();
 
