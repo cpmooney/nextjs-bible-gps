@@ -8,12 +8,12 @@ import Prompt from "./prompt";
 import { useCardStateContext } from "./card-state-provider";
 import { useUserPreferenceStore } from "src/store/user-preference-store";
 import { useDeckDataStore } from "src/store/deck-data-store";
-import { useDrawDeckStore } from "src/store/draw-deck-store";
+import { useDrawDeckActions } from "src/store/actions/draw-deck-actions";
 
 export default function Content() {
   const { showingAnswer, showAnswer } = useCardStateContext();
   const { userHasNoCards } = useDeckDataStore();
-  const { currentCard } = useDrawDeckStore();
+  const { guaranteedCurrentCard } = useDrawDeckActions();
   const { promptDisplay } = useUserPreferenceStore();
 
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function Content() {
     router.push("/getting-started");
   };
 
-  const fullCitation = currentCard ? buildFullCitation(currentCard) : "";
+  const fullCitation = guaranteedCurrentCard() ? buildFullCitation(guaranteedCurrentCard()) : "";
 
   const showAnswerClickHandler = userHasNoCards() ? getStarted : showAnswer;
 
@@ -38,7 +38,7 @@ export default function Content() {
     <>
         <Prompt
           preference={promptDisplay}
-          citation={currentCard}
+          citation={guaranteedCurrentCard()}
           userHasNoCards={userHasNoCards()}
         />
         <button

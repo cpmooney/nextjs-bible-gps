@@ -68,6 +68,9 @@ export const useDrawDeckActions = (): DrawDeckActions => {
 
   const guaranteedCurrentCard = () => {
     if (!currentCard) {
+      guaranteedNextCard();
+    }
+    if (!currentCard) {
       throw new Error("No current card");
     }
     return currentCard;
