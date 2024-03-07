@@ -1,7 +1,7 @@
 import {CitationTable} from "db/schema/citation-table";
-import {Citation} from "src/models/citation";
-import {obtainDatabase, usingDatabase} from "../utilities/database";
-import {debugLog, usingDebugger} from "../utilities/debugger";
+import { Citation} from "src/models/citation";
+import {obtainDatabase, usingDatabase} from "../../utilities/database";
+import {debugLog, usingDebugger} from "../../utilities/debugger";
 
 export const invokeDbUpdateCitationAction = async (
   userId: string,
@@ -32,3 +32,10 @@ const citationWithoutId = (citation: Citation): Citation => {
   const {id, ...citationWithoutId} = citation;
   return citationWithoutId;
 };
+
+export interface ScoreUpdate {
+  id: number;
+  score: number;
+  lastReviewed: Date;
+}
+

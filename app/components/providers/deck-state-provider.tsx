@@ -4,9 +4,7 @@ import {
   buildCardsByBook,
 } from "@/utilities/card-by-book-builder";
 import {Filter, emptyFilter, filtered} from "@/utilities/filtering";
-import * as ScoreRecorder from "@/utilities/score-recorder";
 import {useUser} from "@clerk/nextjs";
-import {saveChangedCards} from "app/actions";
 import {
   Dispatch,
   SetStateAction,
@@ -21,6 +19,7 @@ import {Citation} from "src/models/citation";
 import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
 import {randomInRange} from "src/utilities/misc";
 import {useUserPreferenceContext} from "./user-preference-provider";
+import { useDbActionContext } from "./db-actions-provider";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
@@ -61,6 +60,7 @@ export const useDeckStateContext = () => {
 export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const {manualSave} = useUserPreferenceContext();
   const {isSignedIn} = useUser();
+  const {invokeSaveScoreAction, queueSaveScoreAction} = useDbActionContext();
   const [unbankedScore, setUnbankedScore] = useState<number>(0);
   const [bankedScore, setBankedScore] = useState<number>(
     props.initialBankedScore
@@ -117,13 +117,6 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     }
   }, [triggerDrawDeck, drawCitation]);
 
-  const syncScoresToDb = async (): Promise<void> => {
-    setBankedScore(bankedScore + unbankedScore);
-    saveChangedCards(
-      ScoreRecorder.obtainChangedScoreRequest(cardsWithChangedScores)
-    );
-  };
-
   const resetDeck = (newFilter: Filter) => {
     setFilter(newFilter);
     drawDeck.current = [];
@@ -141,8 +134,12 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
       scoreChange,
       setUnbankedScore
     );
-    if (isSignedIn && !manualSave) {
-      saveChangedCards([scoreChangeRecord]);
+    if (isSignedIn) {
+      if (manualSave) {
+        queueSaveScoreAction(scoreChangeRecord);
+      } else {
+        invokeSaveScoreAction(scoreChangeRecord);
+      }
       setBankedScore(() => bankedScore + scoreDelta);
     } else {
       if (!card.id) {

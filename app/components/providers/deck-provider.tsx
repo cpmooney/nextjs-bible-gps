@@ -2,8 +2,13 @@ import {guaranteeUserId} from "app/actions";
 import {Citation} from "src/models/citation";
 import {invokeDbLoadAllAction} from "src/server/db-load-all-rows";
 import {CardArrayProvider} from "./deck-state-provider";
+import React, { ReactNode } from "react";
 
-const DeckProvider = async ({children}: DeckProviderProps) => {
+interface Props {
+  children: ReactNode;
+}
+
+const DeckProvider = async ({children}: Props) => {
   const allCards = await loadAllCards();
 
   return (
@@ -16,10 +21,6 @@ const DeckProvider = async ({children}: DeckProviderProps) => {
     </CardArrayProvider>
   );
 };
-
-interface DeckProviderProps {
-  children: React.ReactNode;
-}
 
 const computeTotalScore = (cards: Citation[]): number => {
   return cards.reduce((total, card) => total + card.score, 0);

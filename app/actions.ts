@@ -1,57 +1,49 @@
 "use server";
 
 import {Citation} from "@/models/citation";
-import { deserialize } from "@/utilities/serialize";
 import {currentUser} from "@clerk/nextjs";
 import {User} from "@clerk/nextjs/server";
 import { demoUser } from "src/constants";
-import {invokeDeleteCardAction} from "src/server/db-delete-citation";
-import {invokeDeletePartialCardAction} from "src/server/db-delete-partial-citation";
 import { invokeDbDuplicateDemoCards } from "src/server/db-duplicate-demo-cards";
-import {invokeDbImportAllAction} from "src/server/db-import-all-rows";
-import {invokeDbLoadAllPartialCitationAction} from "src/server/db-load-all-partial-citations";
 import {invokeDbLoadCitationAction} from "src/server/db-load-citation";
-import {
-  SaveChangedScoresRequest,
-  invokeDbSaveChangedAction,
-} from "src/server/db-save-changed";
-import {
-  SavePartialCitationRequest,
-  invokeDbSavePartialCitationAction,
-} from "src/server/db-save-partial-citation";
-import {invokeDbUpdateCitationAction} from "src/server/db-update-citation";
+import {ScoreUpdate, invokeDbUpdateCitationAction} from "src/server/actions/db-update-citation";
+import { ActionNameType, DbAction } from "./components/providers/db-actions-provider";
+import { invokeDbSaveChangedAction } from "src/server/actions/db-save-score";
+import { invokeDeleteCardAction } from "src/server/actions/db-delete-citation";
+
+export const invokeDbActions = async (actions: DbAction[]) => {
+  const userId = await guaranteeUserId({});
+  await Promise.all(
+    actions.map(({ actionName, args }) => invokeAction(actionName, userId, args))
+  );
+}
+const invokeAction = async (actionName: ActionNameType,
+    userId: string,
+    args: unknown) => {
+        switch (actionName) {
+            case 'delete-citation':
+                return await invokeDeleteCardAction(userId, args as number);
+            case 'save-score':
+                return await invokeDbSaveChangedAction(userId, args as ScoreUpdate);
+            case 'update-citation':
+                return await invokeDbUpdateCitationAction(userId, args as Citation);
+            default:
+                throw new Error(`Unknown action name: ${actionName}`);
+        }
+    }
+
+export const createNewCitation = async (citation: Citation): Promise<number> => {
+    if (citation.id) {
+        throw new Error('Do not call createNewCitation for a citation which is already in the db');
+    }
+  const userId = await guaranteeUserId({});
+  return invokeDbUpdateCitationAction(userId, citation);
+}
 
 export const duplicateDemoCards = async () => {
   const userId = await guaranteeUserId({useDemo: true});
   await invokeDbDuplicateDemoCards(userId);
 }
-
-export const importAllCards = async (tsv: string) => {
-  // TODO: This needs to be wired up further down.
-  const userId = await guaranteeUserId({useDemo: true});
-  const allCitations = deserialize(tsv);
-  await invokeDbImportAllAction(userId, allCitations);
-};
-
-export const deleteCard = async (id: number) => {
-  const userId = await guaranteeUserId({});
-  return await invokeDeleteCardAction(userId, id);
-};
-
-export const deletePartialCard = async (id: number) => {
-  const userId = await guaranteeUserId({});
-  return await invokeDeletePartialCardAction(userId, id);
-};
-
-export const loadPartialCitations = async () => {
-  const userId = await guaranteeUserId({});
-  return await invokeDbLoadAllPartialCitationAction(userId);
-};
-
-export const savePartialCards = async (request: SavePartialCitationRequest) => {
-  const userId = await guaranteeUserId({});
-  return await invokeDbSavePartialCitationAction(userId, request);
-};
 
 export const saveCitation = async (citation: Citation): Promise<number> => {
   const userId = await guaranteeUserId({});
@@ -61,11 +53,6 @@ export const saveCitation = async (citation: Citation): Promise<number> => {
 export const loadCitation = async (citationId: number): Promise<Citation> => {
   const userId = await guaranteeUserId({});
   return await invokeDbLoadCitationAction(userId, citationId);
-};
-
-export const saveChangedCards = async (request: SaveChangedScoresRequest) => {
-  const userId = await guaranteeUserId({});
-  return await invokeDbSaveChangedAction(userId, request);
 };
 
 export const guaranteeUserId = async ({
