@@ -16,10 +16,11 @@ import {
   useState,
 } from "react";
 import {Citation} from "src/models/citation";
-import {WrappedCard, createDrawDeck} from "src/utilities/draw-deck-builder";
+import {WrappedCard, createDrawDeck, scoreCutoffs} from "src/utilities/draw-deck-builder";
 import {randomInRange} from "src/utilities/misc";
 import {useUserPreferenceContext} from "./user-preference-provider";
 import { useDbActionContext } from "./db-actions-provider";
+import { ScoreUpdate } from "src/server/actions/db-update-citation";
 
 export interface DeckStateContext {
   obtainCurrentCard: () => Citation;
@@ -29,8 +30,7 @@ export interface DeckStateContext {
   decrementCurrentCardScore: () => void;
   obtainCardsByBook: () => OrderedCardsByBook;
   obtainAllCitations: () => Citation[];
-  obtainUnbankedScore: () => number;
-  obtainBankedScore: () => number;
+  obtainTotalScore: () => number;
   obtainCurrentCardGroup: () => number;
   obtainCardById: (id: number) => Citation;
   updateCitation: (citation: Citation) => void;
@@ -61,8 +61,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const {manualSave} = useUserPreferenceContext();
   const {isSignedIn} = useUser();
   const {invokeSaveScoreAction, queueSaveScoreAction} = useDbActionContext();
-  const [unbankedScore, setUnbankedScore] = useState<number>(0);
-  const [bankedScore, setBankedScore] = useState<number>(
+  const [totalScore, setTotalScore] = useState<number>(
     props.initialBankedScore
   );
 
@@ -71,8 +70,6 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
   const [currentCardGroup, setCurrentCardGroup] = useState<number | null>(null);
   const [filter, setFilter] = useState<Filter>(emptyFilter());
   const [triggerDrawDeck, setTriggerDrawDeck] = useState<boolean>(false);
-  const [cardsWithChangedScores, setCardsWithChangedScores] =
-    useState<ScoreRecorder.ScoreChangeRecords>({});
 
   const userHasNoCards = useCallback(
     () => props.allCards.length === 0,
@@ -125,45 +122,41 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
 
   const recordScoreChange = (
     card: Citation,
-    scoreChange: ScoreRecorder.ScoreChange,
-    setUnbankedScore: Dispatch<SetStateAction<number>>
+    scoreChange: ScoreChange
   ) => {
-    const scoreDelta = ScoreRecorder.computeScoreDelta(scoreChange, card.score);
-    const scoreChangeRecord = ScoreRecorder.recordScoreChange(
-      card,
-      scoreChange,
-      setUnbankedScore
-    );
+    if (!card.id) {
+      throw new Error("Card has no id");
+    }
+    const scoreDelta = computeScoreDelta(scoreChange, card.score);
+    const scoreUpdate: ScoreUpdate = {
+      id: card.id,
+      score: card.score + scoreDelta,
+      lastReviewed: new Date(),
+    };
     if (isSignedIn) {
       if (manualSave) {
-        queueSaveScoreAction(scoreChangeRecord);
+        queueSaveScoreAction(scoreUpdate);
       } else {
-        invokeSaveScoreAction(scoreChangeRecord);
+        invokeSaveScoreAction(scoreUpdate);
       }
-      setBankedScore(() => bankedScore + scoreDelta);
+      setTotalScore(() => totalScore + scoreDelta);
     } else {
       if (!card.id) {
         throw "Card has no id";
       }
-      setCardsWithChangedScores({
-        ...cardsWithChangedScores,
-        [card.id]: scoreChangeRecord,
-      });
     }
   };
 
   const incrementCurrentCardScore = (): void =>
     recordScoreChange(
       guaranteeCurrentCard(),
-      ScoreRecorder.ScoreChange.Increment,
-      setUnbankedScore
+      ScoreChange.Increment
     );
 
   const decrementCurrentCardScore = (): void =>
     recordScoreChange(
       guaranteeCurrentCard(),
-      ScoreRecorder.ScoreChange.Reset,
-      setUnbankedScore
+      ScoreChange.Decrement
     );
 
   const obtainCardsByBook = () => buildCardsByBook(props.allCards);
@@ -196,8 +189,7 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
         decrementCurrentCardScore: decrementCurrentCardScore,
         obtainCardsByBook,
         obtainAllCitations,
-        obtainUnbankedScore: () => unbankedScore,
-        obtainBankedScore: () => bankedScore,
+        obtainTotalScore: () => totalScore,
         obtainCardById,
         updateCitation,
         setCurrentCard,
@@ -210,5 +202,25 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     </DeckStateContext.Provider>
   );
 };
+
+enum ScoreChange {
+  Increment,
+  Decrement
+}
+
+interface ScoreChangeRecord {
+  id: number;
+  score: number;
+  lastReviewed: string;
+}
+
+const computeScoreDelta = (scoreChange: ScoreChange, score: number): number => {
+  if (scoreChange === ScoreChange.Increment) {
+    return 1;
+  } else if (scoreChange === ScoreChange.Decrement) {
+    return -Math.min(score, 10);
+  }
+  throw new Error(`Invalid score change: ${scoreChange}`);
+}
 
 const DeckStateContext = createContext<DeckStateContext | null>(null);
