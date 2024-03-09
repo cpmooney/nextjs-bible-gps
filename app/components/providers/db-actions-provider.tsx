@@ -1,3 +1,4 @@
+"use client"
 import { Citation } from "@/models/citation";
 import { invokeDbActions } from "app/actions";
 import { createContext, useContext, useState } from "react";
