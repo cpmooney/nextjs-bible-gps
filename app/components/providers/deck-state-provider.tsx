@@ -76,16 +76,19 @@ export const CardArrayProvider = (props: DeckStateProviderProps) => {
     [props.allCards]
   );
 
-  const guaranteeCurrentCard = (): Citation => {
-    if (!currentCard) {
-      // TODO This seems like a bug of some kind!
-      const nextCard = drawCitation();
-    }
-    return currentCard!;
-  };
-
   const guaranteeCurrentCardGroup = (): number => {
     return currentCardGroup ?? -1;
+  };
+
+  const guaranteeCurrentCard = (): Citation => {
+    if (!currentCard) {
+      const nextCard = drawCitation();
+      if (!nextCard) {
+        throw new Error("No cards to draw from");
+      }
+      setCurrentCard(nextCard);
+    }
+    return currentCard!;
   };
 
   const guaranteeDrawDeck = useCallback(() => {

@@ -13,6 +13,7 @@ export const ExtendedMenu = () => {
   const {closeDrawer, isOpen} = useDrawerStateContext();
   return (
     <Drawer
+      customIdSuffix="extended-menu"
       open={isOpen}
       direction="right"
       lockBackgroundScroll

@@ -1,6 +1,5 @@
 "use client";
 import { Citation } from "@/models/citation";
-import { deletePartialCard } from "app/actions";
 import CardEditForm from "app/components/edit/card-form";
 import { useDeckStateContext } from "app/components/providers/deck-state-provider";
 import { useSearchParams } from "next/navigation";
@@ -17,18 +16,12 @@ export default function CardEditPage({ params }: CardEditPageParams) {
 
   const searchParams = useSearchParams();
   const fragment = searchParams?.get("fragment");
-  const fragmentId = searchParams?.get("fragment-id");
 
   const initialCard = id > 0 ? obtainCardById(id) : defaultInitialCard(fragment);
-  const onSave = () => {
-    if (fragmentId) {
-      deletePartialCard(parseInt(fragmentId));
-    }
-  }
 
   return (
     <>
-      <CardEditForm initialCard={initialCard} onSave={onSave} />
+      <CardEditForm initialCard={initialCard} />
     </>
   );
 }
