@@ -4,7 +4,7 @@ import { useDeckStateContext } from "app/components/providers/deck-state-provide
 import { useUserPreferenceContext } from "app/components/providers/user-preference-provider";
 import { ThemeChanger } from "app/components/theme-changer";
 import Link from "next/link";
-import {useMemo} from "react";
+import { useMemo } from "react";
 
 export default function Preferences() {
   const {
@@ -15,7 +15,7 @@ export default function Preferences() {
     setPromptDisplay,
     setManualSave,
   } = useUserPreferenceContext();
-  const {obtainAllCitations} = useDeckStateContext();
+  const { obtainAllCitations } = useDeckStateContext();
   const citationsWithoutFragmentsCount = useMemo(() => {
     if (
       promptDisplay === "citation-fragment" ||
@@ -31,20 +31,24 @@ export default function Preferences() {
     <>
       <div className="bg-light-primary mt-1 p-4">
         <Label title="Preferences" />
-        <div className="mt-2">
-          Advanced view:
-          <input
+        <div className="mt-1 p-4 bg-light-primary flex">
+          <div className="w-32">Advanced view:</div>
+           <input
             type="checkbox"
             checked={advancedView}
             onChange={(e) => setAdvancedView(e.target.checked)}
           />
-          Manual save:
+        </div>
+        <div className="mt-1 p-4 bg-light-primary flex">
+          <div className="w-32">Manual save:</div>
           <input
             type="checkbox"
             checked={manualSave}
             onChange={(e) => setManualSave(e.target.checked)}
           />
-          Prompt type:
+        </div>
+        <div className="mt-1 p-4 bg-light-primary flex">
+          <div className="w-32">Prompt type:</div>
           <select
             value={promptDisplay}
             onChange={(e) => setPromptDisplay(e.target.value as any)}
@@ -54,8 +58,12 @@ export default function Preferences() {
             <option value="fragment-citation">Fragment citation</option>
             <option value="citation-fragment">Citation fragment</option>
           </select>
-          Theme:
-          <ThemeChanger />
+        </div>
+        <div className="mt-1 p-4 bg-light-primary flex">
+          <div className="w-32">Theme:</div>
+          <div>
+            <ThemeChanger />
+          </div>
         </div>
       </div>
       <div

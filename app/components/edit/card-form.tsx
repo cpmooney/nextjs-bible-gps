@@ -101,6 +101,7 @@ export default function CardEditForm({
             initialValue={initialCard.suffix}
           />
         </div>
+        <Label title={fullCitation} />
       </div>
       <div className="mt-1 p-4 bg-light-primary">
         <FragmentEntry setString={setFragment} initialValue={initialCard.fragment} />
