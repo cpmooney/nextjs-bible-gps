@@ -13,6 +13,7 @@ export const ExtendedMenu = () => {
   const {closeDrawer, isOpen} = useDrawerStateContext();
   return (
     <Drawer
+      customIdSuffix="extended-menu"
       open={isOpen}
       direction="right"
       lockBackgroundScroll
@@ -31,7 +32,9 @@ export const ExtendedMenu = () => {
         <Link href="/edit/0" onClick={closeDrawer}>
           <Label title="Add a New Citation" />
         </Link>
-        <ThemeChanger />
+        <Link href="/preferences" onClick={closeDrawer}>
+          <Label title="Preferences" />
+        </Link>
       </div>
     </Drawer>
   );

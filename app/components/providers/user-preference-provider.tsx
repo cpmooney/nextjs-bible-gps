@@ -1,26 +1,38 @@
 "use client";
-import { ReactNode, createContext, useContext } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 
 interface Props {
   children: ReactNode;
 }
 
-export type PromptPreference = "key-words" | "entire";
+const DefaultPromptPreferenceChoice = "entire-citation";
+const PromptPreferenceChoices = ["citation-fragment", "citation-entire", "entire-citation", "fragment-citation"] as const;
+
+export type PromptPreference = typeof PromptPreferenceChoices[number];
 
 export interface UserPreferenceContext {
   promptDisplay: PromptPreference;
   advancedView: boolean
   manualSave: boolean;
+  setPromptDisplay: (prompt: PromptPreference) => void;
+  setAdvancedView: (advancedView: boolean) => void;
+  setManualSave: (manualSave: boolean) => void;
 }
 
 export const UserPreferenceProvider = ({ children }: Props) => {
+  const [promptDisplay, setPromptDisplay] = useState<PromptPreference>(DefaultPromptPreferenceChoice);
+  const [advancedView, setAdvancedView] = useState<boolean>(false);
+  const [manualSave, setManualSave] = useState<boolean>(false);
   return (
     <>
       <UserPreferenceContext.Provider
         value={{
-          promptDisplay: "entire",
-          manualSave: false,
-          advancedView: false
+          promptDisplay,
+          manualSave,
+          advancedView,
+          setPromptDisplay,
+          setAdvancedView,
+          setManualSave
         }}
       >
         {children}
@@ -40,7 +52,10 @@ export const useUserPreferenceContext = () => {
 }
 
 const UserPreferenceContext = createContext<UserPreferenceContext>({
-  promptDisplay: "entire",
+  promptDisplay: "entire-citation",
   manualSave: false,
-  advancedView: false
+  advancedView: false,
+  setPromptDisplay: () => {},
+  setAdvancedView: () => {},
+  setManualSave: () => {}
 });

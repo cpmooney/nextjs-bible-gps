@@ -1,10 +1,10 @@
 "use client";
 import Label from "app/components/label";
+import { useDeckStateContext } from "app/components/providers/deck-state-provider";
+import { useUserPreferenceContext } from "app/components/providers/user-preference-provider";
 import { ThemeChanger } from "app/components/theme-changer";
 import Link from "next/link";
-import {useMemo} from "react";
-import { useDeckDataStore } from "src/store/deck-data-store";
-import { useUserPreferenceStore } from "src/store/user-preference-store";
+import { useMemo } from "react";
 
 export default function Preferences() {
   const {
@@ -14,37 +14,41 @@ export default function Preferences() {
     setAdvancedView,
     setPromptDisplay,
     setManualSave,
-  } = useUserPreferenceStore();
-  const {cards} = useDeckDataStore();
+  } = useUserPreferenceContext();
+  const { obtainAllCitations } = useDeckStateContext();
   const citationsWithoutFragmentsCount = useMemo(() => {
     if (
       promptDisplay === "citation-fragment" ||
       promptDisplay === "fragment-citation"
     ) {
-      return cards.filter((citation) => !citation.fragment)
+      return obtainAllCitations().filter((citation) => !citation.fragment)
         .length;
     }
     return 0;
-  }, [cards, promptDisplay]);
+  }, [obtainAllCitations, promptDisplay]);
 
   return (
     <>
       <div className="bg-light-primary mt-1 p-4">
         <Label title="Preferences" />
-        <div className="mt-2">
-          Advanced view:{" "}
-          <input
+        <div className="mt-1 p-4 bg-light-primary flex">
+          <div className="w-32">Advanced view:</div>
+           <input
             type="checkbox"
             checked={advancedView}
             onChange={(e) => setAdvancedView(e.target.checked)}
           />
-          Manual save:{" "}
+        </div>
+        <div className="mt-1 p-4 bg-light-primary flex">
+          <div className="w-32">Manual save:</div>
           <input
             type="checkbox"
             checked={manualSave}
             onChange={(e) => setManualSave(e.target.checked)}
           />
-          Prompt type:{" "}
+        </div>
+        <div className="mt-1 p-4 bg-light-primary flex">
+          <div className="w-32">Prompt type:</div>
           <select
             value={promptDisplay}
             onChange={(e) => setPromptDisplay(e.target.value as any)}
@@ -54,8 +58,12 @@ export default function Preferences() {
             <option value="fragment-citation">Fragment citation</option>
             <option value="citation-fragment">Citation fragment</option>
           </select>
-          Theme:{" "}
-          <ThemeChanger />
+        </div>
+        <div className="mt-1 p-4 bg-light-primary flex">
+          <div className="w-32">Theme:</div>
+          <div>
+            <ThemeChanger />
+          </div>
         </div>
       </div>
       <div

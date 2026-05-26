@@ -3,15 +3,15 @@ import {useMemo} from "react";
 import {useDeckStateContext} from "../providers/deck-state-provider";
 
 export const Score = () => {
-  const {obtainBankedScore} = useDeckStateContext();
+  const {obtainTotalScore} = useDeckStateContext();
 
   const scoreDisplay = useMemo(() => {
-    const totalScore = obtainBankedScore();
+    const totalScore = obtainTotalScore();
     if (totalScore > 0) {
       return `Score: ${totalScore}`;
     }
     return "";
-  }, [obtainBankedScore]);
+  }, [obtainTotalScore]);
 
   return (
     <div className="mt-1 text-xl text-light-primary text-center">

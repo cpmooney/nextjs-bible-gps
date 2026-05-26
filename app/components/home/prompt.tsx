@@ -11,13 +11,11 @@ interface Props {
 
 export default function Prompt({preference, citation, userHasNoCards}: Props) {
   const promptText = useMemo(() => {
-    if (userHasNoCards) {
-    }
-    if (citation) {
+    if (!userHasNoCards && citation) {
       switch (preference) {
-        case "key-words":
+        case "fragment-citation":
           return citation.fragment.split("/");
-        case "entire":
+        case "entire-citation":
           return [citation.entire];
       }
     }
@@ -26,22 +24,22 @@ export default function Prompt({preference, citation, userHasNoCards}: Props) {
 
   const promptTextAlign = useMemo(() => {
     switch (preference) {
-      case "key-words":
+      case "fragment-citation":
         return "text-center";
-      case "entire":
+      case "entire-citation":
         return "text-left";
     }
   }, [preference]);
 
   const promptTextSize = useMemo(() => {
     switch (preference) {
-      case "key-words":
+      case "fragment-citation":
         const fragmentLength = citation?.fragment?.length ?? 0;
         if (fragmentLength <= 53) {
           return "text-2xl";
         }
         return "text-xl";
-      case "entire":
+      case "entire-citation":
         const entireLength = citation?.entire?.length ?? 0;
         if (entireLength <= 100) {
           return "text-2xl";
@@ -52,18 +50,18 @@ export default function Prompt({preference, citation, userHasNoCards}: Props) {
 
   const promptHeight = useMemo(() => {
     switch (preference) {
-      case "key-words":
+      case "fragment-citation":
         return "h-16";
-      case "entire":
+      case "entire-citation":
         return "h-64";
     }
   }, [preference]);
 
   const fadeNearBottom = useMemo(() => {
     switch (preference) {
-      case "key-words":
+      case "fragment-citation":
         return "fade-out";
-      case "entire":
+      case "entire-citation":
         return "";
     }
   }, [preference]);
